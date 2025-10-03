@@ -36,6 +36,10 @@ export default defineUserConfig({
         link: '/InformationAI/NeuralNetwork/',
       },
       {
+        text: '信息AI--计算机病毒',
+        link: '/InformationAI/ComputerVirus/',
+      },
+      {
         text: '核巨啸的坦克们',
         link: '/tanks/',
       },
