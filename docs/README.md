@@ -10,20 +10,17 @@ actions:
   - text: 核巨啸的坦克们
     link: /tanks/
     type: primary
-  - text: AI--简介
-    link: /InformationAI/Introduction/
-    type: secondary
-  - text: 信息课展示神经网络
-    link: /InformationAI/NeuralNetwork/
+  - text: 信息相关
+    link: /InformationAI/
     type: secondary
   - text: 附件下载区
     link: /tools/
     type: thirdary
-  - text: 种花（劳技课展示）
-    link: /planting/
+  - text: HTML学习
+    link: /Learning/HTML/
     type: thirdary 
   - text: C++学习
-    link: /Learning/
+    link: /Learning/C++/
     type: thirdary 
 
 features:
