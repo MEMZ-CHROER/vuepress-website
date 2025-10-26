@@ -22,6 +22,9 @@ actions:
   - text: 种花（劳技课展示）
     link: /planting/
     type: thirdary 
+  - text: C++学习
+    link: /Learning/
+    type: thirdary 
 
 features:
   - title: 种花（劳技课展示）
