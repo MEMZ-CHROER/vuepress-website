@@ -3,6 +3,7 @@ import { defaultTheme } from '@vuepress/theme-default'
 import { defineUserConfig } from 'vuepress'
 import { viteBundler } from '@vuepress/bundler-vite'
 import { copyrightPlugin } from '@vuepress/plugin-copyright'
+import { markdownChartPlugin } from '@vuepress/plugin-markdown-chart'
 
 
 export default defineUserConfig({
@@ -50,6 +51,10 @@ export default defineUserConfig({
     copyrightPlugin({
       author: "lxy",
       license: "MIT"
+    }),
+    // 启用 Mermaid 渲染
+    markdownChartPlugin({
+      mermaid: true,
     }),
     blogPlugin({
       // Only files under posts are articles
