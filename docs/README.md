@@ -35,5 +35,7 @@ footer: MIT Licensed | Copyright (c) 2024 (Github)MEMZ-CHROER，LiuXiYu，核巨
 
 若要查看许可协议，请点击[LICENSE][Lxy_MIT_License]查看协议
 <a href="./Users/ADMIN/">Administrator-Mode</a>
+<a href="https://cdn.liuxiyu.dpdns.org">进入CDN节点</a>
+<a href="https://liuxiyu.dpdns.org">回到主站</a>
 
 [Lxy_MIT_License]: ./LICENSE/README.md
