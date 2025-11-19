@@ -34,5 +34,6 @@ footer: MIT Licensed | Copyright (c) 2024 (Github)MEMZ-CHROER，LiuXiYu，核巨
 ---
 
 若要查看许可协议，请点击[LICENSE][Lxy_MIT_License]查看协议
+<a href="./Users/ADMIN/">Administrator-Mode</a>
 
 [Lxy_MIT_License]: ./LICENSE/README.md

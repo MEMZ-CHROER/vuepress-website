@@ -81,8 +81,8 @@ flowchart TD
     A[开始] --> B[取出 key, nonce, ciphertext, tag 和 aad]
     B --> C[AEAD 解密: plaintext = Decrypt(key, nonce, ciphertext, tag, aad)]
     C --> D{校验是否通过}
-    D -- 否 --> E[报错/拒绝]
-    D -- 是 --> F[得到原文 plaintext]
+    D -->|否| E[报错/拒绝]
+    D -->|是| F[得到原文 plaintext]
     E --> G[结束]
     F --> G[结束]
 ```
@@ -118,8 +118,8 @@ flowchart TD
     A[用户输入密码] --> B[取出该用户的 salt 与 hash]
     B --> C[verify = Argon2id_Verify(input_password, salt, stored_hash)]
     C --> D{verify 是否为真}
-    D -- 是 --> E[登录成功]
-    D -- 否 --> F[拒绝登录]
+    D -->|是| E[登录成功]
+    D -->|否| F[拒绝登录]
 ```
 
 ```plaintext
@@ -150,8 +150,8 @@ flowchart TD
 flowchart TD
     A[收到: message, signature, public_key] --> B[Verify(public_key, message, signature)]
     B --> C{验证结果}
-    C -- 成功 --> D[接受]
-    C -- 失败 --> E[拒绝]
+    C -->|成功| D[接受]
+    C -->|失败| E[拒绝]
 ```
 
 ```plaintext
