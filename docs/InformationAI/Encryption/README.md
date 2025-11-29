@@ -68,23 +68,20 @@
 
 ```mermaid
 flowchart TD
-    A[开始] --> B[准备原文 plaintext 和可选的附加信息 aad]
-    B --> C[生成 32 字节随机钥匙 key]
-    C --> D[生成 12 字节一次性号码 nonce（不能重复）]
-    D --> E[AEAD 加密: 得到 ciphertext 与 tag]
-    E --> F[保存: nonce, ciphertext, tag（key 要安全存放）]
-    F --> G[结束]
+    A("开始") --> B("准备原文 plaintext 和可选的附加信息 aad")
+    B --> C("生成 32 字节随机钥匙 key")
+    C --> D("生成 12 字节一次性号码 nonce<br>注：必须全局唯一")
+    D --> E("AEAD 加密<br>输出 ciphertext 与 tag")
+    E --> F("保存：nonce, ciphertext, tag<br>注：key 需安全存放")
+    F --> G("结束")
 ```
-
 ```mermaid
 flowchart TD
-    A[开始] --> B[取出 key, nonce, ciphertext, tag 和 aad]
-    B --> C[AEAD 解密: plaintext = Decrypt(key, nonce, ciphertext, tag, aad)]
-    C --> D{校验是否通过}
-    D -->|否| E[报错/拒绝]
-    D -->|是| F[得到原文 plaintext]
-    E --> F[]
-    F --> G[结束]
+    A("开始") --> B("取出 key, nonce, ciphertext, tag, aad")
+    B --> C("AEAD 解密<br>ciphertext + tag → plaintext")
+    C --> D{校验通过？}
+    D -->|否| E("报错/拒绝") --> F("结束")
+    D -->|是| G("得到原文 plaintext") --> F("结束")
 ```
 
 ```plaintext
@@ -107,19 +104,19 @@ IF verify_failed THEN error ELSE RETURN plaintext
 
 ```mermaid
 flowchart TD
-    A[用户设置密码] --> B[生成随机盐 salt]
-    B --> C[hash = Argon2id(password, salt, 安全参数)]
-    C --> D[保存 salt 与 hash（不保存明文密码）]
-    D --> E[结束]
+    A("用户设置密码") --> B("生成随机盐 salt<br>注：≥16字节")
+    B --> C("计算 Argon2id 哈希<br>hash = Argon2id(password, salt, 安全参数)")
+    C --> D("保存 salt 与 hash<br>注意：绝不保存明文密码")
+    D --> E("结束")
 ```
 
 ```mermaid
 flowchart TD
-    A[用户输入密码] --> B[取出该用户的 salt 与 hash]
-    B --> C[verify = Argon2id_Verify(input_password, salt, stored_hash)]
-    C --> D{verify 是否为真}
-    D -->|是| E[登录成功]
-    D -->|否| F[拒绝登录]
+    A("用户输入密码") --> B("取出该用户的 salt 与 stored_hash")
+    B --> C("验证 Argon2id<br>verify = Argon2id_Verify(input_password, salt, stored_hash)")
+    C --> D{验证通过？}
+    D -->|是| E("登录成功") --> F("结束")
+    D -->|否| G("拒绝登录") --> F("结束")
 ```
 
 ```plaintext
@@ -141,17 +138,19 @@ IF ok THEN allow ELSE deny
 
 ```mermaid
 flowchart TD
-    A[生成密钥对: private_key + public_key] --> B[准备消息 message]
-    B --> C[signature = Sign(private_key, message)]
-    C --> D[发送: message + signature + public_key（或证书）]
+    A("生成密钥对") --> B("私钥：private_key<br>公钥：public_key")
+    B --> C("准备消息 message")
+    C --> D("生成签名<br>signature = Sign(private_key, message)")
+    D --> E("发送：message + signature + public_key<br>或附带证书")
+    E --> F("结束")
 ```
 
 ```mermaid
 flowchart TD
-    A[收到: message, signature, public_key] --> B[Verify(public_key, message, signature)]
+    A("收到：message, signature, public_key") --> B("验证签名<br>Verify(public_key, message, signature)")
     B --> C{验证结果}
-    C -->|成功| D[接受]
-    C -->|失败| E[拒绝]
+    C -->|成功| D("接受") --> E("结束")
+    C -->|失败| F("拒绝") --> E("结束")
 ```
 
 ```plaintext
@@ -171,11 +170,12 @@ IF ok THEN accept ELSE reject
 
 ```mermaid
 flowchart TD
-    A[读取记录 record] --> B[选中敏感字段，如 phone 或 id_number]
-    B --> C[生成或获取字段专用钥匙 field_key]
-    C --> D[field_nonce <- UniqueRandom(12 bytes)]
-    D --> E[field_cipher, tag <- AEAD_Encrypt(field_key, field_nonce, field_value, aad=record_id)]
-    E --> F[写回: 保存 field_nonce, field_cipher, tag；不保存明文]
+    A("读取记录 record") --> B("选择敏感字段<br>如 phone, id_card")
+    B --> C("获取字段专用密钥 field_key<br>注：每个字段应有独立密钥")
+    C --> D("生成唯一 nonce<br>field_nonce <- UniqueRandom(12 bytes)")
+    D --> E("AEAD 加密字段值<br>field_cipher, tag <- AEAD_Encrypt(field_key, field_nonce, field_value, aad=record_id)")
+    E --> F("保存：<br>1. field_nonce<br>2. field_cipher<br>3. tag<br>4. 不保存明文")
+    F --> G("结束")
 ```
 
 ```plaintext
@@ -201,7 +201,21 @@ STORE: field_nonce, cipher, tag
 - 放在哪里：最好用专业的“钥匙保险柜”（比如云厂商 KMS）。
 - 备份恢复：把钥匙做分片备份，备份要离线保存。
 - 审计与权限：记录谁动过钥匙；只给必须的人权限。
-
+<br>
+- 秘钥管理生命周期流程：
+```mermaid
+flowchart TD
+    A("密钥生成<br>(强随机源)") --> B("密钥激活<br>(加入KMS)")
+    B --> C("密钥使用<br>(业务加密)")
+    C --> D{是否到期/泄露?}
+    D -->|是| E("密钥轮换")
+    D -->|否| C
+    E --> F("数据重加密")
+    F --> G("旧密钥归档")
+    G --> H("安全销毁")
+    H --> I("审计记录")
+    I --> J("结束")
+```
 ---
 
 ## 八、HTTPS（TLS 1.3）大概怎么工作
@@ -209,7 +223,21 @@ STORE: field_nonce, cipher, tag
 - 再用“带认证的加密”保护数据（比如 AES-GCM）。
 - 网站用证书证明“我真的是这个网站”，浏览器会检查证书链。
 - 会话可以恢复（不必每次都重新换钥匙），但要安全地保存票据。
-
+<br>
+- HTTPS安全连接建立流程
+```mermaid
+sequenceDiagram
+    participant C as 客户端
+    participant S as 服务器
+    C->>S: ClientHello(支持算法)
+    S->>C: ServerHello+证书+密钥交换参数
+    Note over C,S: 验证证书链
+    C->>S: 客户端密钥交换
+    Note over C,S: 计算共享密钥
+    C->>S: Finish(Encrypted)
+    S->>C: Finish(Encrypted)
+    Note over C,S: 应用数据传输
+```
 ---
 
 ## 九、密码与账号安全（日常必备）
@@ -217,7 +245,25 @@ STORE: field_nonce, cipher, tag
 - 每人一个“随机盐”，和哈希一起存。
 - 开启二次验证（验证码、TOTP、或安全钥），防止别人撞库。
 - 做好登录限速和异常提醒，防止暴力破解。
-
+<br>
+- 密码存储安全验证流程
+```mermaid
+flowchart TD
+    A("用户登录") --> B("提交加密密码")
+    B --> C("查出用户盐值")
+    C --> D("Argon2id哈希计算")
+    D --> E{与存储哈希匹配?}
+    E -->|否| F("记录失败日志")
+    F --> G("失败计数+1")
+    G --> H{超过阈值?}
+    H -->|是| I("锁定账号/通知")
+    I --> J("结束")
+    H -->|否| K("返回错误")
+    K --> J
+    E -->|是| L("生成会话令牌")
+    L --> M("审计记录")
+    M --> N("结束")
+```
 ---
 
 ## 十、常见坑（尽量别踩）
@@ -252,3 +298,21 @@ STORE: field_nonce, cipher, tag
 - 钥匙怎么产生、保存、多久换？有审计吗？
 - 老数据要不要重新加密？怎么迁移？
 - 登录有没有限速和异常提醒？
+- 加密系统部署验证流程
+```mermaid
+flowchart TD
+    A("系统部署") --> B("算法合规检查<br>(禁用ECB等)")
+    B --> C{通过?}
+    C -->|否| D("高风险！修复后重试")
+    C -->|是| E("Nonce唯一性测试")
+    E --> F{测试通过?}
+    F -->|否| G("修复随机数生成")
+    F -->|是| H("密钥轮换测试")
+    H --> I{通过?}
+    I -->|否| J("优化轮换机制")
+    I -->|是| K("性能压测<br>(p99延迟<50ms)")
+    K --> L{达标?}
+    L -->|否| M("硬件/算法优化")
+    L -->|是| N("审计日志检查")
+    N --> O("安全签收上线")
+```
