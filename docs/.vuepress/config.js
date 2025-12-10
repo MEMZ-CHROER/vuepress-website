@@ -4,15 +4,18 @@ import { defineUserConfig } from 'vuepress'
 import { viteBundler } from '@vuepress/bundler-vite'
 import { copyrightPlugin } from '@vuepress/plugin-copyright'
 import { markdownChartPlugin } from '@vuepress/plugin-markdown-chart'
-
+import markdownItKatex from 'markdown-it-katex'
 
 export default defineUserConfig({
   lang: 'zh-CN',
 
   title: 'Lxy的博客',
   description: 'Lxy Powered by VuePress@2.0.0-rc.25',
-  head: [['link', { rel: 'icon', href: 'https://z.wiki/u/MMPFZO' }]],
-
+  head: [
+    ['link', { rel: 'icon', href: 'https://z.wiki/u/MMPFZO' }],
+    // 启用 KaTeX 样式
+    ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css' }],
+  ],
 
   theme: defaultTheme({
     logo: 'https://z.wiki/u/UVdSlT',
@@ -46,6 +49,11 @@ export default defineUserConfig({
       },
     ],
   }),
+
+  // 启用 KaTeX 渲染（支持 $...$ 与 $$...$$）
+  extendsMarkdown: (md) => {
+    md.use(markdownItKatex)
+  },
 
   plugins: [
     copyrightPlugin({

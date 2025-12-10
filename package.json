@@ -38,6 +38,7 @@
     "fs": "^0.0.1-security",
     "hash": "^0.2.1",
     "highlight.js": "^11.11.1",
+    "katex": "^0.16.27",
     "markdown-it-katex": "^2.0.3",
     "md5": "^2.3.0",
     "mermaid": "^10.9.0-rc.2",
