@@ -44,6 +44,10 @@ export default defineUserConfig({
         link: '/planting/',
       },
       {
+        text: 'maths',
+        link: '/maths/',
+      },
+      {
         text: 'Github',
         link: 'https://www.github.com/MEMZ-CHROER/vuepress-test' 
       },
