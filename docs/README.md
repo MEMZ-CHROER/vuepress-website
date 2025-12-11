@@ -22,6 +22,9 @@ actions:
   - text: C++学习
     link: /Learning/C++/
     type: thirdary 
+  - text: 数学三阶幻方
+    link: /maths/
+    type: thirdary
 
 features:
   - title: 种花（劳技课展示）
