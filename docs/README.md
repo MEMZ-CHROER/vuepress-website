@@ -7,22 +7,22 @@ tagline: 一个关于手绘坦克的网站
 
 # https://z.wiki/u/TI9MI0
 actions:
-  - text: 核巨啸的坦克们
+  - text: 🎨 核巨啸的坦克们
     link: /tanks/
     type: primary
-  - text: 信息相关
+  - text: 🤖 信息相关
     link: /InformationAI/
     type: secondary
-  - text: 附件下载区
+  - text: 📦 附件下载区
     link: /tools/
     type: thirdary
-  - text: HTML学习
+  - text: 🌐 HTML学习
     link: /Learning/HTML/
     type: thirdary 
-  - text: C++学习
+  - text: ⚡ C++学习
     link: /Learning/C++/
     type: thirdary 
-  - text: 数学三阶幻方
+  - text: 🔢 数学三阶幻方
     link: /maths/
     type: thirdary
 

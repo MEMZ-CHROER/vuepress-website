@@ -11,19 +11,22 @@ const categoryMap = useBlogCategory('category')
 <template>
   <ParentLayout>
     <template #page>
-      <main class="page">
+      <main class="page category-page">
+        <div class="page-header">
+          <h1 class="page-title">📂 分类</h1>
+          <p class="page-subtitle">共 {{ Object.keys(categoryMap.map).length }} 个分类</p>
+        </div>
+
         <div class="category-wrapper">
           <RouteLink
             v-for="({ items, path }, name) in categoryMap.map"
             :key="name"
             :to="path"
             :active="route.path === path"
-            class="category"
+            class="category-chip"
           >
-            {{ name }}
-            <span class="category-num">
-              {{ items.length }}
-            </span>
+            <span class="category-name">{{ name }}</span>
+            <span class="category-num">{{ items.length }}</span>
           </RouteLink>
         </div>
 
@@ -33,63 +36,89 @@ const categoryMap = useBlogCategory('category')
   </ParentLayout>
 </template>
 
-<style lang="scss">
-@use '@vuepress/theme-default/styles/mixins';
+<style lang="scss" scoped>
+.category-page {
+  padding: 1rem 0;
+}
+
+.page-header {
+  text-align: center;
+  padding: 1.5rem 1rem 0.5rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--c-brand), #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--c-text-lighter);
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
 
 .category-wrapper {
-  @include mixins.content_wrapper;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  padding: 1rem 2rem 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
 
-  padding-top: 1rem !important;
-  padding-bottom: 0 !important;
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: var(--c-bg-lighter);
+  border: 1.5px solid var(--c-border);
+  color: var(--c-text-light) !important;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.04));
+  text-decoration: none !important;
 
-  font-size: 14px;
-
-  a {
-    color: inherit;
+  &:hover {
+    border-color: var(--c-brand-light);
+    color: var(--c-brand) !important;
+    background: rgba(99, 102, 241, 0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
   }
 
-  .category {
-    display: inline-block;
-    vertical-align: middle;
+  &.route-link-active {
+    background: linear-gradient(135deg, var(--c-brand), var(--c-brand-light));
+    color: #fff !important;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+  }
 
-    overflow: hidden;
+  .category-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.3rem;
+    height: 1.4rem;
+    padding: 0 0.35rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.06);
+  }
 
-    margin: 0.3rem 0.6rem 0.8rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.25rem;
-
-    cursor: pointer;
-
-    transition:
-      background 0.3s,
-      color 0.3s;
-
-    @media (max-width: 419px) {
-      font-size: 0.9rem;
-    }
-
-    .category-num {
-      display: inline-block;
-
-      min-width: 1rem;
-      height: 1.2rem;
-      margin-inline-start: 0.2em;
-      padding: 0 0.1rem;
-      border-radius: 0.6rem;
-
-      font-size: 0.7rem;
-      line-height: 1.2rem;
-      text-align: center;
-    }
-
-    &.route-link-active {
-      background: var(--c-brand);
-      color: var(--c-bg);
-
-      .category-num {
-        color: var(--c-bg);
-      }
-    }
+  &.route-link-active .category-num {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
   }
 }
 </style>

@@ -24,32 +24,32 @@ export default defineUserConfig({
     navbar: [
       '/',
       {
-        text: '附件表',
+        text: '📋 附件表',
         link: '/fujian/',
       },
       {
-        text: '工具下载区',
+        text: '🛠️ 工具下载',
         link: '/tools/',
       },
       {
-        text: '信息AI',
+        text: '🤖 信息AI',
         link: '/InformationAI/',
       },
       {
-        text: '核巨啸的坦克们',
+        text: '🎨 坦克们',
         link: '/tanks/',
       },
       {
-        text: '种花（劳技课展示）',
+        text: '🌱 种花',
         link: '/planting/',
       },
       {
-        text: 'maths',
+        text: '🔢 Maths',
         link: '/maths/',
       },
       {
-        text: 'Github',
-        link: 'https://www.github.com/MEMZ-CHROER/vuepress-test' 
+        text: '🐙 GitHub',
+        link: 'https://www.github.com/MEMZ-CHROER/vuepress-test'
       },
     ],
   }),

@@ -11,19 +11,23 @@ const tagMap = useBlogCategory('tag')
 <template>
   <ParentLayout>
     <template #page>
-      <main class="page">
+      <main class="page tag-page">
+        <div class="page-header">
+          <h1 class="page-title">🏷️ 标签</h1>
+          <p class="page-subtitle">共 {{ Object.keys(tagMap.map).length }} 个标签</p>
+        </div>
+
         <div class="tag-wrapper">
           <RouteLink
             v-for="({ items, path }, name) in tagMap.map"
             :key="name"
             :to="path"
             :active="route.path === path"
-            class="tag"
+            class="tag-chip"
+            :style="getTagStyle(items.length)"
           >
-            {{ name }}
-            <span class="tag-num">
-              {{ items.length }}
-            </span>
+            <span class="tag-name">#{{ name }}</span>
+            <span class="tag-num">{{ items.length }}</span>
           </RouteLink>
         </div>
 
@@ -33,63 +37,108 @@ const tagMap = useBlogCategory('tag')
   </ParentLayout>
 </template>
 
-<style lang="scss">
-@use '@vuepress/theme-default/styles/mixins';
+<script>
+export default {
+  methods: {
+    getTagStyle(count) {
+      // 根据文章数量调整标签大小
+      const max = 20
+      const min = 6
+      const clamped = Math.min(count, max)
+      const ratio = Math.max(0.3, clamped / max)
+      const fontSize = 0.8 + ratio * 0.35
+      return { fontSize: `${fontSize}rem` }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.tag-page {
+  padding: 1rem 0;
+}
+
+.page-header {
+  text-align: center;
+  padding: 1.5rem 1rem 0.5rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--c-brand), #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--c-text-lighter);
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
 
 .tag-wrapper {
-  @include mixins.content_wrapper;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 1rem 2rem 1.5rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
 
-  padding-top: 1rem !important;
-  padding-bottom: 0 !important;
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.35rem 1rem;
+  border-radius: 50px;
+  font-weight: 500;
+  background: var(--c-bg-lighter);
+  border: 1.5px solid var(--c-border);
+  color: var(--c-text-light) !important;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.04));
+  text-decoration: none !important;
 
-  font-size: 14px;
-
-  a {
-    color: inherit;
+  &:hover {
+    border-color: var(--c-brand-light);
+    color: var(--c-brand) !important;
+    background: rgba(99, 102, 241, 0.06);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
   }
 
-  .tag {
-    display: inline-block;
-    vertical-align: middle;
+  &.route-link-active {
+    background: linear-gradient(135deg, var(--c-brand), var(--c-brand-light));
+    color: #fff !important;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+  }
 
-    overflow: hidden;
+  .tag-name {
+    line-height: 1;
+  }
 
-    margin: 0.3rem 0.6rem 0.8rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.25rem;
+  .tag-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.1rem;
+    height: 1.2rem;
+    padding: 0 0.3rem;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.06);
+  }
 
-    cursor: pointer;
-
-    transition:
-      background 0.3s,
-      color 0.3s;
-
-    @media (max-width: 419px) {
-      font-size: 0.9rem;
-    }
-
-    .tag-num {
-      display: inline-block;
-
-      min-width: 1rem;
-      height: 1.2rem;
-      margin-inline-start: 0.2em;
-      padding: 0 0.1rem;
-      border-radius: 0.6rem;
-
-      font-size: 0.7rem;
-      line-height: 1.2rem;
-      text-align: center;
-    }
-
-    &.route-link-active {
-      background: var(--c-brand);
-      color: var(--c-bg);
-
-      .tag-num {
-        color: var(--c-bg);
-      }
-    }
+  &.route-link-active .tag-num {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
   }
 }
 </style>
