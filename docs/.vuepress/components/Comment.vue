@@ -22,7 +22,7 @@ function loadTwikoo() {
 
   // 加载 Twikoo 脚本
   const script = document.createElement('script')
-  script.src = 'https://cdn.jsdelivr.net/npm/twikoo@1.7.13/dist/twikoo.all.min.js'
+  script.src = 'https://unpkg.com/twikoo@1.7.13/dist/twikoo.all.min.js'
   script.onload = () => {
     if (window.twikoo) {
       window.twikoo.init({
