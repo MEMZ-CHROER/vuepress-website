@@ -51,6 +51,10 @@ export default defineUserConfig({
         link: '/maths/',
       },
       {
+        text: '🤝 友链',
+        link: '/friends/',
+      },
+      {
         text: '🐙 GitHub',
         link: 'https://www.github.com/MEMZ-CHROER/vuepress-test'
       },

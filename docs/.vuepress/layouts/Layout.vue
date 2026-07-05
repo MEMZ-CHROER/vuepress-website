@@ -14,6 +14,9 @@ const frontmatter = usePageFrontmatter()
       </div>
     </template>
   </ParentLayout>
+
+  <!-- 全局彩蛋 -->
+  <EasterEgg />
 </template>
 
 <style scoped>

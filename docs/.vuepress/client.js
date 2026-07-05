@@ -6,6 +6,7 @@ import Timeline from './layouts/Timeline.vue'
 import MyLayout from './layouts/Layout.vue'
 import QuoteOfTheDay from './components/QuoteOfTheDay.vue'
 import Comment from './components/Comment.vue'
+import EasterEgg from './components/EasterEgg.vue'
 
 export default defineClientConfig({
   // we provide some blog layouts
@@ -19,5 +20,6 @@ export default defineClientConfig({
   enhance: ({ app }) => {
     app.component('QuoteOfTheDay', QuoteOfTheDay)
     app.component('Comment', Comment)
+    app.component('EasterEgg', EasterEgg)
   },
 })
