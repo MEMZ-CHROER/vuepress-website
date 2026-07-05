@@ -4,6 +4,7 @@ import { defineUserConfig } from 'vuepress'
 import { viteBundler } from '@vuepress/bundler-vite'
 import { copyrightPlugin } from '@vuepress/plugin-copyright'
 import { markdownChartPlugin } from '@vuepress/plugin-markdown-chart'
+import { sitemapPlugin } from 'vuepress-plugin-sitemap2'
 import markdownItKatex from 'markdown-it-katex'
 
 export default defineUserConfig({
@@ -71,6 +72,12 @@ export default defineUserConfig({
   },
 
   plugins: [
+    // Sitemap 生成（帮助百度/Google 收录）
+    sitemapPlugin({
+      hostname: 'https://www.liuxiyu.cn',
+      excludeUrls: ['/404.html'],
+    }),
+
     copyrightPlugin({
       author: "lxy",
       license: "MIT"
