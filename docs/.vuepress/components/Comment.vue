@@ -1,59 +1,43 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vuepress/client'
 
 const route = useRoute()
 const commentEl = ref(null)
+const envId = ''
 
-// Giscus 配置 — ✏️ 按下方说明替换 repoId 和 categoryId
-const GISCUS_CONFIG = {
-  repo: 'MEMZ-CHROER/vuepress-website',
-  repoId: '',
-  category: 'Announcements',
-  categoryId: '',
-  mapping: 'pathname',
-  strict: '1',
-  reactionsEnabled: '1',
-  emitMetadata: '0',
-  inputPosition: 'top',
-  lang: 'zh-CN',
-  theme: 'light',
-}
-
-function loadGiscus() {
-  if (!GISCUS_CONFIG.repoId || !GISCUS_CONFIG.categoryId) return
-
-  // 清除旧的 giscus 脚本
-  commentEl.value.innerHTML = ''
-
-  const script = document.createElement('script')
-  script.src = 'https://giscus.app/client.js'
-  script.setAttribute('data-repo', GISCUS_CONFIG.repo)
-  script.setAttribute('data-repo-id', GISCUS_CONFIG.repoId)
-  script.setAttribute('data-category', GISCUS_CONFIG.category)
-  script.setAttribute('data-category-id', GISCUS_CONFIG.categoryId)
-  script.setAttribute('data-mapping', GISCUS_CONFIG.mapping)
-  script.setAttribute('data-strict', GISCUS_CONFIG.strict)
-  script.setAttribute('data-reactions-enabled', GISCUS_CONFIG.reactionsEnabled)
-  script.setAttribute('data-emit-metadata', GISCUS_CONFIG.emitMetadata)
-  script.setAttribute('data-input-position', GISCUS_CONFIG.inputPosition)
-  script.setAttribute('data-lang', GISCUS_CONFIG.lang)
-  script.setAttribute('data-theme', GISCUS_CONFIG.theme)
-  script.setAttribute('crossorigin', 'anonymous')
-  script.async = true
-  commentEl.value.appendChild(script)
-}
+// 替换成你的 Vercel 地址（下一步会拿到）
+const TWIKOO_URL = ''
 
 onMounted(() => {
-  if (GISCUS_CONFIG.repoId && GISCUS_CONFIG.categoryId) {
-    loadGiscus()
-  }
+  if (TWIKOO_URL) loadTwikoo()
 })
 
-// 路由变化时重新加载
 watch(() => route.path, () => {
-  setTimeout(loadGiscus, 300)
+  nextTick(() => {
+    if (TWIKOO_URL) loadTwikoo()
+  })
 })
+
+function loadTwikoo() {
+  if (!TWIKOO_URL) return
+  commentEl.value.innerHTML = ''
+
+  // 加载 Twikoo 脚本
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/twikoo@1.6.41/dist/twikoo.all.min.js'
+  script.onload = () => {
+    if (window.twikoo) {
+      window.twikoo.init({
+        el: commentEl.value,
+        envId: TWIKOO_URL,
+        lang: 'zh-CN',
+        path: route.path,
+      })
+    }
+  }
+  document.head.appendChild(script)
+}
 </script>
 
 <template>
@@ -61,35 +45,33 @@ watch(() => route.path, () => {
     <h2 class="comment-title">💬 评论区</h2>
 
     <!-- 未配置时显示引导 -->
-    <div v-if="!GISCUS_CONFIG.repoId || !GISCUS_CONFIG.categoryId" class="comment-setup-guide">
+    <div v-if="!TWIKOO_URL" class="comment-setup-guide">
       <div class="setup-card">
-        <h3>⚙️ 评论系统待配置</h3>
-        <p>评论功能基于 Giscus（GitHub Discussions），需要两步配置：</p>
+        <h3>🚀 部署评论后端（免费）</h3>
+        <p>评论使用 Twikoo，支持 <strong>QQ / 微信 / 邮箱 / GitHub</strong> 登录，国内网络友好。</p>
+        <p>只需一步：</p>
         <ol>
           <li>
-            <strong>开启 Discussions</strong> — 前往
-            <a :href="`https://github.com/${GISCUS_CONFIG.repo}/settings`" target="_blank">
-              仓库 Settings
+            打开
+            <a href="https://vercel.com/import/project?template=https://github.com/imaegoo/twikoo/tree/main/vercel-template" target="_blank">
+              Twikoo Vercel 模板
             </a>
-            ，勾选 Discussions
+            ，用 GitHub 账号登录 Vercel 并一键部署
           </li>
           <li>
-            <strong>安装 Giscus App</strong> — 打开
-            <a href="https://giscus.app/zh-CN" target="_blank">giscus.app</a>
-            ，授权仓库后获取 <code>repoId</code> 和 <code>categoryId</code>
+            部署成功后拿到域名 <code>xxx.vercel.app</code>
           </li>
           <li>
-            <strong>填入组件</strong> — 编辑
-            <code>docs/.vuepress/components/Comment.vue</code>，
-            把 <code>repoId</code> 和 <code>categoryId</code> 填到第 9~10 行
+            编辑 <code>docs/.vuepress/components/Comment.vue</code>，
+            把第 8 行的 <code>TWIKOO_URL</code> 填成你的 Vercel 地址
           </li>
         </ol>
-        <p class="setup-tip">💡 配置好后重启 dev server 即可生效</p>
+        <p class="setup-tip">💡 部署完重启 dev server 即可生效</p>
       </div>
     </div>
 
-    <!-- Giscus 评论区 -->
-    <div ref="commentEl" class="giscus-wrapper"></div>
+    <!-- Twikoo 评论区容器 -->
+    <div ref="commentEl" class="twikoo-wrapper"></div>
   </div>
 </template>
 
@@ -129,11 +111,12 @@ watch(() => route.path, () => {
 
 .setup-card ol {
   padding-left: 1.2rem;
-  line-height: 1.8;
+  line-height: 2;
 }
 
 .setup-card a {
   color: var(--c-brand);
+  font-weight: 600;
 }
 
 .setup-card code {
@@ -149,7 +132,7 @@ watch(() => route.path, () => {
   color: var(--c-text-lighter);
 }
 
-.giscus-wrapper {
+.twikoo-wrapper {
   min-height: 200px;
 }
 </style>
