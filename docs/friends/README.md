@@ -42,6 +42,16 @@ sidebar: false
 </div>
 
 <div class="friend-card">
+  <a href="https://csel.dpdns.org" target="_blank" rel="noopener noreferrer">
+    <div class="friend-avatar">💻</div>
+    <div class="friend-info">
+      <div class="friend-name">CSEL 编程组织</div>
+      <div class="friend-desc">编程学习交流 csel.dpdns.org</div>
+    </div>
+  </a>
+</div>
+
+<div class="friend-card">
   <a href="https://www.github.com/MEMZ-CHROER" target="_blank" rel="noopener noreferrer">
     <div class="friend-avatar">🐙</div>
     <div class="friend-info">
