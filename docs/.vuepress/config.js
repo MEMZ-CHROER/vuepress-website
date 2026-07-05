@@ -37,7 +37,10 @@ export default defineUserConfig({
       },
       {
         text: '🎨 坦克们',
-        link: '/tanks/',
+        children: [
+          { text: '🎨 坦克图鉴', link: '/tanks/' },
+          { text: '📖 坦克设计图鉴', link: '/tanks/design.html' },
+        ],
       },
       {
         text: '🌱 种花',
