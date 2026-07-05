@@ -133,6 +133,7 @@ export default defineUserConfig({
           // Remove archive articles
           filter: (page) => !page.frontmatter.archive,
           layout: 'Article',
+          itemLayout: 'Post',
           frontmatter: () => ({
             title: 'Articles',
             sidebar: false,
