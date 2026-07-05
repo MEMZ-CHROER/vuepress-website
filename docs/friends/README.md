@@ -12,11 +12,31 @@ sidebar: false
 ## 🏠 主站
 
 <div class="friend-card">
-  <a href="https://liuxiyu.dpdns.org" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.liuxiyu.cn" target="_blank" rel="noopener noreferrer">
     <div class="friend-avatar">🏠</div>
     <div class="friend-info">
       <div class="friend-name">Lxy 的主站</div>
-      <div class="friend-desc">个人网站主站，CDN 分发</div>
+      <div class="friend-desc">个人网站主站 www.liuxiyu.cn</div>
+    </div>
+  </a>
+</div>
+
+<div class="friend-card">
+  <a href="https://chat.liuxiyu.dpdns.org" target="_blank" rel="noopener noreferrer">
+    <div class="friend-avatar">💬</div>
+    <div class="friend-info">
+      <div class="friend-name">聊天室</div>
+      <div class="friend-desc">在线聊天室 chat.liuxiyu.dpdns.org</div>
+    </div>
+  </a>
+</div>
+
+<div class="friend-card">
+  <a href="https://notes.liuxiyu.dpdns.org" target="_blank" rel="noopener noreferrer">
+    <div class="friend-avatar">📝</div>
+    <div class="friend-info">
+      <div class="friend-name">C++ 讲义</div>
+      <div class="friend-desc">C++ 学习笔记 notes.liuxiyu.dpdns.org</div>
     </div>
   </a>
 </div>
