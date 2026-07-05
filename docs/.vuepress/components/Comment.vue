@@ -4,19 +4,16 @@ import { useRoute } from 'vuepress/client'
 
 const route = useRoute()
 const commentEl = ref(null)
-const envId = ''
-
-// 替换成你的 Vercel 地址（下一步会拿到）
-const TWIKOO_URL = ''
+const TWIKOO_URL = 'https://cnt.liuxiyu.dpdns.org'
 
 onMounted(() => {
   if (TWIKOO_URL) loadTwikoo()
 })
 
 watch(() => route.path, () => {
-  nextTick(() => {
-    if (TWIKOO_URL) loadTwikoo()
-  })
+  setTimeout(() => {
+    loadTwikoo()
+  }, 500)
 })
 
 function loadTwikoo() {
