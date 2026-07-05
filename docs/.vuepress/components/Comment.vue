@@ -4,7 +4,7 @@ import { useRoute } from 'vuepress/client'
 
 const route = useRoute()
 const commentEl = ref(null)
-const TWIKOO_URL = 'https://cnt.liuxiyu.dpdns.org'
+const TWIKOO_URL = 'https://twikoochat-production.up.railway.app'
 
 onMounted(() => {
   if (TWIKOO_URL) loadTwikoo()
@@ -22,7 +22,7 @@ function loadTwikoo() {
 
   // 加载 Twikoo 脚本
   const script = document.createElement('script')
-  script.src = 'https://cdn.jsdelivr.net/npm/twikoo@1.6.41/dist/twikoo.all.min.js'
+  script.src = 'https://cdn.jsdelivr.net/npm/twikoo@1.7.13/dist/twikoo.all.min.js'
   script.onload = () => {
     if (window.twikoo) {
       window.twikoo.init({
