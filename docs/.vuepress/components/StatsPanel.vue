@@ -9,50 +9,56 @@ const categories = useBlogCategory('category')
 const tags = useBlogCategory('tag')
 const site = useSite()
 
-const stats = computed(() => [
-  {
-    icon: '📝',
-    label: '文章',
-    value: articles.items.length,
-    desc: '篇原创内容',
-    color: '#6366f1',
-  },
-  {
-    icon: '📂',
-    label: '分类',
-    value: Object.keys(categories.map).length,
-    desc: '个分类',
-    color: '#8b5cf6',
-  },
-  {
-    icon: '🏷️',
-    label: '标签',
-    value: Object.keys(tags.map).length,
-    desc: '个标签',
-    color: '#ec4899',
-  },
-  {
-    icon: '📄',
-    label: '页面',
-    value: site.value.pages.length,
-    desc: '页收录',
-    color: '#14b8a6',
-  },
-  {
-    icon: '🎨',
-    label: '坦克',
-    value: 33,
-    desc: '辆原创手绘',
-    color: '#f97316',
-  },
-  {
-    icon: '🔗',
-    label: '友链',
-    value: 4,
-    desc: '个小伙伴',
-    color: '#06b6d4',
-  },
-])
+const stats = computed(() => {
+  const pageCount = site.value?.pages?.length || 0
+  const catCount = categories.map ? Object.keys(categories.map).length : 0
+  const tagCount = tags.map ? Object.keys(tags.map).length : 0
+
+  return [
+    {
+      icon: '📝',
+      label: '文章',
+      value: articles.items.length,
+      desc: '篇原创内容',
+      color: '#6366f1',
+    },
+    {
+      icon: '📂',
+      label: '分类',
+      value: catCount,
+      desc: '个分类',
+      color: '#8b5cf6',
+    },
+    {
+      icon: '🏷️',
+      label: '标签',
+      value: tagCount,
+      desc: '个标签',
+      color: '#ec4899',
+    },
+    {
+      icon: '📄',
+      label: '页面',
+      value: pageCount,
+      desc: '页收录',
+      color: '#14b8a6',
+    },
+    {
+      icon: '🎨',
+      label: '坦克',
+      value: 33,
+      desc: '辆原创手绘',
+      color: '#f97316',
+    },
+    {
+      icon: '🔗',
+      label: '友链',
+      value: 4,
+      desc: '个小伙伴',
+      color: '#06b6d4',
+    },
+  ]
+})
 </script>
 
 <template>
