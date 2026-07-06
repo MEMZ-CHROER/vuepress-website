@@ -11109,6 +11109,15 @@ vue@^3.5.25:
     "@vue/server-renderer" "3.5.25"
     "@vue/shared" "3.5.25"
 
+vuepress-plugin-feed2@^2.0.0-rc.16:
+  version "2.0.0-rc.16"
+  resolved "https://registry.yarnpkg.com/vuepress-plugin-feed2/-/vuepress-plugin-feed2-2.0.0-rc.16.tgz#094f6c7bbf95419a0fdc7eed35b9f32516f44701"
+  integrity sha512-tni2cRLaHLp/Pgt8h1YdmJ499+NmuSEJYsdUX2P1G2LJNaqQrZiAkC2WZ1aef4fCiJTPgdC2nbDEJKbnHj+WFA==
+  dependencies:
+    cheerio "1.0.0-rc.12"
+    vuepress-shared "2.0.0-rc.16"
+    xml-js "^1.6.11"
+
 vuepress-plugin-md-enhance@2.0.0-rc.99:
   version "2.0.0-rc.99"
   resolved "https://registry.yarnpkg.com/vuepress-plugin-md-enhance/-/vuepress-plugin-md-enhance-2.0.0-rc.99.tgz#f6b1993597e1906ac21eeb62473de1d8baf76434"
@@ -11385,6 +11394,13 @@ xdg-portable@^7.0.0:
   integrity sha512-sqMMuL1rc0FmMBOzCpd0yuy9trqF2yTTVe+E9ogwCSWQCdDEtQUwrZPT6AxqtsFGRNxycgncbP/xmOOSPw5ZUw==
   dependencies:
     os-paths "^4.0.1"
+
+xml-js@^1.6.11:
+  version "1.6.11"
+  resolved "https://registry.yarnpkg.com/xml-js/-/xml-js-1.6.11.tgz#927d2f6947f7f1c19a316dd8eea3614e8b18f8e9"
+  integrity sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==
+  dependencies:
+    sax "^1.2.4"
 
 xml2js@^0.6.2:
   version "0.6.2"

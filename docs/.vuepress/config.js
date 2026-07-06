@@ -5,6 +5,7 @@ import { viteBundler } from '@vuepress/bundler-vite'
 import { copyrightPlugin } from '@vuepress/plugin-copyright'
 import { markdownChartPlugin } from '@vuepress/plugin-markdown-chart'
 import { sitemapPlugin } from 'vuepress-plugin-sitemap2'
+import { feedPlugin } from 'vuepress-plugin-feed2'
 import markdownItKatex from 'markdown-it-katex'
 
 export default defineUserConfig({
@@ -76,6 +77,17 @@ export default defineUserConfig({
     sitemapPlugin({
       hostname: 'https://www.liuxiyu.cn',
       excludeUrls: ['/404.html'],
+    }),
+
+    // RSS/Atom/JSON 订阅
+    feedPlugin({
+      hostname: 'https://www.liuxiyu.cn',
+      atom: true,
+      rss: true,
+      json: false,
+      count: 20,
+      filter: ({ frontmatter, filePathRelative }) =>
+        !frontmatter.home && !!filePathRelative,
     }),
 
     copyrightPlugin({
