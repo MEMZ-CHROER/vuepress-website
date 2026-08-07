@@ -7,6 +7,7 @@ import { markdownChartPlugin } from '@vuepress/plugin-markdown-chart'
 import { sitemapPlugin } from 'vuepress-plugin-sitemap2'
 import { feedPlugin } from 'vuepress-plugin-feed2'
 import markdownItKatex from 'markdown-it-katex'
+import { readFileSync, writeFileSync } from 'node:fs'
 
 export default defineUserConfig({
   lang: 'zh-CN',
@@ -73,6 +74,39 @@ export default defineUserConfig({
   },
 
   plugins: [
+    // 修复 SSR title 污染：404 页面第一个被渲染，导致所有页面 <title> 都变成"坦克迷路了"
+    {
+      name: 'fix-ssr-title-pollution',
+      onInitialized(app) {
+        // 把 404 页面移到渲染顺序最后，避免它污染后续页面的 SSR head
+        const idx = app.pages.findIndex((page) => page.path === '/404.html')
+        if (idx > -1) {
+          const [notFoundPage] = app.pages.splice(idx, 1)
+          app.pages.push(notFoundPage)
+        }
+      },
+      onGenerated(app) {
+        // 兜底：直接重写每个 HTML 的 <title> 为正确的页面标题
+        const siteTitle = app.siteData.title || ''
+        for (const page of app.pages) {
+          const htmlFilePath = page.htmlFilePath
+          if (!htmlFilePath) continue
+          try {
+            const html = readFileSync(htmlFilePath, 'utf8')
+            const pageTitle = page.title || ''
+            const fullTitle = pageTitle ? `${pageTitle} | ${siteTitle}` : siteTitle
+            const newHtml = html.replace(
+              /<title>[\s\S]*?<\/title>/,
+              `<title>${fullTitle}</title>`
+            )
+            if (newHtml !== html) writeFileSync(htmlFilePath, newHtml)
+          } catch (e) {
+            console.warn(`[fix-ssr-title] 跳过 ${page.path}: ${e.message}`)
+          }
+        }
+      },
+    },
+
     // Sitemap 生成（帮助百度/Google 收录）
     sitemapPlugin({
       hostname: 'https://www.liuxiyu.cn',
