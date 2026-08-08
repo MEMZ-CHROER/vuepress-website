@@ -72,7 +72,7 @@ export default {
   },
   mounted() {
     if (process.env.NODE_ENV !== "development") {
-      this.prefix = "https://api.liuxiyu.cn";
+      this.prefix = "https://www.liuxiyu.cn";
     }
     this.getFile();
   },
