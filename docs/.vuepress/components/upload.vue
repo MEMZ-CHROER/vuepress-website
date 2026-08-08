@@ -70,9 +70,9 @@ export default {
       loading: false,
     };
   },
-  created() {
+  mounted() {
     if (process.env.NODE_ENV !== "development") {
-      this.prefix = "https://notes.chaosmile.com";
+      this.prefix = "https://api.liuxiyu.cn";
     }
     this.getFile();
   },
@@ -92,7 +92,7 @@ export default {
             if (this.inWindow()) {
               window.alert("文件查询失败，请联系管理员");
             }
-            console.error("文件查询失败:", error);
+            console.error("文件查询失败:", data);
             return;
           }
           if (data?.data) {
@@ -106,7 +106,7 @@ export default {
               if (this.inWindow()) {
                 window.alert("文件下载失败，请联系管理员");
               }
-              console.error("文件下载失败:", error);
+              console.error("文件下载失败:", response);
               return;
             }
             const cppContent = await response.json();
@@ -161,23 +161,23 @@ export default {
 
       this.buttonText = "上传中...";
       this.loading = true;
-      const formData = new FormData();
-      formData.append("username", md5("chaosmile"));
-      formData.append("password", md5("chaosmilepassword"));
-      formData.append("file", file);
-      formData.append("filename", this.filename);
-      // console.log("上传的CPP文件内容:", file);
       // 清空input缓存
       this.$refs[this.filename].value = "";
 
-      fetch(`${this.prefix}/api/upload`, {
-        method: "POST",
-        body: formData,
-      })
+      const uploadUrl = `${this.prefix}/api/upload?filename=${encodeURIComponent(this.filename)}&username=${md5("chaosmile")}&password=${md5("chaosmilepassword")}`;
+      file
+        .text()
+        .then((text) =>
+          fetch(uploadUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: text,
+          })
+        )
         .then((response) => response.json())
         .then((data) => {
           this.loading = false;
-          if (data?.code.toString() !== "200") {
+          if (data?.code?.toString() !== "200") {
             if (this.inWindow()) {
               window.alert("上传失败，请重新上传");
             }
