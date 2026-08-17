@@ -8,6 +8,8 @@ import { sitemapPlugin } from 'vuepress-plugin-sitemap2'
 import { feedPlugin } from 'vuepress-plugin-feed2'
 import markdownItKatex from 'markdown-it-katex'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { searchPlugin } from '@vuepress/plugin-search'
+import { pwaPlugin } from '@vuepress/plugin-pwa'
 
 export default defineUserConfig({
   lang: 'zh-CN',
@@ -131,6 +133,22 @@ export default defineUserConfig({
     // 启用 Mermaid 渲染
     markdownChartPlugin({
       mermaid: true,
+    }),
+    // 本地全文搜索（navbar 搜索框）
+    searchPlugin({
+      locales: {
+        '/': { placeholder: '搜索' },
+      },
+    }),
+    // 离线 PWA（可安装 + Service Worker 缓存）
+    pwaPlugin({
+      themeColor: '#6366f1',
+      manifest: {
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+        ],
+      },
     }),
     blogPlugin({
       // Only files under posts are articles
