@@ -6,20 +6,29 @@ import { copyrightPlugin } from '@vuepress/plugin-copyright'
 import { markdownChartPlugin } from '@vuepress/plugin-markdown-chart'
 import { sitemapPlugin } from 'vuepress-plugin-sitemap2'
 import { feedPlugin } from 'vuepress-plugin-feed2'
-import markdownItKatex from 'markdown-it-katex'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { katex } from '@mdit/plugin-katex'
 import { searchPlugin } from '@vuepress/plugin-search'
 import { pwaPlugin } from '@vuepress/plugin-pwa'
+import { markdownExtPlugin } from '@vuepress/plugin-markdown-ext'
+import { markdownStylizePlugin } from '@vuepress/plugin-markdown-stylize'
+
+// 挂载 KaTeX：rc.30 用插件的 extendsMarkdown hook（config.markdown.extendMarkdown 已弃用）
+const katexPlugin = {
+  name: 'vuepress-plugin-katex-compat',
+  extendsMarkdown(md) {
+    md.use(katex)
+  },
+}
 
 export default defineUserConfig({
   lang: 'zh-CN',
 
   title: 'Lxy的博客',
-  description: 'Lxy Powered by VuePress@2.0.0-rc.25',
+  description: 'Lxy Powered by VuePress@2.0.0-rc.30',
   head: [
     ['link', { rel: 'icon', href: 'https://z.wiki/u/MMPFZO' }],
     // 启用 KaTeX 样式
-    ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css' }],
+    ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css' }],
   ],
 
   theme: defaultTheme({
@@ -70,44 +79,24 @@ export default defineUserConfig({
     ],
   }),
 
-  // 启用 KaTeX 渲染（支持 $...$ 与 $$...$$）
-  extendsMarkdown: (md) => {
-    md.use(markdownItKatex)
-  },
-
   plugins: [
-    // 修复 SSR title 污染：404 页面第一个被渲染，导致所有页面 <title> 都变成"坦克迷路了"
-    {
-      name: 'fix-ssr-title-pollution',
-      onInitialized(app) {
-        // 把 404 页面移到渲染顺序最后，避免它污染后续页面的 SSR head
-        const idx = app.pages.findIndex((page) => page.path === '/404.html')
-        if (idx > -1) {
-          const [notFoundPage] = app.pages.splice(idx, 1)
-          app.pages.push(notFoundPage)
-        }
-      },
-      onGenerated(app) {
-        // 兜底：直接重写每个 HTML 的 <title> 为正确的页面标题
-        const siteTitle = app.siteData.title || ''
-        for (const page of app.pages) {
-          const htmlFilePath = page.htmlFilePath
-          if (!htmlFilePath) continue
-          try {
-            const html = readFileSync(htmlFilePath, 'utf8')
-            const pageTitle = page.title || ''
-            const fullTitle = pageTitle ? `${pageTitle} | ${siteTitle}` : siteTitle
-            const newHtml = html.replace(
-              /<title>[\s\S]*?<\/title>/,
-              `<title>${fullTitle}</title>`
-            )
-            if (newHtml !== html) writeFileSync(htmlFilePath, newHtml)
-          } catch (e) {
-            console.warn(`[fix-ssr-title] 跳过 ${page.path}: ${e.message}`)
-          }
-        }
-      },
-    },
+    katexPlugin,
+
+    // Markdown 增强（md-enhance rc.107 拆分后的官方插件形态）
+    // 脚注 / 任务列表 / GFM
+    markdownExtPlugin({
+      footnote: true,
+      tasklist: true,
+      gfm: true,
+    }),
+    // 文本对齐 / 上下标 / 高亮
+    markdownStylizePlugin({
+      align: true,
+      sub: true,
+      sup: true,
+      mark: true,
+    }),
+    // 选项卡 tabs/codeTabs 由 theme-default rc.132 内置（无需单独配置）
 
     // Sitemap 生成（帮助百度/Google 收录）
     sitemapPlugin({

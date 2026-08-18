@@ -1,0 +1,16 @@
+diff --git a/node_modules/@vuepress/bundler-vite/dist/index.js b/node_modules/@vuepress/bundler-vite/dist/index.js
+index f9efe58..82a4974 100644
+--- a/node_modules/@vuepress/bundler-vite/dist/index.js
++++ b/node_modules/@vuepress/bundler-vite/dist/index.js
+@@ -339,10 +339,10 @@ const build$1 = async (options, app) => {
+ 		const clientEntryChunk = clientOutput.output.find((item) => item.type === "chunk" && item.isEntry);
+ 		const clientCssAsset = clientOutput.output.find((item) => item.type === "asset" && item.fileName.endsWith(".css"));
+ 		const serverEntryChunk = serverOutput.output.find((item) => item.type === "chunk" && item.isEntry);
+-		const { vueApp, vueRouter } = await createVueServerApp(app.dir.temp(".server", serverEntryChunk.fileName));
+ 		const ssrTemplate = await getSsrTemplate(app);
+ 		for (const page of app.pages) {
+ 			if (spinner) spinner.text = `Rendering pages ${colors.magenta(page.path)}`;
++			const { vueApp, vueRouter } = await createVueServerApp(app.dir.temp(".server", serverEntryChunk.fileName));
+ 			await renderPage({
+ 				app,
+ 				page,
