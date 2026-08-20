@@ -15,10 +15,10 @@
     "vuepress": "vuepress",
     "gitsync": "git pull --rebase origin master",
     "gitadd": "git add -A",
-    "gitcommit": "git commit -m \"deploy $(date +%Y-%m-%d_%H%M%S)\"",
+    "gitcommit": "git commit",
     "gitpush": "git push -u origin master",
     "verceldeploy": "vercel --prod",
-    "deploy": "yarn gitadd && yarn gitcommit && yarn gitsync && yarn gitpush && yarn verceldeploy"
+    "deploy": "yarn gitadd && yarn gitcommit && yarn gitsync && yarn gitpush"
   },
   "devDependencies": {
     "@docsearch/js": "^3.9.0",
