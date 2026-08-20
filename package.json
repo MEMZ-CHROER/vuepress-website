@@ -19,6 +19,8 @@
     "vuepress": "vuepress",
     "gitadd": "git add -A",
     "push": "git pull --rebase origin master && git push -u origin master",
+    "vercel": "vercel --prod",
+    "deploy": "yarn gitadd && yarn commit && yarn push && yarn vercel",
     "commit": "git commit",
     "dev": "vuepress dev docs",
     "start": "echo 请使用 yarn dev 来本地开发",
