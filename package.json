@@ -86,6 +86,8 @@
     "@vue/compiler-dom": "3.5.41",
     "@vue/compiler-sfc": "3.5.41",
     "**/vue": "3.5.41",
-    "@vercel/vc-native-darwin-x64": "0.0.0"
+    "@vercel/vc-native-darwin-x64": "0.0.0",
+    "@vuepress/bundler-vite": "2.0.0-rc.30",
+    "vuepress": "2.0.0-rc.30"
   }
 }
