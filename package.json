@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "i": "yarn run inst",
-    "inst": "yarn --force --non-interactive ",
+    "inst": "yarn --non-interactive ",
     "postinstall": "patch-package",
     "dev": "vuepress dev docs",
     "build": "vuepress build docs",
