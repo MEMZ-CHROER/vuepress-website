@@ -15,7 +15,7 @@
     "vuepress": "vuepress",
     "gitsync": "git pull --rebase origin master",
     "gitadd": "git add -A",
-    "gitcommit": "git commit",
+    "gitcommit": "git commit -m \"deploy $(date +%Y-%m-%d_%H%M%S)\"",
     "gitpush": "git push -u origin master",
     "verceldeploy": "vercel --prod",
     "deploy": "yarn gitadd && yarn gitcommit && yarn gitsync && yarn gitpush && yarn verceldeploy"
@@ -58,7 +58,7 @@
     "vite": "^7.1.5",
     "vp-update": "^2.0.0-rc.15",
     "vue": "^3.5.41",
-    "vuepress": "2.0.0-rc.31",
+    "vuepress": "2.0.0-rc.30",
     "vuepress-plugin-md-enhance": "2.0.0-rc.107",
     "wmic": "^1.1.1",
     "wrappy": "^1.0.2",
