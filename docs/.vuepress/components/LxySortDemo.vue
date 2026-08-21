@@ -88,10 +88,11 @@ function radixSort(a, l, r) {
 function lxySortRange(a, l, r) {
   if (l >= r) return;
   const { unordered, mx, mn } = isUnorderedEx(a, l, r);
-  if (!unordered) return;
-  if (mx - mn < 20) { countingSort(a, l, r); return; }
-  if (a[r] < a[l] && (r - l + 1) <= 64) { [a[l], a[r]] = [a[r], a[l]]; jwjSort(a, l, r); return; }
-  if (mn > 0 && mx <= 99999) { radixSort(a, l, r); return; }
+  if (!unordered) { used += " → 中间段已有序"; return; }
+  if (mx - mn < 20) { used += " → countingSort 计数"; countingSort(a, l, r); return; }
+  if (a[r] < a[l] && (r - l + 1) <= 64) { used += " → jwjSort 鸡尾酒"; [a[l], a[r]] = [a[r], a[l]]; jwjSort(a, l, r); return; }
+  if (mn > 0 && mx <= 99999) { used += " → radixSort 基数"; radixSort(a, l, r); return; }
+  used += " → quickSort 快排";
   const limit = 2 * Math.log2(r - l + 1) + 1;
   quickSortInner(a, l, r, 0, limit);
 }
@@ -115,7 +116,7 @@ function lxySort(a, m) {
   if (posMin === n - 1) posMin = posMax;
   [a[posMin], a[0]] = [a[0], a[posMin]];
 
-  used = "隔离 min→最左, max→最右 + 中间段";
+  used = "隔离 min→最左, max→最右，中间段";
   lxySortRange(a, 1, n - 2);   // 中间段 [1, n-2]
 }
 
