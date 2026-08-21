@@ -32,6 +32,15 @@ export default defineUserConfig({
     navbar: [
       "/",
       {
+        text: "📝 博客",
+        children: [
+          { text: "📚 全部文章", link: "/article/" },
+          { text: "🏷️ 标签", link: "/tag/" },
+          { text: "📂 分类", link: "/category/" },
+          { text: "🕐 时间线", link: "/timeline/" },
+        ],
+      },
+      {
         text: "📋 附件表",
         link: "/fujian/",
       },
