@@ -59,46 +59,44 @@ tag:
 
 本站基于 **VuePress 2 + vuepress-theme-hope**，当前启用的插件：
 
-```text
-@vuepress/bundler-vite@2.0.0-rc.30
-@vuepress/plugin-active-header-links@2.0.0-rc.130
-@vuepress/plugin-back-to-top@2.0.0-rc.130
-@vuepress/plugin-blog@2.0.0-rc.130
-@vuepress/plugin-catalog@2.0.0-rc.130
-@vuepress/plugin-comment@2.0.0-rc.130
-@vuepress/plugin-copy-code@2.0.0-rc.130
-@vuepress/plugin-copyright@2.0.0-rc.130
-@vuepress/plugin-feed@2.0.0-rc.130
-@vuepress/plugin-git@2.0.0-rc.130
-@vuepress/plugin-icon@2.0.0-rc.130
-@vuepress/plugin-links-check@2.0.0-rc.130
-@vuepress/plugin-markdown-chart@2.0.0-rc.130
-@vuepress/plugin-markdown-ext@2.0.0-rc.130
-@vuepress/plugin-markdown-hint@2.0.0-rc.130
-@vuepress/plugin-markdown-image@2.0.0-rc.130
-@vuepress/plugin-markdown-include@2.0.0-rc.130
-@vuepress/plugin-markdown-math@2.0.0-rc.130
-@vuepress/plugin-markdown-preview@2.0.0-rc.130
-@vuepress/plugin-markdown-stylize@2.0.0-rc.130
-@vuepress/plugin-markdown-tab@2.0.0-rc.130
-@vuepress/plugin-notice@2.0.0-rc.130
-@vuepress/plugin-nprogress@2.0.0-rc.130
-@vuepress/plugin-photo-swipe@2.0.0-rc.130
-@vuepress/plugin-pwa@2.0.0-rc.130
-@vuepress/plugin-reading-time@2.0.0-rc.130
-@vuepress/plugin-redirect@2.0.0-rc.130
-@vuepress/plugin-rtl@2.0.0-rc.130
-@vuepress/plugin-sass-palette@2.0.0-rc.130
-@vuepress/plugin-seo@2.0.0-rc.130
-@vuepress/plugin-shiki@2.0.0-rc.130
-@vuepress/plugin-sitemap@2.0.0-rc.130
-@vuepress/plugin-slimsearch@2.0.0-rc.130
-@vuepress/plugin-theme-data@2.0.0-rc.130
-vuepress-plugin-components@2.0.0-rc.107
-vuepress-plugin-md-enhance@2.0.0-rc.107
-vuepress-theme-hope@2.0.0-rc.107
-vuepress@2.0.0-rc.30
-```
+- [@vuepress/bundler-vite@2.0.0-rc.30](https://v2.vuepress.vuejs.org/zh/reference/bundler/vite.html)
+- [@vuepress/plugin-active-header-links@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/development/active-header-links.html)
+- [@vuepress/plugin-back-to-top@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/back-to-top.html)
+- [@vuepress/plugin-blog@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/blog/blog.html)
+- [@vuepress/plugin-catalog@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/catalog.html)
+- [@vuepress/plugin-comment@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/blog/comment/)
+- [@vuepress/plugin-copy-code@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/copy-code.html)
+- [@vuepress/plugin-copyright@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/copyright.html)
+- [@vuepress/plugin-feed@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/blog/feed/config.html)
+- [@vuepress/plugin-git@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/development/git.html)
+- [@vuepress/plugin-icon@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/icon.html)
+- [@vuepress/plugin-links-check@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/links-check.html)
+- [@vuepress/plugin-markdown-chart@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-chart/)
+- [@vuepress/plugin-markdown-ext@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-ext.html)
+- [@vuepress/plugin-markdown-hint@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-hint.html)
+- [@vuepress/plugin-markdown-image@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-image.html)
+- [@vuepress/plugin-markdown-include@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-include.html)
+- [@vuepress/plugin-markdown-math@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-math.html)
+- [@vuepress/plugin-markdown-preview@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-preview.html)
+- [@vuepress/plugin-markdown-stylize@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-stylize.html)
+- [@vuepress/plugin-markdown-tab@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/markdown-tab.html)
+- [@vuepress/plugin-notice@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/notice.html)
+- [@vuepress/plugin-nprogress@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/nprogress.html)
+- [@vuepress/plugin-photo-swipe@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/photo-swipe.html)
+- [@vuepress/plugin-pwa@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/pwa/pwa.html)
+- [@vuepress/plugin-reading-time@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/development/reading-time.html)
+- [@vuepress/plugin-redirect@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/tools/redirect.html)
+- [@vuepress/plugin-rtl@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/development/rtl.html)
+- [@vuepress/plugin-sass-palette@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/development/sass-palette.html)
+- [@vuepress/plugin-seo@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/seo/seo.html)
+- [@vuepress/plugin-shiki@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/markdown/shiki.html)
+- [@vuepress/plugin-sitemap@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/seo/sitemap.html)
+- [@vuepress/plugin-slimsearch@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/search/slimsearch.html)
+- [@vuepress/plugin-theme-data@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/development/theme-data.html)
+- [vuepress-plugin-components@2.0.0-rc.107](https://plugin-components.vuejs.press/)
+- [vuepress-plugin-md-enhance@2.0.0-rc.107](https://plugin-md-enhance.vuejs.press/)
+- [vuepress-theme-hope@2.0.0-rc.107](https://theme-hope.vuejs.press/zh/)
+- [vuepress@2.0.0-rc.30](https://v2.vuepress.vuejs.org/zh/)
 
 ## 🎯 未来的想法
 
