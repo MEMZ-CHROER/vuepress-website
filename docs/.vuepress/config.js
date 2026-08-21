@@ -2,13 +2,21 @@ import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { hopeTheme } from "vuepress-theme-hope";
 
+// base 路径：默认根路径（Vercel 主站 / 本地 dev），
+// GitHub Pages 构建时通过环境变量 VUEPRESS_BASE 注入子路径 /vuepress-website/
+const base = process.env.VUEPRESS_BASE || "/";
+
+// 资源统一加 base 前缀，保证在子路径部署（GitHub Pages）下也能正确加载
+const asset = (p) => `${base.replace(/\/$/, "")}${p.startsWith("/") ? p : `/${p}`}`;
+
 export default defineUserConfig({
   lang: "zh-CN",
+  base,
 
   title: "Lxy的博客",
   description: "Lxy Powered by VuePress@2.0.0-rc.30",
   head: [
-    ["link", { rel: "icon", href: "/icons/icon-192.png", type: "image/png" }],
+    ["link", { rel: "icon", href: asset("/icons/icon-192.png"), type: "image/png" }],
     // KaTeX 样式（theme-hope 的 markdown.math 也会注入，重复无害）
     [
       "link",
@@ -19,7 +27,7 @@ export default defineUserConfig({
   theme: hopeTheme({
     hostname: "https://www.liuxiyu.cn",
     author: "lxy",
-    logo: "/icons/icon-512.png",
+    logo: asset("/icons/icon-512.png"),
 
     navbar: [
       "/",
@@ -113,8 +121,8 @@ export default defineUserConfig({
         themeColor: "#6366f1",
         manifest: {
           icons: [
-            { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-            { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+            { src: asset("/icons/icon-192.png"), sizes: "192x192", type: "image/png" },
+            { src: asset("/icons/icon-512.png"), sizes: "512x512", type: "image/png" },
           ],
         },
       },

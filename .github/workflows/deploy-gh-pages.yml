@@ -1,0 +1,47 @@
+# 部署到 GitHub Pages（作为 cdn.liuxiyu.cn 的备份站 / CDN）
+# 触发条件：push 到 master（与 Vercel 自动部署共用一次 push）
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        # 与 AGENTS.md 一致，只用 yarn
+        run: yarn --non-interactive
+
+      - name: Build
+        run: yarn build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # 用内置 GITHUB_TOKEN 即可部署到 gh-pages 分支
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # VuePress 构建产物目录
+          publish_dir: docs/.vuepress/dist
+          # 部署到的分支（GitHub Pages 常用 gh-pages）
+          publish_branch: gh-pages
+          # 保留 CNAME 自定义域名（cdn.liuxiyu.cn）
+          keep_files: false
