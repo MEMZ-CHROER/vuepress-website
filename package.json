@@ -34,7 +34,7 @@
   "devDependencies": {
     "@docsearch/js": "^3.9.0",
     "@mdit/plugin-katex": "^1.1.0",
-    "@vuepress/bundler-vite": "2.0.0-rc.30",
+    "@vuepress/bundler-vite": "^2.0.0-rc.30",
     "@vuepress/plugin-blog": "2.0.0-rc.131",
     "@vuepress/plugin-markdown-chart": "2.0.0-rc.132",
     "@vuepress/plugin-markdown-ext": "2.0.0-rc.132",

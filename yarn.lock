@@ -2274,7 +2274,7 @@
   resolved "https://registry.npmmirror.com/@vue/shared/-/shared-3.5.41.tgz#ac476497f74495f7525087270849841756555cf2"
   integrity sha512-IOnwSCma8j+9xJT6b8H0dEYidC80NsYmNMlZxRsukYcSoGaDBohog5hDxzeUXdFeGWFA++vWvxqOmrr96VlqMA==
 
-"@vuepress/bundler-vite@2.0.0-rc.30":
+"@vuepress/bundler-vite@2.0.0-rc.30", "@vuepress/bundler-vite@^2.0.0-rc.30":
   version "2.0.0-rc.30"
   resolved "https://registry.npmmirror.com/@vuepress/bundler-vite/-/bundler-vite-2.0.0-rc.30.tgz#81921d15df0d53c8b4aef3bded2bd4efe9fc952d"
   integrity sha512-Glfi6JQIbSTpQDuYR3e4VDF6iMgdZixQLHtry4tidYSeSudeZgL1yzxIxO4B5hRoflP+Xre7Fy3r0ilGZSitXg==
