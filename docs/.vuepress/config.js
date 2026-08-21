@@ -8,7 +8,7 @@ export default defineUserConfig({
   title: "Lxy的博客",
   description: "Lxy Powered by VuePress@2.0.0-rc.30",
   head: [
-    ["link", { rel: "icon", href: "https://z.wiki/u/MMPFZO" }],
+    ["link", { rel: "icon", href: "/icons/icon-192.png", type: "image/png" }],
     // KaTeX 样式（theme-hope 的 markdown.math 也会注入，重复无害）
     [
       "link",

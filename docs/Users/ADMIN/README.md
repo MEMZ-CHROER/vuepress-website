@@ -5,7 +5,6 @@ heroImage: ""
 heroText: Lxy's Blog-AdministratorMode
 tagline: Cannot access this page unless you're an administrator
 
-# https://z.wiki/u/TI9MI0
 actions:
   - text: Tank-Pics
     link: /tanks/

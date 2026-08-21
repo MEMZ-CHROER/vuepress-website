@@ -5,7 +5,6 @@ heroImage: ""
 heroText: Lxy和核巨啸的坦克网站
 tagline: 🎨 一个关于手绘坦克、编程学习和奇思妙想的网站
 
-# https://z.wiki/u/TI9MI0
 actions:
   - text: 🎨 核巨啸的坦克们
     link: /tanks/

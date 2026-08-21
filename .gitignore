@@ -143,3 +143,6 @@ server_sts_url.js
 
 # AI agent 项目说明（本地维护，不入库）
 AGENTS.md
+
+# pi 后台任务产物（不入库）
+.pi/
