@@ -79,6 +79,9 @@ export default defineUserConfig({
       mermaid: true,
       // markdown-math（katex）
       math: true,
+      // markdown-tab（选项卡）
+      tabs: true,
+      codeTabs: true,
     },
 
     // 插件（内置，替代原独立插件：blog / sitemap2 / feed2 / search / pwa / copyright）
@@ -115,6 +118,31 @@ export default defineUserConfig({
           ],
         },
       },
+      // 图片点击放大预览
+      photoSwipe: true,
+      // 代码块复制按钮
+      copyCode: true,
+      // 文章阅读时间
+      readingTime: true,
+      // 文章自动目录
+      catalog: true,
+      // 最后更新时间 / 贡献者
+      git: true,
+      // Font Awesome 图标（markdown 里用 :icon: 语法）
+      icon: true,
+      // 常用组件（Badge / BiliBili 视频 / PDF / 代码演示 / 分享）
+      components: {
+        components: ["Badge", "BiliBili", "CodePen", "PDF", "Share"],
+      },
+      // 公告弹窗
+      notice: [
+        {
+          path: "/",
+          title: "🚀 欢迎",
+          content: "欢迎来到 Lxy 的博客！本站已升级 theme-hope 主题。",
+          showOnce: true,
+        },
+      ],
     },
   }),
 
