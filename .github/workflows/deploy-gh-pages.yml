@@ -28,8 +28,9 @@ jobs:
           cache: yarn
 
       - name: Install dependencies
-        # 与 AGENTS.md 一致，只用 yarn
-        run: yarn --non-interactive
+        # 与 AGENTS.md 一致，只用 yarn。
+        # vuepress-theme-hope@rc.107 engines 要求 yarn>=2，但项目用 yarn1，需 --ignore-engines。
+        run: yarn --non-interactive --ignore-engines
 
       - name: Build
         run: yarn build
