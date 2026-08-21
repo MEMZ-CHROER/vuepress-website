@@ -1,11 +1,10 @@
 ---
 date: 2022-01-08
-category:
-  - CategoryA
-  - CategoryB
 tag:
   - 数学
   - 幻方
+category:
+  - 数学
 ---
 
 # Article 8

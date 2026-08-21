@@ -1,10 +1,10 @@
 ---
 date: 2022-01-02
-category:
-  - CategoryA
 tag:
   - 坦克
   - 设计
+category:
+  - 坦克
 ---
 
 # Article 2

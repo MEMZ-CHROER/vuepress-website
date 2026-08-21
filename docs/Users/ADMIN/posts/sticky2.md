@@ -1,10 +1,10 @@
 ---
 date: 2020-01-01
-category:
-  - CategoryC
 sticky: 10
 tag:
   - 置顶
+  - 随笔
+category:
   - 随笔
 ---
 

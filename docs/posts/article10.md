@@ -1,11 +1,10 @@
 ---
 date: 2022-01-10
-category:
-  - CategoryA
-  - CategoryB
 tag:
   - 随笔
   - 日常
+category:
+  - 随笔
 ---
 
 # Article 10

@@ -1,11 +1,10 @@
 ---
 date: 2022-01-04
-category:
-  - CategoryA
-  - CategoryB
 tag:
   - C++
   - 入门
+category:
+  - C++学习
 ---
 
 # Article 4

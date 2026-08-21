@@ -1,11 +1,10 @@
 ---
 date: 2022-01-06
-category:
-  - CategoryA
-  - CategoryB
 tag:
   - C++
   - 指针
+category:
+  - C++学习
 ---
 
 # Article 6

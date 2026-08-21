@@ -1,11 +1,11 @@
 ---
 date: 1998-01-01
-category:
-  - History
 archive: true
 tag:
   - 历史
   - 一战
+category:
+  - 历史
 ---
 
 # Archive Article1

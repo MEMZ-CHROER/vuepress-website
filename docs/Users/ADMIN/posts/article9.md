@@ -1,11 +1,10 @@
 ---
 date: 2022-01-09
-category:
-  - CategoryA
-  - CategoryB
 tag:
   - 学习
   - 笔记
+category:
+  - 学习
 ---
 
 # Article 9

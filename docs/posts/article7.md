@@ -1,11 +1,10 @@
 ---
 date: 2022-01-07
-category:
-  - CategoryA
-  - CategoryB
 tag:
   - HTML
   - 网页
+category:
+  - HTML
 ---
 
 # Article 7

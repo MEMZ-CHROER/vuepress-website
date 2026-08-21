@@ -1,10 +1,10 @@
 ---
 date: 2022-01-01
-category:
-  - CategoryA
 tag:
   - 坦克
   - 手绘
+category:
+  - 坦克
 ---
 
 # Article 1

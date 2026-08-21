@@ -1,11 +1,10 @@
 ---
 date: 2022-01-12
-category:
-  - CategoryA
-  - CategoryB
 tag:
   - C++
   - 编程
+category:
+  - C++学习
 ---
 
 # Article 12

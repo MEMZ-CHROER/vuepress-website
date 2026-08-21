@@ -1,7 +1,6 @@
 ---
 category:
-  - CategoryA
-  - CategoryB
+  - 工具
 tag:
   - 工具
 ---

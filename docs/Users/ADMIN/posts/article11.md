@@ -1,11 +1,10 @@
 ---
 date: 2022-01-11
-category:
-  - CategoryA
-  - CategoryB
 tag:
   - 坦克
   - 图鉴
+category:
+  - 坦克
 ---
 
 # Article 11
