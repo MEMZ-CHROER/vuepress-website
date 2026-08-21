@@ -1,24 +1,6 @@
-import { blogPlugin } from "@vuepress/plugin-blog";
-import { defaultTheme } from "@vuepress/theme-default";
 import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
-import { copyrightPlugin } from "@vuepress/plugin-copyright";
-import { markdownChartPlugin } from "@vuepress/plugin-markdown-chart";
-import { sitemapPlugin } from "vuepress-plugin-sitemap2";
-import { feedPlugin } from "vuepress-plugin-feed2";
-import { katex } from "@mdit/plugin-katex";
-import { searchPlugin } from "@vuepress/plugin-search";
-import { pwaPlugin } from "@vuepress/plugin-pwa";
-import { markdownExtPlugin } from "@vuepress/plugin-markdown-ext";
-import { markdownStylizePlugin } from "@vuepress/plugin-markdown-stylize";
-
-// 挂载 KaTeX：rc.30 用插件的 extendsMarkdown hook（config.markdown.extendMarkdown 已弃用）
-const katexPlugin = {
-  name: "vuepress-plugin-katex-compat",
-  extendsMarkdown(md) {
-    md.use(katex);
-  },
-};
+import { hopeTheme } from "vuepress-theme-hope";
 
 export default defineUserConfig({
   lang: "zh-CN",
@@ -27,14 +9,16 @@ export default defineUserConfig({
   description: "Lxy Powered by VuePress@2.0.0-rc.30",
   head: [
     ["link", { rel: "icon", href: "https://z.wiki/u/MMPFZO" }],
-    // 启用 KaTeX 样式
+    // KaTeX 样式（theme-hope 的 markdown.math 也会注入，重复无害）
     [
       "link",
       { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" },
     ],
   ],
 
-  theme: defaultTheme({
+  theme: hopeTheme({
+    hostname: "https://www.liuxiyu.cn",
+    author: "lxy",
     logo: "https://z.wiki/u/UVdSlT",
 
     navbar: [
@@ -79,166 +63,60 @@ export default defineUserConfig({
         link: "https://www.github.com/MEMZ-CHROER/vuepress-test",
       },
     ],
-  }),
 
-  plugins: [
-    katexPlugin,
-
-    // Markdown 增强（md-enhance rc.107 拆分后的官方插件形态）
-    // 脚注 / 任务列表 / GFM
-    markdownExtPlugin({
+    // Markdown 增强（内置，替代原 markdown-ext / stylize / chart / katex 插件）
+    markdown: {
+      // markdown-ext
+      gfm: true,
       footnote: true,
       tasklist: true,
-      gfm: true,
-    }),
-    // 文本对齐 / 上下标 / 高亮
-    markdownStylizePlugin({
+      // markdown-stylize
       align: true,
       sub: true,
       sup: true,
       mark: true,
-    }),
-    // 选项卡 tabs/codeTabs 由 theme-default rc.132 内置（无需单独配置）
-
-    // Sitemap 生成（帮助百度/Google 收录）
-    sitemapPlugin({
-      hostname: "https://www.liuxiyu.cn",
-      excludeUrls: ["/404.html"],
-    }),
-
-    // RSS/Atom/JSON 订阅
-    feedPlugin({
-      hostname: "https://www.liuxiyu.cn",
-      atom: true,
-      rss: true,
-      json: false,
-      count: 20,
-      filter: ({ frontmatter, filePathRelative }) => !frontmatter.home && !!filePathRelative,
-    }),
-
-    copyrightPlugin({
-      author: "lxy",
-      license: "MIT",
-    }),
-    // 启用 Mermaid 渲染
-    markdownChartPlugin({
+      // markdown-chart
       mermaid: true,
-    }),
-    // 本地全文搜索（navbar 搜索框）
-    searchPlugin({
-      locales: {
-        "/": { placeholder: "搜索" },
+      // markdown-math（katex）
+      math: true,
+    },
+
+    // 插件（内置，替代原独立插件：blog / sitemap2 / feed2 / search / pwa / copyright）
+    plugins: {
+      // 博客（只把 posts/ 下当文章，沿用原 blogPlugin 的行为）
+      blog: {
+        filter: ({ filePathRelative }) =>
+          filePathRelative?.startsWith("posts/") ?? false,
+        excerpt: true,
       },
-    }),
-    // 离线 PWA（可安装 + Service Worker 缓存）
-    pwaPlugin({
-      themeColor: "#6366f1",
-      manifest: {
-        icons: [
-          { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-          { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-        ],
+      // 本地全文搜索（替代 @vuepress/plugin-search）
+      slimsearch: true,
+      // 站点地图
+      sitemap: true,
+      // RSS/Atom 订阅
+      feed: {
+        atom: true,
+        rss: true,
+        json: false,
+        count: 20,
       },
-    }),
-    blogPlugin({
-      // Only files under posts are articles
-      filter: ({ filePathRelative }) =>
-        filePathRelative ? filePathRelative.startsWith("posts/") : false,
-
-      // Getting article info
-      getInfo: ({ frontmatter, title, data }) => ({
-        title,
-        author: frontmatter.author || "",
-        date: frontmatter.date || null,
-        category: frontmatter.category || [],
-        tag: frontmatter.tag || [],
-        excerpt:
-          // Support manually set excerpt through frontmatter
-          typeof frontmatter.excerpt === "string" ? frontmatter.excerpt : data?.excerpt || "",
-      }),
-
-      // Generate excerpt for all pages excerpt those users choose to disable
-      excerptFilter: ({ frontmatter }) =>
-        !frontmatter.home &&
-        frontmatter.excerpt !== false &&
-        typeof frontmatter.excerpt !== "string",
-
-      category: [
-        {
-          key: "category",
-          getter: (page) => page.frontmatter.category || [],
-          layout: "Category",
-          itemLayout: "Category",
-          frontmatter: () => ({
-            title: "Categories",
-            sidebar: false,
-          }),
-          itemFrontmatter: (name) => ({
-            title: `Category ${name}`,
-            sidebar: false,
-          }),
+      // 版权信息
+      copyright: {
+        author: "lxy",
+        license: "MIT",
+      },
+      // 离线 PWA
+      pwa: {
+        themeColor: "#6366f1",
+        manifest: {
+          icons: [
+            { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+            { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+          ],
         },
-        {
-          key: "tag",
-          getter: (page) => page.frontmatter.tag || [],
-          layout: "Tag",
-          itemLayout: "Tag",
-          frontmatter: () => ({
-            title: "Tags",
-            sidebar: false,
-          }),
-          itemFrontmatter: (name) => ({
-            title: `Tag ${name}`,
-            sidebar: false,
-          }),
-        },
-      ],
-
-      type: [
-        {
-          key: "article",
-          // Remove archive articles
-          filter: (page) => !page.frontmatter.archive,
-          layout: "Article",
-          frontmatter: () => ({
-            title: "Articles",
-            sidebar: false,
-          }),
-          // Sort pages with time and sticky
-          sorter: (pageA, pageB) => {
-            if (pageA.frontmatter.sticky && pageB.frontmatter.sticky)
-              return pageB.frontmatter.sticky - pageA.frontmatter.sticky;
-
-            if (pageA.frontmatter.sticky && !pageB.frontmatter.sticky) return -1;
-
-            if (!pageA.frontmatter.sticky && pageB.frontmatter.sticky) return 1;
-
-            if (!pageB.frontmatter.date) return 1;
-            if (!pageA.frontmatter.date) return -1;
-
-            return (
-              new Date(pageB.frontmatter.date).getTime() -
-              new Date(pageA.frontmatter.date).getTime()
-            );
-          },
-        },
-        {
-          key: "timeline",
-          // Only article with date should be added to timeline
-          filter: (page) => page.frontmatter.date instanceof Date,
-          // Sort pages with time
-          sorter: (pageA, pageB) =>
-            new Date(pageB.frontmatter.date).getTime() - new Date(pageA.frontmatter.date).getTime(),
-          layout: "Timeline",
-          frontmatter: () => ({
-            title: "Timeline",
-            sidebar: false,
-          }),
-        },
-      ],
-      hotReload: true,
-    }),
-  ],
+      },
+    },
+  }),
 
   bundler: viteBundler(),
 });

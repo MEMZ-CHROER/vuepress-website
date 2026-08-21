@@ -1,19 +1,19 @@
 <script setup>
 import { usePageFrontmatter } from "vuepress/client";
-import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
+import { Layout } from "vuepress-theme-hope/client";
 
 const frontmatter = usePageFrontmatter();
 </script>
 
 <template>
-  <ParentLayout>
+  <Layout>
     <!-- 页面底部插入评论区（排除首页和特定页面） -->
-    <template #page-bottom>
+    <template #pageBottom>
       <div v-if="!frontmatter.home && frontmatter.comment !== false" class="comment-section">
         <Comment />
       </div>
     </template>
-  </ParentLayout>
+  </Layout>
 
   <!-- 全局彩蛋 -->
   <EasterEgg />
