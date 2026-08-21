@@ -76,7 +76,6 @@
   },
   "resolutions": {
     "**/vue": "3.5.41",
-    "@oxfmt/binding-win32-x64-msvc": "0.63.0",
     "@vue/compiler-core": "3.5.41",
     "@vue/compiler-dom": "3.5.41",
     "@vue/compiler-sfc": "3.5.41",
