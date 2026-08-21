@@ -7,7 +7,7 @@ defineProps({
   },
   /** Whether is timeline or not */
   isTimeline: Boolean,
-})
+});
 </script>
 
 <template>
@@ -26,15 +26,18 @@ defineProps({
       <div class="article-meta">
         <span v-if="info.sticky" class="sticky-badge">📌 置顶</span>
         <span v-if="info.date" class="date-badge">
-          {{ new Date(info.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }) }}
+          {{
+            new Date(info.date).toLocaleDateString("zh-CN", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }}
         </span>
       </div>
 
       <header class="title">
-        {{
-          (isTimeline ? `${new Date(info.date).toLocaleDateString()}: ` : '') +
-          info.title
-        }}
+        {{ (isTimeline ? `${new Date(info.date).toLocaleDateString()}: ` : "") + info.title }}
       </header>
 
       <hr />
@@ -49,11 +52,11 @@ defineProps({
         </span>
 
         <span v-if="info.category" class="category">
-          <span class="info-icon">📂</span> {{ info.category.join(', ') }}
+          <span class="info-icon">📂</span> {{ info.category.join(", ") }}
         </span>
 
         <span v-if="info.tag" class="tag">
-          <span class="info-icon">🏷️</span> {{ info.tag.join(', ') }}
+          <span class="info-icon">🏷️</span> {{ info.tag.join(", ") }}
         </span>
       </div>
 
@@ -101,7 +104,7 @@ defineProps({
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -159,7 +162,7 @@ defineProps({
     transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       inset-inline-start: 0;
@@ -219,10 +222,20 @@ defineProps({
     line-height: 1.7;
     color: var(--c-text-light);
 
-    :deep(h1) { display: none; }
-    :deep(h2) { font-size: 1.2em; margin: 0.6rem 0; }
-    :deep(h3) { font-size: 1.1em; margin: 0.5rem 0; }
-    :deep(p) { margin: 0.4rem 0; }
+    :deep(h1) {
+      display: none;
+    }
+    :deep(h2) {
+      font-size: 1.2em;
+      margin: 0.6rem 0;
+    }
+    :deep(h3) {
+      font-size: 1.1em;
+      margin: 0.5rem 0;
+    }
+    :deep(p) {
+      margin: 0.4rem 0;
+    }
   }
 }
 

@@ -21,17 +21,17 @@ actions:
     type: thirdary
   - text: 🌐 HTML学习
     link: /Learning/HTML/
-    type: thirdary 
+    type: thirdary
   - text: ⚡ C++学习
     link: /Learning/C++/
-    type: thirdary 
+    type: thirdary
   - text: 🔢 数学三阶幻方
     link: /maths/
     type: thirdary
 
 features:
   - title: 🌱 种花（劳技课展示）
-    details: 奶茶杯再次利用，水培和土培枇杷核养成的幼苗  
+    details: 奶茶杯再次利用，水培和土培枇杷核养成的幼苗
   - title: 🎨 核巨啸的坦克和飞机们
     details: 这是一个关于核巨啸的坦克们的展示区，30+辆原创手绘坦克
   - title: 📦 下载区（夸克网盘）
@@ -47,7 +47,6 @@ features:
 ICP备案号：<a href="https://beian.miit.gov.cn/">津ICP备2026006589号-1</a>
 
 ICP主体备案号：<a href="https://beian.miit.gov.cn/">津ICP备2026006589号</a>
-
 
 若要查看许可协议，请点击[LICENSE][Lxy_MIT_License]查看协议
 <a href="./Users/ADMIN/">Administrator-Mode</a>

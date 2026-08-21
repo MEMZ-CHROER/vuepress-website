@@ -18,15 +18,15 @@ actions:
     type: thirdary
   - text: learning/html
     link: /Learning/HTML/
-    type: thirdary 
+    type: thirdary
   - text: learning/c++
     link: /Learning/C++/
-    type: thirdary 
+    type: thirdary
 
 features:
   - title: Admin-Mode
-    details: Cannot access this page unless you are an administrator.  
-footer: MIT Licensed | Copyright (c) 2024 (Github)MEMZ-CHROER，LiuXiYu，核巨啸 
+    details: Cannot access this page unless you are an administrator.
+footer: MIT Licensed | Copyright (c) 2024 (Github)MEMZ-CHROER，LiuXiYu，核巨啸
 ---
 
 若要查看许可协议，请点击[LICENSE][Lxy_MIT_License]查看协议

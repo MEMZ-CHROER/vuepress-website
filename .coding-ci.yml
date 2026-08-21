@@ -10,11 +10,10 @@
 master:
   push:
     - stages:
-      - name: echo
-        script: echo "CI build"
-      - name: echo2
-        script: echo "hello world2"
-
+        - name: echo
+          script: echo "CI build"
+        - name: echo2
+          script: echo "hello world2"
 
 # 这个案例描述的流程如下：
 

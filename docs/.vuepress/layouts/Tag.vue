@@ -1,11 +1,11 @@
 <script setup>
-import { useBlogCategory } from '@vuepress/plugin-blog/client'
-import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
-import { RouteLink, useRoute } from 'vuepress/client'
-import ArticleList from '../components/ArticleList.vue'
+import { useBlogCategory } from "@vuepress/plugin-blog/client";
+import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
+import { RouteLink, useRoute } from "vuepress/client";
+import ArticleList from "../components/ArticleList.vue";
 
-const route = useRoute()
-const tagMap = useBlogCategory('tag')
+const route = useRoute();
+const tagMap = useBlogCategory("tag");
 </script>
 
 <template>
@@ -42,15 +42,15 @@ export default {
   methods: {
     getTagStyle(count) {
       // 根据文章数量调整标签大小
-      const max = 20
-      const min = 6
-      const clamped = Math.min(count, max)
-      const ratio = Math.max(0.3, clamped / max)
-      const fontSize = 0.8 + ratio * 0.35
-      return { fontSize: `${fontSize}rem` }
-    }
-  }
-}
+      const max = 20;
+      const min = 6;
+      const clamped = Math.min(count, max);
+      const ratio = Math.max(0.3, clamped / max);
+      const fontSize = 0.8 + ratio * 0.35;
+      return { fontSize: `${fontSize}rem` };
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

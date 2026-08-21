@@ -9,6 +9,7 @@
 `vuepress build` 生成的静态 HTML 中，**每个页面的 `<main>` body 都是渲染循环里第一个页面的内容**。
 
 目录式站点（`about/README.md` → `/about/`）生产实测：
+
 - `about/index.html` 是 `<main class="vp-home">`，包含**首页 hero 的内容**（应为 `vp-page` 文档布局）
 - 所有页面的 `<title>` 也复用了第一个页面的 head
 - 客户端水合 / SPA 导航正常（浏览器会用正确的数据 chunk 重渲染），所以**只有 SSR 产物是错的**
@@ -47,6 +48,7 @@ for (const page of app.pages) {
 ```
 
 对 `@vuepress/bundler-vite@2.0.0-rc.26` 打了该补丁（patch-package 固化），在线上博客验证：
+
 - `about/index.html`：`vp-home`（首页泄漏）→ `vp-page`（正确的文档布局）
 - 重建后所有页面 title 正确
 - build 耗时无明显变化（~20s / 94 页）

@@ -1,8 +1,8 @@
 <script setup>
-import { usePageFrontmatter } from 'vuepress/client'
-import ParentLayout from '@vuepress/theme-default/layouts/Layout.vue'
+import { usePageFrontmatter } from "vuepress/client";
+import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
 
-const frontmatter = usePageFrontmatter()
+const frontmatter = usePageFrontmatter();
 </script>
 
 <template>

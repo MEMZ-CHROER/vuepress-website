@@ -1,12 +1,6 @@
 <template>
   <div v-if="!!filename">
-    <input
-      type="file"
-      :ref="filename"
-      class="fileInput"
-      accept=".*"
-      @change="uploadFile"
-    />
+    <input type="file" :ref="filename" class="fileInput" accept=".*" @change="uploadFile" />
     <div class="pulse-box" :style="style">
       <div v-if="loading" class="pulse-full" :style="getBG"></div>
       <div v-if="loading" class="pulse-container">
@@ -14,10 +8,7 @@
         <div class="pulse-bubble pulse-bubble-2"></div>
         <div class="pulse-bubble pulse-bubble-3"></div>
       </div>
-      <pre
-        v-if="!!content"
-        class="language-cpp"
-      ><code v-html="highlightedCode"></code></pre>
+      <pre v-if="!!content" class="language-cpp"><code v-html="highlightedCode"></code></pre>
     </div>
     <div class="buttonLine" v-if="button">
       <div class="fileButton" @click="upload">{{ buttonText }}</div>
@@ -98,9 +89,7 @@ export default {
           if (data?.data) {
             this.loading = true;
             this.buttonText = "更新答案";
-            const response = await fetch(
-              `${this.prefix}/api/download/${this.filename}`
-            );
+            const response = await fetch(`${this.prefix}/api/download/${this.filename}`);
             if (!response.ok) {
               this.loading = false;
               if (this.inWindow()) {
@@ -172,7 +161,7 @@ export default {
             method: "POST",
             headers: { "Content-Type": "text/plain" },
             body: text,
-          })
+          }),
         )
         .then((response) => response.json())
         .then((data) => {

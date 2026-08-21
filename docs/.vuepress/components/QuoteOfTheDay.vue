@@ -1,61 +1,61 @@
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const quotes = [
   {
-    text: '炮管要长，装甲要厚，速度要快，造型要帅——小孩子才做选择，我全都要。',
-    author: '核巨啸',
+    text: "炮管要长，装甲要厚，速度要快，造型要帅——小孩子才做选择，我全都要。",
+    author: "核巨啸",
   },
   {
-    text: '一辆好坦克，从名字开始就要有气势。',
-    author: '核巨啸设计语录',
+    text: "一辆好坦克，从名字开始就要有气势。",
+    author: "核巨啸设计语录",
   },
   {
-    text: '你以为我在画坦克？不，我在创造朋友。',
-    author: '匿名坦克设计师',
+    text: "你以为我在画坦克？不，我在创造朋友。",
+    author: "匿名坦克设计师",
   },
   {
-    text: '编程和设计坦克有一个共同点：都是从空白开始，用想象力填满它。',
-    author: 'Lxy',
+    text: "编程和设计坦克有一个共同点：都是从空白开始，用想象力填满它。",
+    author: "Lxy",
   },
   {
-    text: '坦克的履带碾过的地方，就是路。代码跑通的地方，就是桥。',
-    author: '网络',
+    text: "坦克的履带碾过的地方，就是路。代码跑通的地方，就是桥。",
+    author: "网络",
   },
   {
-    text: '没有最强的坦克，只有最懂它的人。',
-    author: '坦克手语录',
+    text: "没有最强的坦克，只有最懂它的人。",
+    author: "坦克手语录",
   },
   {
-    text: 'Bug 就像坦克的薄弱装甲——你不找它，敌人也会找到。',
-    author: '程序员谚语',
+    text: "Bug 就像坦克的薄弱装甲——你不找它，敌人也会找到。",
+    author: "程序员谚语",
   },
   {
-    text: '每一个像素，都是坦克的一颗螺丝。',
-    author: '核巨啸',
+    text: "每一个像素，都是坦克的一颗螺丝。",
+    author: "核巨啸",
   },
   {
-    text: '最酷的坦克，永远是下一辆。',
-    author: '设计哲学',
+    text: "最酷的坦克，永远是下一辆。",
+    author: "设计哲学",
   },
   {
-    text: '学无止境，就像坦克的炮管——永远指向更远的地方。',
-    author: 'Lxy的学习笔记',
+    text: "学无止境，就像坦克的炮管——永远指向更远的地方。",
+    author: "Lxy的学习笔记",
   },
   {
-    text: '如果一辆坦克不够解决问题，那就画两辆。',
-    author: '核巨啸战术思想',
+    text: "如果一辆坦克不够解决问题，那就画两辆。",
+    author: "核巨啸战术思想",
   },
   {
-    text: '设计不是一种职业，而是一种看待世界的方式。',
-    author: '坦克设计手稿扉页',
+    text: "设计不是一种职业，而是一种看待世界的方式。",
+    author: "坦克设计手稿扉页",
   },
-]
+];
 
 // 随机选一条
 const todayQuote = computed(() => {
-  return quotes[Math.floor(Math.random() * quotes.length)]
-})
+  return quotes[Math.floor(Math.random() * quotes.length)];
+});
 </script>
 
 <template>

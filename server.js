@@ -40,9 +40,7 @@ app.get("/api/search/:filename", async (req, res) => {
       message: "search success.",
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ code: 500, message: error.message ?? "search error." });
+    return res.status(500).json({ code: 500, message: error.message ?? "search error." });
   }
 });
 
@@ -53,9 +51,9 @@ app.get("/api/download/:filename", async (req, res) => {
   }
   try {
     const result = await client.get(`files/${filename}`);
-    const contentType = result.res.headers['content-type'];
-    if (contentType.startsWith('image/')) {
-      res.set('Content-Type', contentType);
+    const contentType = result.res.headers["content-type"];
+    if (contentType.startsWith("image/")) {
+      res.set("Content-Type", contentType);
       res.status(200).send(result.content);
     } else {
       res.status(200).json({
@@ -64,11 +62,8 @@ app.get("/api/download/:filename", async (req, res) => {
         message: "download success.",
       });
     }
-
   } catch (error) {
-    return res
-      .status(500)
-      .json({ code: 500, message: error.message ?? "download error." });
+    return res.status(500).json({ code: 500, message: error.message ?? "download error." });
   }
 });
 
@@ -97,7 +92,7 @@ app.post("/api/upload", async (req, res) => {
     meta: { temp: "noi" },
     mime: "cpp",
     headers: {
-      "Content-Type": filename.includes('.cpp') ? 'text/plain' : 'image/*',
+      "Content-Type": filename.includes(".cpp") ? "text/plain" : "image/*",
       "x-oss-object-acl": "private",
     },
   };
@@ -105,9 +100,7 @@ app.post("/api/upload", async (req, res) => {
     await client.put(`files/${filename}`, file.data, options);
     res.status(200).json({ code: 200, message: "upload success." });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ code: 500, message: error.message ?? "upload error." });
+    return res.status(500).json({ code: 500, message: error.message ?? "upload error." });
   }
 });
 

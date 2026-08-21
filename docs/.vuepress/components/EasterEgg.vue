@@ -1,28 +1,28 @@
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const count = ref(0)
-const showSurprise = ref(false)
-const msg = ref('')
+const count = ref(0);
+const showSurprise = ref(false);
+const msg = ref("");
 
 function clickTank() {
-  count.value++
+  count.value++;
   if (count.value >= 5) {
-    showSurprise.value = true
+    showSurprise.value = true;
     const messages = [
-      '🎉 你发现了一只野生坦克！',
-      '💥 坦克开炮了！BOOM！',
-      '🛡️ 装甲加厚 +100',
-      '⚡ 速度提升，引擎轰鸣！',
-      '🎨 获得限定涂装：幻彩星辰',
-      '🏆 成就解锁：坦克收藏家',
-      '🔫 主炮已就绪，目标锁定！',
-    ]
-    msg.value = messages[Math.floor(Math.random() * messages.length)]
+      "🎉 你发现了一只野生坦克！",
+      "💥 坦克开炮了！BOOM！",
+      "🛡️ 装甲加厚 +100",
+      "⚡ 速度提升，引擎轰鸣！",
+      "🎨 获得限定涂装：幻彩星辰",
+      "🏆 成就解锁：坦克收藏家",
+      "🔫 主炮已就绪，目标锁定！",
+    ];
+    msg.value = messages[Math.floor(Math.random() * messages.length)];
     setTimeout(() => {
-      showSurprise.value = false
-      count.value = 0
-    }, 2000)
+      showSurprise.value = false;
+      count.value = 0;
+    }, 2000);
   }
 }
 </script>

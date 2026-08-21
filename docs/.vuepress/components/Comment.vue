@@ -1,39 +1,42 @@
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue'
-import { useRoute } from 'vuepress/client'
+import { ref, onMounted, watch, nextTick } from "vue";
+import { useRoute } from "vuepress/client";
 
-const route = useRoute()
-const commentEl = ref(null)
-const TWIKOO_URL = 'https://twikoochat-production.up.railway.app'
+const route = useRoute();
+const commentEl = ref(null);
+const TWIKOO_URL = "https://twikoochat-production.up.railway.app";
 
 onMounted(() => {
-  if (TWIKOO_URL) loadTwikoo()
-})
+  if (TWIKOO_URL) loadTwikoo();
+});
 
-watch(() => route.path, () => {
-  setTimeout(() => {
-    loadTwikoo()
-  }, 500)
-})
+watch(
+  () => route.path,
+  () => {
+    setTimeout(() => {
+      loadTwikoo();
+    }, 500);
+  },
+);
 
 function loadTwikoo() {
-  if (!TWIKOO_URL) return
-  commentEl.value.innerHTML = ''
+  if (!TWIKOO_URL) return;
+  commentEl.value.innerHTML = "";
 
   // 加载 Twikoo 脚本
-  const script = document.createElement('script')
-  script.src = 'https://unpkg.com/twikoo@1.7.13/dist/twikoo.all.min.js'
+  const script = document.createElement("script");
+  script.src = "https://unpkg.com/twikoo@1.7.13/dist/twikoo.all.min.js";
   script.onload = () => {
     if (window.twikoo) {
       window.twikoo.init({
         el: commentEl.value,
         envId: TWIKOO_URL,
-        lang: 'zh-CN',
+        lang: "zh-CN",
         path: route.path,
-      })
+      });
     }
-  }
-  document.head.appendChild(script)
+  };
+  document.head.appendChild(script);
 }
 </script>
 
@@ -50,17 +53,18 @@ function loadTwikoo() {
         <ol>
           <li>
             打开
-            <a href="https://vercel.com/import/project?template=https://github.com/imaegoo/twikoo/tree/main/vercel-template" target="_blank">
+            <a
+              href="https://vercel.com/import/project?template=https://github.com/imaegoo/twikoo/tree/main/vercel-template"
+              target="_blank"
+            >
               Twikoo Vercel 模板
             </a>
             ，用 GitHub 账号登录 Vercel 并一键部署
           </li>
+          <li>部署成功后拿到域名 <code>xxx.vercel.app</code></li>
           <li>
-            部署成功后拿到域名 <code>xxx.vercel.app</code>
-          </li>
-          <li>
-            编辑 <code>docs/.vuepress/components/Comment.vue</code>，
-            把第 8 行的 <code>TWIKOO_URL</code> 填成你的 Vercel 地址
+            编辑 <code>docs/.vuepress/components/Comment.vue</code>， 把第 8 行的
+            <code>TWIKOO_URL</code> 填成你的 Vercel 地址
           </li>
         </ol>
         <p class="setup-tip">💡 部署完重启 dev server 即可生效</p>
