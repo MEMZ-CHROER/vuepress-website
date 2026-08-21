@@ -41,6 +41,15 @@ export default defineUserConfig({
         ],
       },
       {
+        text: "📘 C++ 讲义",
+        children: [
+          { text: "📘 讲义首页", link: "/cpp/" },
+          { text: "🚀 C++ 入门", link: "/cpp/introduction/" },
+          { text: "⚡ 算法", link: "/cpp/algorithm/" },
+          { text: "🌳 数据结构", link: "/cpp/datastructure/" },
+        ],
+      },
+      {
         text: "📋 附件表",
         link: "/fujian/",
       },
@@ -81,6 +90,48 @@ export default defineUserConfig({
       },
     ],
 
+    // C++ 讲义区侧边栏（按目录自动分组，便于导航）
+    sidebar: {
+      "/cpp/": [
+        {
+          text: "C++ 讲义",
+          icon: "book",
+          prefix: "/cpp/",
+          collapsible: true,
+          children: [
+            {
+              text: "🚀 C++ 入门",
+              prefix: "introduction/",
+              collapsible: true,
+              children: [
+                "intro", "editor", "environment", "input", "files",
+                "constantVariable", "dataType", "operator", "controlStructure",
+                "function", "array", "pointers", "scope", "structure", "routine",
+                "assign",
+              ],
+            },
+            {
+              text: "⚡ 算法",
+              prefix: "algorithm/",
+              collapsible: true,
+              children: [
+                "complexity", "recursion", "divide", "greedy", "dynamic",
+                "backtracking", "sort", "accurate",
+              ],
+            },
+            {
+              text: "🌳 数据结构",
+              prefix: "datastructure/",
+              collapsible: true,
+              children: [
+                "stack", "queue", "tree", "heap", "graph", "huffman", "expression",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+
     // Markdown 增强（内置，替代原 markdown-ext / stylize / chart / katex 插件）
     markdown: {
       // markdown-ext
@@ -103,10 +154,20 @@ export default defineUserConfig({
 
     // 插件（内置，替代原独立插件：blog / sitemap2 / feed2 / search / pwa / copyright）
     plugins: {
-      // 博客（只把 posts/ 下当文章，沿用原 blogPlugin 的行为）
+      // 博客：posts/ 下的文章 + cpp/ 下的讲义（排除 README 入口页）都算文章
       blog: {
-        filter: ({ filePathRelative }) =>
-          filePathRelative?.startsWith("posts/") ?? false,
+        filter: ({ filePathRelative }) => {
+          if (!filePathRelative) return false;
+          if (filePathRelative.startsWith("posts/")) return true;
+          // cpp 讲义区的文章（排除各层 README 入口页）
+          if (
+            filePathRelative.startsWith("cpp/") &&
+            !filePathRelative.endsWith("/README.md") &&
+            filePathRelative !== "cpp/README.md"
+          )
+            return true;
+          return false;
+        },
         excerpt: true,
       },
       // 本地全文搜索（替代 @vuepress/plugin-search）

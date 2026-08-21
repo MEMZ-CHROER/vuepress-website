@@ -2,10 +2,10 @@
 import { ref } from "vue";
 
 const items = ref([
-  { icon: "📝", label: "文章", value: 9, desc: "篇原创内容", color: "#6366f1" },
-  { icon: "📂", label: "分类", value: 3, desc: "个分类", color: "#8b5cf6" },
-  { icon: "🏷️", label: "标签", value: 16, desc: "个标签", color: "#ec4899" },
-  { icon: "📄", label: "页面", value: 101, desc: "页收录", color: "#14b8a6" },
+  { icon: "📝", label: "文章", value: 40, desc: "篇原创内容", color: "#6366f1" },
+  { icon: "📂", label: "分类", value: 6, desc: "个分类", color: "#8b5cf6" },
+  { icon: "🏷️", label: "标签", value: 18, desc: "个标签", color: "#ec4899" },
+  { icon: "📄", label: "页面", value: 141, desc: "页收录", color: "#14b8a6" },
   { icon: "🎨", label: "坦克", value: 33, desc: "辆原创手绘", color: "#f97316" },
   { icon: "🔗", label: "友链", value: 5, desc: "个小伙伴", color: "#06b6d4" },
 ]);
