@@ -55,13 +55,12 @@ void mergeSort(vector<int>& a) {
     mergeSortRange(a, 0, (int)a.size() - 1);
 }
 
-// 检查是否无序，顺手带回 max/min
-bool isUnorderedEx(const vector<int>& a, int& outMax, int& outMin) {
-    int n = (int)a.size();
-    if (n <= 1) { outMax = 0; outMin = 0; return false; }
-    outMax = outMin = a[0];
+// 检查区间 [l, r] 是否无序，顺手带回 max/min
+bool isUnorderedEx(const vector<int>& a, int l, int r, int& outMax, int& outMin) {
+    if (l > r) { outMax = 0; outMin = 0; return false; }
+    outMax = outMin = a[l];
     bool unordered = false;
-    for (int i = 1; i < n; ++i) {
+    for (int i = l + 1; i <= r; ++i) {
         if (a[i] < a[i - 1]) unordered = true;
         if (a[i] > outMax) outMax = a[i];
         if (a[i] < outMin) outMin = a[i];
@@ -69,9 +68,8 @@ bool isUnorderedEx(const vector<int>& a, int& outMax, int& outMin) {
     return unordered;
 }
 
-// 鸡尾酒排序（双向冒泡）
-void jwjSort(vector<int>& a) {
-    int l = 0, r = (int)a.size() - 1;
+// 鸡尾酒排序（双向冒泡），区间版
+void jwjSort(vector<int>& a, int l, int r) {
     while (l < r) {
         bool ok = true;
         for (int i = l; i < r; i++)
@@ -84,7 +82,7 @@ void jwjSort(vector<int>& a) {
     }
 }
 
-// 快排（带深度超限兜底）
+// 快排（带深度超限兜底），区间版
 void quickSortInner(vector<int>& a, int l, int r, int depth, int limit) {
     if (depth > limit) {
         // 深度超限说明分得不均衡（快退化到 O(n^2)），改用归并兜底
@@ -104,54 +102,66 @@ void quickSortInner(vector<int>& a, int l, int r, int depth, int limit) {
         else                   { quickSortInner(a, pos + 1, r, depth + 1, limit); r = pos - 1; }
     }
 }
-void quickSort(vector<int>& a) {
-    if (a.empty()) return;
-    int limit = 2 * (int)log2((double)a.size()) + 1;  // 深度上限
-    quickSortInner(a, 0, (int)a.size() - 1, 0, limit);
-}
 
-// 计数排序
-void countingSort(vector<int>& a) {
-    if (a.empty()) return;
-    int mx = *max_element(a.begin(), a.end());
-    int mn = *min_element(a.begin(), a.end());
+// 计数排序，区间版
+void countingSort(vector<int>& a, int l, int r) {
+    if (l >= r) return;
+    int mx = a[l], mn = a[l];
+    for (int i = l + 1; i <= r; ++i) { mx = max(mx, a[i]); mn = min(mn, a[i]); }
     vector<int> cnt(mx - mn + 1, 0);
-    for (int x : a) cnt[x - mn]++;
-    int p = 0;
+    for (int i = l; i <= r; ++i) cnt[a[i] - mn]++;
+    int p = l;
     for (int i = 0; i < (int)cnt.size(); i++)
         while (cnt[i]--) a[p++] = i + mn;
 }
 
-// 基数排序
-void radixSort(vector<int>& a) {
-    if (a.empty()) return;
-    int mx = *max_element(a.begin(), a.end());
-    vector<int> temp(a.size());
+// 基数排序，区间版
+void radixSort(vector<int>& a, int l, int r) {
+    if (l >= r) return;
+    int mx = a[l];
+    for (int i = l + 1; i <= r; ++i) mx = max(mx, a[i]);
+    vector<int> temp(r - l + 1);
     for (int exp = 1; mx / exp > 0; exp *= 10) {
         int cnt[10] = {0};
-        for (int x : a) cnt[(x / exp) % 10]++;
+        for (int i = l; i <= r; ++i) cnt[(a[i] / exp) % 10]++;
         for (int i = 1; i < 10; i++) cnt[i] += cnt[i - 1];
-        for (int i = (int)a.size() - 1; i >= 0; i--)
-            temp[--cnt[(a[i] / exp) % 10]] = a[i];
-        a.swap(temp);
+        for (int i = r; i >= l; --i) temp[--cnt[(a[i] / exp) % 10]] = a[i];
+        for (int i = l; i <= r; ++i) a[i] = temp[i - l];
     }
 }
 
-// 主角：智能调度
+// 区间智能排序（隔离后对中间段使用）
+void lxySortRange(vector<int>& a, int l, int r) {
+    if (l >= r) return;
+    int mx, mn;
+    if (!isUnorderedEx(a, l, r, mx, mn)) return;
+    if (mx - mn < 20) { countingSort(a, l, r); return; }
+    if (a[r] < a[l] && (r - l + 1) <= 64) { swap(a[l], a[r]); jwjSort(a, l, r); return; }
+    if (mn > 0 && mx <= 99999) { radixSort(a, l, r); return; }
+    int limit = 2 * (int)log2((double)(r - l + 1)) + 1;
+    quickSortInner(a, l, r, 0, limit);
+}
+
+// 主角：默认把 min 隔离到最左、max 隔离到最右，再对中间段智能排序
 void lxySort(vector<int>& a, bool m) {
     if (a.empty()) return;
-    int maxv = 0, minv = 0;
-    if (!isUnorderedEx(a, maxv, minv)) return;            // 已有序，直接跑
-    if (m) { mergeSort(a); return; }                       // 要稳定 → 归并
-    if (maxv - minv < 20) { countingSort(a); return; }     // 范围小 → 计数
-    int sz = (int)a.size();
-    if (a.back() < a.front() && sz <= 64) {                // 递减小数组 → 鸡尾酒
-        swap(a[0], a[sz - 1]);
-        jwjSort(a);
-        return;
+    int n = (int)a.size();
+    int maxv, minv;
+    if (!isUnorderedEx(a, 0, n - 1, maxv, minv)) return;  // 全数组已有序
+    if (m) { mergeSort(a); return; }                        // 要稳定 → 归并
+    if (n <= 2) { if (a[0] > a[1]) swap(a[0], a[1]); return; }
+
+    // 隔离 min 到最左、max 到最右
+    int posMax = 0, posMin = 0;
+    for (int i = 1; i < n; ++i) {
+        if (a[i] > a[posMax]) posMax = i;
+        if (a[i] < a[posMin]) posMin = i;
     }
-    if (minv > 0 && maxv <= 99999) { radixSort(a); return; } // 正整数 → 基数
-    quickSort(a);                                           // 兜底 → 快排
+    swap(a[posMax], a[n - 1]);
+    if (posMin == n - 1) posMin = posMax;
+    swap(a[posMin], a[0]);
+
+    lxySortRange(a, 1, n - 2);   // 中间段 [1, n-2]
 }
 ```
 
@@ -160,40 +170,55 @@ void lxySort(vector<int>& a, bool m) {
 ```cpp
 void lxySort(vector<int>& a, bool m) {
     if (a.empty()) return;
-    int maxv = 0, minv = 0;
-    if (!isUnorderedEx(a, maxv, minv)) return;            // 已有序，直接跑
-    if (m) { mergeSort(a); return; }                       // 要稳定 → 归并
-    if (maxv - minv < 20) { countingSort(a); return; }     // 范围小 → 计数
-    int sz = (int)a.size();
-    if (a.back() < a.front() && sz <= 64) {                // 递减小数组 → 鸡尾酒
-        swap(a[0], a[sz - 1]);
-        jwjSort(a);
-        return;
+    int n = (int)a.size();
+    int maxv, minv;
+    if (!isUnorderedEx(a, 0, n - 1, maxv, minv)) return;  // 全数组已有序
+    if (m) { mergeSort(a); return; }                        // 要稳定 → 归并
+    if (n <= 2) { if (a[0] > a[1]) swap(a[0], a[1]); return; }
+
+    // 隔离 min 到最左、max 到最右
+    int posMax = 0, posMin = 0;
+    for (int i = 1; i < n; ++i) {
+        if (a[i] > a[posMax]) posMax = i;
+        if (a[i] < a[posMin]) posMin = i;
     }
-    if (minv > 0 && maxv <= 99999) { radixSort(a); return; } // 正整数 → 基数
-    quickSort(a);                                           // 兜底 → 快排
+    swap(a[posMax], a[n - 1]);
+    if (posMin == n - 1) posMin = posMax;
+    swap(a[posMin], a[0]);
+
+    lxySortRange(a, 1, n - 2);   // 中间段 [1, n-2]
 }
 ```
 
-- **已有序** → 直接返回，不白费力气（`isUnorderedEx` 顺手带回 max/min）
-- **要稳定**（`m=true`）→ 归并排序
-- **范围小**（`max-min<20`）→ 计数排序 `O(n)`
-- **递减小数组**（≤64）→ 交换首尾 + 鸡尾酒排序
-- **正整数且 ≤99999** → 基数排序 `O(n)`
-- **兜底** → 快速排序
+**核心思路**：先把 `min` 隔离到最左、`max` 隔离到最右，这样**中间段的范围不再被 outlier 撑爆**，计数/基数排序能重新派上用场。然后对中间段 `[1, n-2]` 走一套同样的智能判断（`lxySortRange`）：
+
+- **全数组已有序** → 直接返回，不白费力气
+- **要稳定**（`m=true`）→ 归并排序（整段归并，min/max 自然归位）
+- **数组 ≤2** → 直接交换
+- **否则**：把 min/max 隔离到两端，中间段再走：
+  - 范围小（`max-min<20`）→ 计数排序 `O(n)`
+  - 递减小数组（≤64）→ 鸡尾酒排序
+  - 正整数且 ≤99999 → 基数排序 `O(n)`
+  - 兜底 → 快速排序
+
+::: tip 为什么这样更聪明
+以 `1 1 2 2 2 4 5 5 6 6 6 8 9 99999999999` 为例：
+- 旧版：max 是超大 outlier，`max-min` 巨大 → 计数/基数全被卡死，只能走快排
+- 新版：先把 `99999999999` 隔离到最右，中间段全是小整数，范围小 → **直接计数排序 `O(n)` 搞定**
+:::
 
 ::: tip 一个细节
-原来这里写的是 `if (minv > 0 && maxv <= 99999) radixSort(a); quickSort(a);`——少了 `return`，导致基数排序完**又被快排覆盖**了。重塑时补上了 `return`，让基数排序真正生效。
+之前基数分支少写 `return`，导致 `radixSort` 完又被 `quickSort` 覆盖。现在隔离后由 `lxySortRange` 统一调度，不会再出现这种问题。
 :::
 
 ## 四、快排的"危"：深度超限就换归并
 
 这是整个实现里最值得讲的一环。**快速排序最怕什么？退化到 O(n²)。** 当 pivot 选得不好、数据又很"病态"时，递归会特别深，甚至爆栈。
 
-所以给快排设了一个**深度上限**（introsort 的标准做法）：
+所以给快排设了一个**深度上限**（introsort 的标准做法，这里以当前区间长度为准）：
 
 ```cpp
-int limit = 2 * (int)log2((double)a.size()) + 1;
+int limit = 2 * (int)log2((double)(r - l + 1)) + 1;
 ```
 
 递归深度一旦超过这个值，说明分得极不均衡、有退化成 O(n²) 的风险——这时候**果断切换到归并排序兜底**：
@@ -214,6 +239,7 @@ void quickSortInner(vector<int>& a, int l, int r, int depth, int limit) {
 
 - **没有银弹**：不同数据适合不同算法，与其赌一个，不如全都要
 - **先判断再动手**：有序就省事，小范围就计数，递减就鸡尾酒……
+- **隔离极值**：把 min/max 先放两端，中间段的范围更“干净”，线性排序更易命中
 - **给快排上保险**：深度超限自动切归并，防止退化爆栈
 - **留个兜底**：快排作为通用解，保证任何情况都有结果
 

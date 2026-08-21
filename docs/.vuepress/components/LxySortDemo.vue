@@ -5,10 +5,10 @@ import { ref } from "vue";
 // 用字段标记实际用了哪个算法
 let used = "";
 
-function isUnorderedEx(a) {
-  const n = a.length;
-  let mx = a[0], mn = a[0], unordered = false;
-  for (let i = 1; i < n; i++) {
+function isUnorderedEx(a, l, r) {
+  if (l > r) return { unordered: false, mx: 0, mn: 0 };
+  let mx = a[l], mn = a[l], unordered = false;
+  for (let i = l + 1; i <= r; i++) {
     if (a[i] < a[i - 1]) unordered = true;
     if (a[i] > mx) mx = a[i];
     if (a[i] < mn) mn = a[i];
@@ -34,8 +34,7 @@ function mergeSort(a) {
   mergeSortRange(a, 0, a.length - 1);
 }
 
-function jwjSort(a) {
-  let l = 0, r = a.length - 1;
+function jwjSort(a, l, r) {
   while (l < r) {
     let ok = true;
     for (let i = l; i < r; i++) if (a[i] > a[i + 1]) { [a[i], a[i + 1]] = [a[i + 1], a[i]]; ok = false; }
@@ -47,7 +46,7 @@ function jwjSort(a) {
 }
 
 function quickSortInner(a, l, r, depth, limit) {
-  if (depth > limit) { used = "quickSort 深度超限 → mergeSort 兜底"; mergeSortRange(a, l, r); return; }
+  if (depth > limit) { used = used + " → quickSort 深度超限, mergeSort 兜底"; mergeSortRange(a, l, r); return; }
   while (l < r) {
     const pv = l + Math.floor(Math.random() * (r - l + 1));
     [a[r], a[pv]] = [a[pv], a[r]];
@@ -60,42 +59,64 @@ function quickSortInner(a, l, r, depth, limit) {
     else { quickSortInner(a, pos + 1, r, depth + 1, limit); r = pos - 1; }
   }
 }
-function quickSort(a) {
-  if (!a.length) return;
-  const limit = 2 * Math.log2(a.length) + 1;
-  quickSortInner(a, 0, a.length - 1, 0, limit);
-}
-
-function countingSort(a) {
-  const mx = Math.max(...a), mn = Math.min(...a);
+function countingSort(a, l, r) {
+  if (l >= r) return;
+  let mx = a[l], mn = a[l];
+  for (let i = l + 1; i <= r; i++) { mx = Math.max(mx, a[i]); mn = Math.min(mn, a[i]); }
   const cnt = new Array(mx - mn + 1).fill(0);
-  a.forEach(x => cnt[x - mn]++);
-  let p = 0;
+  for (let i = l; i <= r; i++) cnt[a[i] - mn]++;
+  let p = l;
   cnt.forEach((c, i) => { while (c--) a[p++] = i + mn; });
 }
 
-function radixSort(a) {
-  const mx = Math.max(...a);
-  let temp = new Array(a.length);
+function radixSort(a, l, r) {
+  if (l >= r) return;
+  let mx = a[l];
+  for (let i = l + 1; i <= r; i++) mx = Math.max(mx, a[i]);
+  const len = r - l + 1;
+  const temp = new Array(len);
   for (let exp = 1; Math.floor(mx / exp) > 0; exp *= 10) {
     const cnt = new Array(10).fill(0);
-    a.forEach(x => cnt[Math.floor(x / exp) % 10]++);
+    for (let i = l; i <= r; i++) cnt[Math.floor(a[i] / exp) % 10]++;
     for (let i = 1; i < 10; i++) cnt[i] += cnt[i - 1];
-    for (let i = a.length - 1; i >= 0; i--) temp[--cnt[Math.floor(a[i] / exp) % 10]] = a[i];
-    a.splice(0, a.length, ...temp);
+    for (let i = r; i >= l; i--) temp[--cnt[Math.floor(a[i] / exp) % 10]] = a[i];
+    for (let i = l; i <= r; i++) a[i] = temp[i - l];
   }
 }
 
+// 区间智能排序（供隔离后中间段使用，与 C++ 版 lxySortRange 一致）
+function lxySortRange(a, l, r) {
+  if (l >= r) return;
+  const { unordered, mx, mn } = isUnorderedEx(a, l, r);
+  if (!unordered) return;
+  if (mx - mn < 20) { countingSort(a, l, r); return; }
+  if (a[r] < a[l] && (r - l + 1) <= 64) { [a[l], a[r]] = [a[r], a[l]]; jwjSort(a, l, r); return; }
+  if (mn > 0 && mx <= 99999) { radixSort(a, l, r); return; }
+  const limit = 2 * Math.log2(r - l + 1) + 1;
+  quickSortInner(a, l, r, 0, limit);
+}
+
+// 主角：默认把 min 隔离到最左、max 隔离到最右，再对中间段智能排序
 function lxySort(a, m) {
-  if (!a.length) return;
-  const { unordered, mx, mn } = isUnorderedEx(a);
-  if (!unordered) { used = "已有序，直接返回"; return; }
+  if (!a.length) { used = "（空数组）"; return; }
+  const n = a.length;
+  const whole = isUnorderedEx(a, 0, n - 1);
+  if (!whole.unordered) { used = "已有序，直接返回"; return; }
   if (m) { used = "mergeSort（稳定排序）"; mergeSort(a); return; }
-  if (mx - mn < 20) { used = "countingSort（范围小）"; countingSort(a); return; }
-  const sz = a.length;
-  if (a[a.length - 1] < a[0] && sz <= 64) { used = "jwjSort 鸡尾酒（递减小数组）"; [a[0], a[a.length - 1]] = [a[a.length - 1], a[0]]; jwjSort(a); return; }
-  if (mn > 0 && mx <= 99999) { used = "radixSort（正整数）"; radixSort(a); return; }
-  used = "quickSort（兜底）"; quickSort(a);
+  if (n <= 2) { if (a[0] > a[1]) { [a[0], a[1]] = [a[1], a[0]]; } used = "小数组直接交换"; return; }
+
+  // 隔离 min 到最左、max 到最右
+  let posMax = 0, posMin = 0;
+  for (let i = 1; i < n; i++) {
+    if (a[i] > a[posMax]) posMax = i;
+    if (a[i] < a[posMin]) posMin = i;
+  }
+  [a[posMax], a[n - 1]] = [a[n - 1], a[posMax]];
+  if (posMin === n - 1) posMin = posMax;
+  [a[posMin], a[0]] = [a[0], a[posMin]];
+
+  used = "隔离 min→最左, max→最右 + 中间段";
+  lxySortRange(a, 1, n - 2);   // 中间段 [1, n-2]
 }
 
 // ============ 组件状态 ============
