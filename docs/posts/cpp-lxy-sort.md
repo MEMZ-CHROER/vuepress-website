@@ -21,102 +21,208 @@ tag:
 ## 二、完整代码
 
 ```cpp
+#include <algorithm>
+#include <vector>
+#include <iostream>
+#include <cmath>
+#include <ctime>
+using namespace std;
+
+// 归并核心
+void merge(vector<int>& a, vector<int>& temp, int l, int mid, int r) {
+    int i = l, j = mid + 1, k = l;
+    while (i <= mid && j <= r)
+        temp[k++] = (a[i] <= a[j]) ? a[i++] : a[j++];
+    while (i <= mid) temp[k++] = a[i++];
+    while (j <= r) temp[k++] = a[j++];
+    for (int p = l; p <= r; ++p) a[p] = temp[p];
+}
+void mergeSortRec(vector<int>& a, vector<int>& temp, int l, int r) {
+    if (l >= r) return;
+    int mid = l + (r - l) / 2;
+    mergeSortRec(a, temp, l, mid);
+    mergeSortRec(a, temp, mid + 1, r);
+    merge(a, temp, l, mid, r);
+}
+// 对 [l, r] 区间归并排序——也作为快排深度超限时的兜底
+void mergeSortRange(vector<int>& a, int l, int r) {
+    if (l >= r) return;
+    vector<int> temp(a.size());
+    mergeSortRec(a, temp, l, r);
+}
+void mergeSort(vector<int>& a) {
+    if (a.empty()) return;
+    mergeSortRange(a, 0, (int)a.size() - 1);
+}
+
+// 检查是否无序，顺手带回 max/min
+bool isUnorderedEx(const vector<int>& a, int& outMax, int& outMin) {
+    int n = (int)a.size();
+    if (n <= 1) { outMax = 0; outMin = 0; return false; }
+    outMax = outMin = a[0];
+    bool unordered = false;
+    for (int i = 1; i < n; ++i) {
+        if (a[i] < a[i - 1]) unordered = true;
+        if (a[i] > outMax) outMax = a[i];
+        if (a[i] < outMin) outMin = a[i];
+    }
+    return unordered;
+}
+
+// 鸡尾酒排序（双向冒泡）
+void jwjSort(vector<int>& a) {
+    int l = 0, r = (int)a.size() - 1;
+    while (l < r) {
+        bool ok = true;
+        for (int i = l; i < r; i++)
+            if (a[i] > a[i + 1]) { swap(a[i], a[i + 1]); ok = false; }
+        r--;
+        for (int i = r; i > l; i--)
+            if (a[i] < a[i - 1]) { swap(a[i], a[i - 1]); ok = false; }
+        l++;
+        if (ok) break;
+    }
+}
+
+// 快排（带深度超限兜底）
+void quickSortInner(vector<int>& a, int l, int r, int depth, int limit) {
+    if (depth > limit) {
+        // 深度超限说明分得不均衡（快退化到 O(n^2)），改用归并兜底
+        mergeSortRange(a, l, r);
+        return;
+    }
+    while (l < r) {
+        swap(a[r], a[l + rand() % (r - l + 1)]);  // 随机选 pivot 放右端
+        int pivot = a[r];
+        int store = l;
+        for (int i = l; i < r; ++i)
+            if (a[i] <= pivot) swap(a[store++], a[i]);
+        swap(a[store], a[r]);
+        int pos = store;
+        // 小区间递归，大区间交给 while 循环
+        if (pos - l < r - pos) { quickSortInner(a, l, pos - 1, depth + 1, limit); l = pos + 1; }
+        else                   { quickSortInner(a, pos + 1, r, depth + 1, limit); r = pos - 1; }
+    }
+}
+void quickSort(vector<int>& a) {
+    if (a.empty()) return;
+    int limit = 2 * (int)log2((double)a.size()) + 1;  // 深度上限
+    quickSortInner(a, 0, (int)a.size() - 1, 0, limit);
+}
+
+// 计数排序
+void countingSort(vector<int>& a) {
+    if (a.empty()) return;
+    int mx = *max_element(a.begin(), a.end());
+    int mn = *min_element(a.begin(), a.end());
+    vector<int> cnt(mx - mn + 1, 0);
+    for (int x : a) cnt[x - mn]++;
+    int p = 0;
+    for (int i = 0; i < (int)cnt.size(); i++)
+        while (cnt[i]--) a[p++] = i + mn;
+}
+
+// 基数排序
+void radixSort(vector<int>& a) {
+    if (a.empty()) return;
+    int mx = *max_element(a.begin(), a.end());
+    vector<int> temp(a.size());
+    for (int exp = 1; mx / exp > 0; exp *= 10) {
+        int cnt[10] = {0};
+        for (int x : a) cnt[(x / exp) % 10]++;
+        for (int i = 1; i < 10; i++) cnt[i] += cnt[i - 1];
+        for (int i = (int)a.size() - 1; i >= 0; i--)
+            temp[--cnt[(a[i] / exp) % 10]] = a[i];
+        a.swap(temp);
+    }
+}
+
+// 主角：智能调度
 void lxySort(vector<int>& a, bool m) {
     if (a.empty()) return;
     int maxv = 0, minv = 0;
-    bool iud = isUnorderedEx(a, maxv, minv);
-    if (!iud)return;
-    if (m == true) {
-        mergeSort(a);
-        return;
-    }
-    if (maxv - minv < 20) {
-        countingSort(a);
-        return;
-    }
+    if (!isUnorderedEx(a, maxv, minv)) return;            // 已有序，直接跑
+    if (m) { mergeSort(a); return; }                       // 要稳定 → 归并
+    if (maxv - minv < 20) { countingSort(a); return; }     // 范围小 → 计数
     int sz = (int)a.size();
-    if (a.back() < a.front() && sz <= 64) {
+    if (a.back() < a.front() && sz <= 64) {                // 递减小数组 → 鸡尾酒
         swap(a[0], a[sz - 1]);
         jwjSort(a);
         return;
     }
-    if ( minv > 0 && maxv <= 99999)radixSort(a);
-    quickSort(a);
-    return;
-    sort(a.begin(), a.end()); //样品请勿触摸
+    if (minv > 0 && maxv <= 99999) { radixSort(a); return; } // 正整数 → 基数
+    quickSort(a);                                           // 兜底 → 快排
 }
 ```
 
-## 三、逐层拆解：它到底在判断什么
+## 三、lxySort 调度逻辑
 
-**第 1 层：空数组直接跑**
 ```cpp
-if (a.empty()) return;
-```
-
-**第 2 层：已经有序就偷懒**
-```cpp
-bool iud = isUnorderedEx(a, maxv, minv);
-if (!iud)return;
-```
-先检查一遍，如果数组已经有序，**直接返回**——不白费力气。顺手还把最大值、最小值带回来了，一石二鸟。
-
-**第 3 层：要稳定排序就用归并**
-```cpp
-if (m == true) {
-    mergeSort(a);
-    return;
+void lxySort(vector<int>& a, bool m) {
+    if (a.empty()) return;
+    int maxv = 0, minv = 0;
+    if (!isUnorderedEx(a, maxv, minv)) return;            // 已有序，直接跑
+    if (m) { mergeSort(a); return; }                       // 要稳定 → 归并
+    if (maxv - minv < 20) { countingSort(a); return; }     // 范围小 → 计数
+    int sz = (int)a.size();
+    if (a.back() < a.front() && sz <= 64) {                // 递减小数组 → 鸡尾酒
+        swap(a[0], a[sz - 1]);
+        jwjSort(a);
+        return;
+    }
+    if (minv > 0 && maxv <= 99999) { radixSort(a); return; } // 正整数 → 基数
+    quickSort(a);                                           // 兜底 → 快排
 }
 ```
-`m` 表示是否要求**稳定排序**（相同元素保持原顺序）。需要稳定时派归并。
 
-**第 4 层：数值范围小就用计数排序**
+- **已有序** → 直接返回，不白费力气（`isUnorderedEx` 顺手带回 max/min）
+- **要稳定**（`m=true`）→ 归并排序
+- **范围小**（`max-min<20`）→ 计数排序 `O(n)`
+- **递减小数组**（≤64）→ 交换首尾 + 鸡尾酒排序
+- **正整数且 ≤99999** → 基数排序 `O(n)`
+- **兜底** → 快速排序
+
+::: tip 一个细节
+原来这里写的是 `if (minv > 0 && maxv <= 99999) radixSort(a); quickSort(a);`——少了 `return`，导致基数排序完**又被快排覆盖**了。重塑时补上了 `return`，让基数排序真正生效。
+:::
+
+## 四、快排的"危"：深度超限就换归并
+
+这是整个实现里最值得讲的一环。**快速排序最怕什么？退化到 O(n²)。** 当 pivot 选得不好、数据又很"病态"时，递归会特别深，甚至爆栈。
+
+所以给快排设了一个**深度上限**（introsort 的标准做法）：
+
 ```cpp
-if (maxv - minv < 20) {
-    countingSort(a);
-    return;
+int limit = 2 * (int)log2((double)a.size()) + 1;
+```
+
+递归深度一旦超过这个值，说明分得极不均衡、有退化成 O(n²) 的风险——这时候**果断切换到归并排序兜底**：
+
+```cpp
+void quickSortInner(vector<int>& a, int l, int r, int depth, int limit) {
+    if (depth > limit) {
+        mergeSortRange(a, l, r);   // 深度超限，归并接手，避免爆栈
+        return;
+    }
+    ...
 }
 ```
-如果最大值和最小值差不到 20，说明数值很"密"，计数排序 `O(n)` 直接起飞。
 
-**第 5 层：小数组递减就用鸡尾酒排序**
-```cpp
-int sz = (int)a.size();
-if (a.back() < a.front() && sz <= 64) {
-    swap(a[0], a[sz - 1]);
-    jwjSort(a);
-    return;
-}
-```
-如果数组是**递减**的、而且很小（≤64），先交换首尾，再用**鸡尾酒排序**（`jwjSort`，就是双向冒泡）——对这种接近有序的小数组特别快。
-
-**第 6 层：正整数且范围合适就用基数排序**
-```cpp
-if ( minv > 0 && maxv <= 99999)radixSort(a);
-quickSort(a);
-```
-全是正数、而且最大值不超过 99999，用基数排序 `O(n)`。否则就走兜底的**快速排序**。
-
-## 四、最后那行是啥？
-
-```cpp
-sort(a.begin(), a.end()); //样品请勿触摸
-```
-
-哈哈，这是个"死代码"——因为前面的 `quickSort(a); return;` 已经返回了，这行**永远执行不到**。它是我留着当"样品"的，提醒自己 STL 的 sort 才是终极方案。**请勿触摸** 😄
+`mergeSortRange` 本来就有——既能做全量归并，也能在快排"顶不住"时救场，一举两得。
 
 ## 五、为什么这么设计
 
 - **没有银弹**：不同数据适合不同算法，与其赌一个，不如全都要
 - **先判断再动手**：有序就省事，小范围就计数，递减就鸡尾酒……
+- **给快排上保险**：深度超限自动切归并，防止退化爆栈
 - **留个兜底**：快排作为通用解，保证任何情况都有结果
 
 ## 小结
 
-lxySort 的核心思想一句话：**根据数组的长度、顺序、数值范围，智能选择合适的排序算法。**
+lxySort 的核心思想一句话：**根据数组的长度、顺序、数值范围，智能选择合适的排序算法，并给快排套上深度保护的保险。**
 
-排序算法那些我用的都是标准模板，`jwjSort` 是**鸡尾酒排序**。整个函数的意义在于"调度"——把每个算法用在它最擅长的地方。
+排序算法那些我用的都是标准模板，`jwjSort` 是**鸡尾酒排序**。整个函数的意义在于"调度"——把每个算法用在它最擅长的地方，并在"危"的时候及时切换。
 
 ---
 
-_写排序不难，难的是知道什么时候该用哪个排序。_
+_写排序不难，难的是知道什么时候该用哪个排序，更难得的是在"危"的时候知道怎么救场。_
