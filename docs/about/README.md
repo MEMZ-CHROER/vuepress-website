@@ -55,6 +55,51 @@ tag:
 └─────────────────────────────┘
 ```
 
+### 🧩 插件生态
+
+本站基于 **VuePress 2 + vuepress-theme-hope**，当前启用的插件：
+
+```text
+@vuepress/bundler-vite@2.0.0-rc.30
+@vuepress/plugin-active-header-links@2.0.0-rc.130
+@vuepress/plugin-back-to-top@2.0.0-rc.130
+@vuepress/plugin-blog@2.0.0-rc.130
+@vuepress/plugin-catalog@2.0.0-rc.130
+@vuepress/plugin-comment@2.0.0-rc.130
+@vuepress/plugin-copy-code@2.0.0-rc.130
+@vuepress/plugin-copyright@2.0.0-rc.130
+@vuepress/plugin-feed@2.0.0-rc.130
+@vuepress/plugin-git@2.0.0-rc.130
+@vuepress/plugin-icon@2.0.0-rc.130
+@vuepress/plugin-links-check@2.0.0-rc.130
+@vuepress/plugin-markdown-chart@2.0.0-rc.130
+@vuepress/plugin-markdown-ext@2.0.0-rc.130
+@vuepress/plugin-markdown-hint@2.0.0-rc.130
+@vuepress/plugin-markdown-image@2.0.0-rc.130
+@vuepress/plugin-markdown-include@2.0.0-rc.130
+@vuepress/plugin-markdown-math@2.0.0-rc.130
+@vuepress/plugin-markdown-preview@2.0.0-rc.130
+@vuepress/plugin-markdown-stylize@2.0.0-rc.130
+@vuepress/plugin-markdown-tab@2.0.0-rc.130
+@vuepress/plugin-notice@2.0.0-rc.130
+@vuepress/plugin-nprogress@2.0.0-rc.130
+@vuepress/plugin-photo-swipe@2.0.0-rc.130
+@vuepress/plugin-pwa@2.0.0-rc.130
+@vuepress/plugin-reading-time@2.0.0-rc.130
+@vuepress/plugin-redirect@2.0.0-rc.130
+@vuepress/plugin-rtl@2.0.0-rc.130
+@vuepress/plugin-sass-palette@2.0.0-rc.130
+@vuepress/plugin-seo@2.0.0-rc.130
+@vuepress/plugin-shiki@2.0.0-rc.130
+@vuepress/plugin-sitemap@2.0.0-rc.130
+@vuepress/plugin-slimsearch@2.0.0-rc.130
+@vuepress/plugin-theme-data@2.0.0-rc.130
+vuepress-plugin-components@2.0.0-rc.107
+vuepress-plugin-md-enhance@2.0.0-rc.107
+vuepress-theme-hope@2.0.0-rc.107
+vuepress@2.0.0-rc.30
+```
+
 ## 🎯 未来的想法
 
 - [x] 首页美化 + 按钮系统
