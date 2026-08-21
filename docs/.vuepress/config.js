@@ -19,7 +19,7 @@ export default defineUserConfig({
   theme: hopeTheme({
     hostname: "https://www.liuxiyu.cn",
     author: "lxy",
-    logo: "https://z.wiki/u/UVdSlT",
+    logo: "/icons/icon-512.png",
 
     navbar: [
       "/",
