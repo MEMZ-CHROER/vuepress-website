@@ -4,8 +4,8 @@ category:
   - CategoryA
   - CategoryB
 tag:
-  - tag A
-  - tag B
+  - C++
+  - 入门
 ---
 
 # Article 4

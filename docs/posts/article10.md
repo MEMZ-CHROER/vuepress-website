@@ -4,8 +4,8 @@ category:
   - CategoryA
   - CategoryB
 tag:
-  - tag C
-  - tag D
+  - 随笔
+  - 日常
 ---
 
 # Article 10

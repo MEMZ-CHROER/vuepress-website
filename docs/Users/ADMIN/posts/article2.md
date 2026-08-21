@@ -3,8 +3,8 @@ date: 2022-01-02
 category:
   - CategoryA
 tag:
-  - tag A
-  - tag B
+  - 坦克
+  - 设计
 ---
 
 # Article 2

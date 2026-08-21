@@ -3,8 +3,8 @@ date: 2022-01-01
 category:
   - CategoryA
 tag:
-  - tag A
-  - tag B
+  - 坦克
+  - 手绘
 ---
 
 # Article 1

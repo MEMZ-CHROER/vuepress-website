@@ -4,8 +4,8 @@ category:
   - CategoryA
   - CategoryB
 tag:
-  - tag C
-  - tag D
+  - C++
+  - 编程
 ---
 
 # Article 12

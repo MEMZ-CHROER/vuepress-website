@@ -2,9 +2,10 @@
 date: 1998-01-01
 category:
   - History
-tag:
-  - WWI
 archive: true
+tag:
+  - 历史
+  - 一战
 ---
 
 # Archive Article1

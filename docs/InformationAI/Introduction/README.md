@@ -1,3 +1,9 @@
+---
+tag:
+  - AI
+  - 入门
+---
+
 # :robot:信息课展示AI:robot:
 
 ![封面](./img/1.jpg)

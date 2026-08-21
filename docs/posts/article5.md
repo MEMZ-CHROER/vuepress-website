@@ -4,8 +4,8 @@ category:
   - CategoryA
   - CategoryB
 tag:
-  - tag A
-  - tag B
+  - C++
+  - 算法
 ---
 
 # Article 5

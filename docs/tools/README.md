@@ -1,9 +1,9 @@
 ---
-tag:
-  - tag A
 category:
   - CategoryA
   - CategoryB
+tag:
+  - 工具
 ---
 
 # 下载链接

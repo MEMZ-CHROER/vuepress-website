@@ -1,6 +1,8 @@
 ---
 title: 友情链接
 sidebar: false
+tag:
+  - 友链
 ---
 
 # 🤝 友情链接

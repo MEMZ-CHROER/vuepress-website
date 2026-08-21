@@ -4,8 +4,8 @@ category:
   - CategoryA
   - CategoryB
 tag:
-  - tag A
-  - tag B
+  - C++
+  - 指针
 ---
 
 # Article 6

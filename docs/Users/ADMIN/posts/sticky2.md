@@ -2,9 +2,10 @@
 date: 2020-01-01
 category:
   - CategoryC
-tag:
-  - tag E
 sticky: 10
+tag:
+  - 置顶
+  - 随笔
 ---
 
 # Sticky Article with Higher Priority

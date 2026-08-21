@@ -1,6 +1,8 @@
 ---
 title: 关于本站
 sidebar: false
+tag:
+  - 关于
 ---
 
 # 👋 关于本站

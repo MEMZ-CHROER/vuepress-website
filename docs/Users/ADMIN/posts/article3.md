@@ -4,8 +4,8 @@ category:
   - CategoryA
   - CategoryB
 tag:
-  - tag A
-  - tag B
+  - 坦克
+  - 图鉴
 ---
 
 # Article 3

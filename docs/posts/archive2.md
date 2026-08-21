@@ -2,9 +2,10 @@
 date: 1998-01-02
 category:
   - History
-tag:
-  - WWII
 archive: true
+tag:
+  - 历史
+  - 二战
 ---
 
 # Archive Article2

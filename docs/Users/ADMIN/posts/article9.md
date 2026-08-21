@@ -4,8 +4,8 @@ category:
   - CategoryA
   - CategoryB
 tag:
-  - tag C
-  - tag D
+  - 学习
+  - 笔记
 ---
 
 # Article 9

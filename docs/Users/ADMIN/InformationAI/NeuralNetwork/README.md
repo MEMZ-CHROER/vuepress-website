@@ -1,3 +1,9 @@
+---
+tag:
+  - AI
+  - 神经网络
+---
+
 # :robot:揭秘AI大脑的核心：神经网络:tada:
 
 ::: tip :question:AI是如何做到识别面孔、理解语言，甚至下棋战胜人类顶尖选手的?:question:

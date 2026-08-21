@@ -4,8 +4,8 @@ category:
   - CategoryA
   - CategoryB
 tag:
-  - tag C
-  - tag D
+  - 数学
+  - 幻方
 ---
 
 # Article 8
