@@ -523,7 +523,7 @@ function loadUsers() {
     html += '<table><tr><th>ID</th><th>用户名</th><th>角色</th><th>权限</th><th>可写路径</th><th>创建时间</th><th>操作</th></tr>';
     (users || []).forEach(function(u) {
       var wp = u.write_paths || '';
-      html += '<tr><td>' + u.id + '</td><td>' + escHtml(u.username) + '</td><td>' + u.role + '</td><td>' + (u.permissions || 'all') + '</td><td>' + (u.permissions === 'custom' ? escHtml(wp) : '-') + '</td><td>' + (u.created_at || '-') + '</td>';
+      html += '<tr><td>' + u.id + '</td><td>' + escHtml(u.username) + '</td><td>' + u.role + '</td><td>' + (u.permissions || 'all') + '</td><td>' + (u.role === 'custom' ? escHtml(wp) : '-') + '</td><td>' + (u.created_at || '-') + '</td>';
       html += '<td>' + (u.id > 1 ? '<button class="btn btn-sm btn-red" onclick="delUser(' + u.id + ')">删除</button>' : '-') + '</td></tr>';
     });
     html += '</table>';
