@@ -48,7 +48,7 @@ ICP备案号：<a href="https://beian.miit.gov.cn/">津ICP备2026006589号-1</a>
 ICP主体备案号：<a href="https://beian.miit.gov.cn/">津ICP备2026006589号</a>
 
 若要查看许可协议，请点击[LICENSE][Lxy_MIT_License]查看协议
-<a href="./Users/ADMIN/">Administrator-Mode</a>
+<a href="/admin/">🔐 管理后台</a>
 <a href="https://cdn.liuxiyu.cn">进入CDN节点（GitHub Pages 备份）</a>
 <a href="https://www.liuxiyu.cn">回到主站</a>
 
