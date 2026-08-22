@@ -53,16 +53,26 @@ async function canWrite(token, db, targetPath) {
   let t = targetPath.replace(/^\/(api|raw)\//, "/");
   // GitHub API 路径形如 /repos/OWNER/REPO/contents/docs/csharp/a.md
   const m = t.match(/\/contents\/(.+)$/);
-  if (!m) return false;
+  if (!m) { throw new Error('cw no contents: ' + targetPath); }
   const filePath = m[1];
+  // 兼容 docs/ 前缀差异：文件可能在 docs/ 下，但 URL 里可能带或不带 docs/ 前缀
+  const variants = [];
+  if (filePath.indexOf('docs/') === 0) variants.push(filePath, filePath.slice(5));
+  else variants.push(filePath, 'docs/' + filePath);
   for (const rule of allowed) {
     if (!rule) continue;
     // 目录规则（结尾 /）：前缀匹配
     if (rule.endsWith("/")) {
-      if (filePath === rule.slice(0, -1) || filePath.startsWith(rule)) return true;
+      for (const v of variants) {
+        if (v === rule.slice(0, -1) || v.startsWith(rule) || v.startsWith('docs/' + rule)) return true;
+      }
     }
     // 精确文件名规则
-    else if (filePath === rule) return true;
+    else {
+      for (const v of variants) {
+        if (v === rule) return true;
+      }
+    }
   }
   return false;
 }
