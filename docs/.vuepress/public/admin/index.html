@@ -224,12 +224,14 @@ function render() {
   html += '<a class="nav-item'+(state==='dashboard'?' active':'')+'" onclick="go(\'dashboard\')">🏠 仪表盘</a>';
   if (hasPerm('pages')) html += '<a class="nav-item'+(state==='pages'?' active':'')+'" onclick="go(\'pages\')">📄 页面管理</a>';
   if (hasPerm('media')) html += '<a class="nav-item'+(state==='media'?' active':'')+'" onclick="go(\'media\')">🖼 媒体库</a>';
-  if (hasPerm('navbar')) html += '<a class="nav-item'+(state==='navbar'?' active':'')+'" onclick="go(\'navbar\')">🔗 导航栏</a>';
+  // 导航栏暂隐藏：本博客导航配置在 config.js，不支持 navbar.json 图形化编辑
+  // if (hasPerm('navbar')) html += '<a class="nav-item'+(state==='navbar'?' active':'')+'" onclick="go(\'navbar\')">🔗 导航栏</a>';
   if (hasPerm('pages')) html += '<a class="nav-item'+(state==='new'?' active':'')+'" onclick="go(\'new\')">➕ 新建页面</a>';
   if (hasPerm('passwords')) html += '<a class="nav-item'+(state==='passwords'?' active':'')+'" onclick="go(\'passwords\')">🔐 页面密码</a>';
   if (isAdmin()) html += '<a class="nav-item'+(state==='users'?' active':'')+'" onclick="go(\'users\')">👥 用户管理</a>';
-  if (isAdmin()) html += '<a class="nav-item'+(state==='settings'?' active':'')+'" onclick="go(\'settings\')">⚙ 站点设置</a>';
-  if (isAdmin()) html += '<a class="nav-item'+(state==='style'?' active':'')+'" onclick="go(\'style\')">🎨 样式编辑器</a>';
+  // 站点设置/样式编辑器暂隐藏：本博客用 config.js + theme-hope，不支持 JSON 图形化编辑
+  // if (isAdmin()) html += '<a class="nav-item'+(state==='settings'?' active':'')+'" onclick="go(\'settings\')">⚙ 站点设置</a>';
+  // if (isAdmin()) html += '<a class="nav-item'+(state==='style'?' active':'')+'" onclick="go(\'style\')">🎨 样式编辑器</a>';
   if (isAdmin()) html += '<a class="nav-item'+(state==='pagesbuild'?' active':'')+'" onclick="go(\'pagesbuild\')">🚀 Pages 构建</a>';
   html += '<a class="nav-item'+(state==='search'?' active':'')+'" onclick="go(\'search\')">🔍 搜索</a>';
   if (isAdmin()) html += '<a class="nav-item'+(state==='sitemap'?' active':'')+'" onclick="go(\'sitemap\')">🗺 站点地图</a>';
@@ -244,7 +246,11 @@ function render() {
   loadPage();
 }
 
-function go(s) { state=s; render(); }
+function go(s) {
+  // 导航栏/站点设置/样式编辑器暂不可用（本博客用 config.js + theme-hope，无 JSON 配置）
+  if (s === 'navbar' || s === 'settings' || s === 'style') { alert('此功能暂不可用（博客使用 config.js 配置，不支持图形化编辑）'); return; }
+  state=s; render();
+}
 
 function logout() {
   fetch(API_BASE + '/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: _session.token }) });
@@ -322,8 +328,7 @@ function loadDashboard() {
     html += '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">';
     if (hasPerm('pages')) html += '<button class="btn" onclick="go(\'new\')">➕ 新建页面</button>';
     if (hasPerm('media')) html += '<button class="btn" onclick="go(\'media\')">🖼 上传图片</button>';
-    if (hasPerm('navbar')) html += '<button class="btn" onclick="go(\'navbar\')">🔗 编辑导航</button>';
-    html += '<button class="btn" onclick="go(\'style\')">🎨 编辑样式</button>';
+    // if (hasPerm('navbar')) html += '<button class="btn" onclick="go(\'navbar\')">🔗 编辑导航</button>';
     html += '<button class="btn" onclick="go(\'sitemap\')">🗺 站点地图</button>';
     html += '</div>';
 
@@ -581,30 +586,40 @@ window.doSearch = function() {
   if (!q) { results.innerHTML = ''; return; }
   results.innerHTML = '<p>搜索中...</p>';
   gh('/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1').then(function(data) {
-    if (data.message) { results.innerHTML = '<p class="red">' + data.message + '</p>'; return; }
-    var mds = data.tree.filter(function(f) { return f.path.startsWith('docs/') && f.path.endsWith('.md') && f.path !== 'docs/README.md'; });
+    if (data && data.message) { results.innerHTML = '<p class="red">' + data.message + '</p>'; return; }
+    var mds = (data && data.tree || []).filter(function(f) { return f.path.startsWith('docs/') && f.path.endsWith('.md') && f.path !== 'docs/README.md'; });
+    if (mds.length === 0) { results.innerHTML = '<p class="dim">没有页面</p>'; return; }
     var found = [];
-    var loaded = 0;
-    mds.forEach(function(f) {
+    var idx = 0;
+    // 串行处理，避免并发请求挂起；任何情况最终都会渲染结果
+    function next() {
+      if (idx >= mds.length) { renderSearchResults(q, found, results); return; }
+      var f = mds[idx++];
+      var finished = false;
+      var timer = setTimeout(function() { if (!finished) { finished = true; next(); } }, 15000); // 15s 超时兜底
       ghRaw('/repos/' + REPO + '/contents/' + f.path + '?ref=' + BRANCH).then(function(content) {
-        loaded++;
-        var text = content.toLowerCase();
+        if (finished) return;
+        finished = true; clearTimeout(timer);
+        var text = String(content || '').toLowerCase();
         if (text.indexOf(q) > -1) {
-          var excerpt = '';
-          var idx = text.indexOf(q);
-          var start = Math.max(0, idx - 40);
-          var end = Math.min(text.length, idx + q.length + 40);
-          excerpt = content.substring(start, end).replace(/\n/g, ' ').trim();
+          var ei = text.indexOf(q);
+          var start = Math.max(0, ei - 40);
+          var end = Math.min(text.length, ei + q.length + 40);
+          var excerpt = String(content).substring(start, end).replace(/\n/g, ' ').trim();
           if (start > 0) excerpt = '...' + excerpt;
           if (end < content.length) excerpt += '...';
           found.push({ path: f.path, excerpt: excerpt });
         }
-        if (loaded >= mds.length) {
-          renderSearchResults(q, found, results);
-        }
+        next();
+      }).catch(function() {
+        if (finished) return;
+        finished = true; clearTimeout(timer);
+        next(); // 失败继续下一个，不阻塞
       });
-    });
-    if (mds.length === 0) results.innerHTML = '<p class="dim">没有页面</p>';
+    }
+    next();
+  }).catch(function(e) {
+    results.innerHTML = '<p class="red">加载失败: ' + (e.message || e) + '</p>';
   });
 };
 
