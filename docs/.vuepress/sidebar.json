@@ -1,0 +1,40 @@
+{
+  "/cpp/": [
+    {
+      "text": "C++ 讲义",
+      "icon": "book",
+      "prefix": "/cpp/",
+      "collapsible": true,
+      "children": [
+        {
+          "text": "🚀 C++ 入门",
+          "prefix": "introduction/",
+          "collapsible": true,
+          "children": [
+            "intro", "editor", "environment", "input", "files",
+            "constantVariable", "dataType", "operator", "controlStructure",
+            "function", "array", "pointers", "scope", "structure", "routine",
+            "assign"
+          ]
+        },
+        {
+          "text": "⚡ 算法",
+          "prefix": "algorithm/",
+          "collapsible": true,
+          "children": [
+            "complexity", "recursion", "divide", "greedy", "dynamic",
+            "backtracking", "sort", "accurate"
+          ]
+        },
+        {
+          "text": "🌳 数据结构",
+          "prefix": "datastructure/",
+          "collapsible": true,
+          "children": [
+            "stack", "queue", "tree", "heap", "graph", "huffman", "expression"
+          ]
+        }
+      ]
+    }
+  ]
+}

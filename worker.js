@@ -191,7 +191,7 @@ export default {
       if (password.length < 6) return json({ error: "password too short (min 6)" }, 400);
       // role 支持 admin / custom / editor（custom = 写操作受 write_paths 白名单约束）
       const role = body.role === "admin" ? "admin" : (body.role === "custom" ? "custom" : "editor");
-      const perms = body.permissions === "all" ? "all" : (body.permissions || "media,navbar,pages,passwords");
+      const perms = body.permissions === "all" ? "all" : (body.permissions || "media,navbar,pages,passwords,sidebar");
       // custom 权限：write_paths 存允许写入的路径/文件名（逗号分隔）
       const writePaths = (typeof body.write_paths === "string" ? body.write_paths : "").trim();
       const hash = await sha256(password);
@@ -269,6 +269,7 @@ export default {
         || targetPath.includes("/contents/.vuepress/styles/index.scss");
       const isMedia = targetPath.includes("/contents/.vuepress/public/assets/img/");
       const isNavbar = targetPath.includes("/contents/.vuepress/navbar.json");
+      const isSidebar = targetPath.includes("/contents/.vuepress/sidebar.json");
       const isPage = /\/contents\/docs\/.*\.md$/.test(targetPath);
       const isPagesBuild = targetPath.includes("/pages/builds");
 
@@ -288,6 +289,8 @@ export default {
           if (!await requirePerm(token, env.DB, "media")) return json({ error: "need 'media' permission" }, 403);
         } else if (isNavbar) {
           if (!await requirePerm(token, env.DB, "navbar")) return json({ error: "need 'navbar' permission" }, 403);
+        } else if (isSidebar) {
+          if (!await requirePerm(token, env.DB, "sidebar")) return json({ error: "need 'sidebar' permission" }, 403);
         } else if (isPage || isPagesBuild) {
           if (!await requirePerm(token, env.DB, "pages")) return json({ error: "need 'pages' permission" }, 403);
         } else {

@@ -2,6 +2,7 @@ import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { hopeTheme } from "vuepress-theme-hope";
 import navbar from "./navbar.json";
+import sidebar from "./sidebar.json";
 
 // base 路径：默认根路径（Vercel 主站 / 本地 dev），
 // GitHub Pages 构建时通过环境变量 VUEPRESS_BASE 注入子路径 /vuepress-website/
@@ -33,46 +34,7 @@ export default defineUserConfig({
     navbar,  // 导航栏来自 navbar.json（供社区协作编辑）
 
     // C++ 讲义区侧边栏（按目录自动分组，便于导航）
-    sidebar: {
-      "/cpp/": [
-        {
-          text: "C++ 讲义",
-          icon: "book",
-          prefix: "/cpp/",
-          collapsible: true,
-          children: [
-            {
-              text: "🚀 C++ 入门",
-              prefix: "introduction/",
-              collapsible: true,
-              children: [
-                "intro", "editor", "environment", "input", "files",
-                "constantVariable", "dataType", "operator", "controlStructure",
-                "function", "array", "pointers", "scope", "structure", "routine",
-                "assign",
-              ],
-            },
-            {
-              text: "⚡ 算法",
-              prefix: "algorithm/",
-              collapsible: true,
-              children: [
-                "complexity", "recursion", "divide", "greedy", "dynamic",
-                "backtracking", "sort", "accurate",
-              ],
-            },
-            {
-              text: "🌳 数据结构",
-              prefix: "datastructure/",
-              collapsible: true,
-              children: [
-                "stack", "queue", "tree", "heap", "graph", "huffman", "expression",
-              ],
-            },
-          ],
-        },
-      ],
-    },
+    sidebar,  // 侧边栏来自 sidebar.json（供社区协作编辑）
 
     // Markdown 增强（内置，替代原 markdown-ext / stylize / chart / katex 插件）
     markdown: {

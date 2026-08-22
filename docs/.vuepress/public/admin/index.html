@@ -225,6 +225,7 @@ function render() {
   if (hasPerm('pages')) html += '<a class="nav-item'+(state==='pages'?' active':'')+'" onclick="go(\'pages\')">📄 页面管理</a>';
   if (hasPerm('media')) html += '<a class="nav-item'+(state==='media'?' active':'')+'" onclick="go(\'media\')">🖼 媒体库</a>';
   if (hasPerm('navbar')) html += '<a class="nav-item'+(state==='navbar'?' active':'')+'" onclick="go(\'navbar\')">🔗 导航栏</a>';
+  if (hasPerm('sidebar')) html += '<a class="nav-item'+(state==='sidebar'?' active':'')+'" onclick="go(\'sidebar\')">📑 侧边栏</a>';
   if (hasPerm('pages')) html += '<a class="nav-item'+(state==='new'?' active':'')+'" onclick="go(\'new\')">➕ 新建页面</a>';
   if (hasPerm('passwords')) html += '<a class="nav-item'+(state==='passwords'?' active':'')+'" onclick="go(\'passwords\')">🔐 页面密码</a>';
   if (isAdmin()) html += '<a class="nav-item'+(state==='users'?' active':'')+'" onclick="go(\'users\')">👥 用户管理</a>';
@@ -302,6 +303,7 @@ function loadPage() {
   else if (state === 'sitemap') { if (!isAdmin()) { go('dashboard'); return; } loadSitemap(); }
   else if (state === 'users') { if (!isAdmin()) { go('dashboard'); return; } loadUsers(); }
   else if (state === 'search') loadSearch();
+  else if (state === 'sidebar') { if (!hasPerm('sidebar')) { go('dashboard'); return; } loadSidebar(); }
 }
 
 // ── Dashboard ──
@@ -537,7 +539,7 @@ window.showAddUser = function() {
   html += '<label>用户名</label><input type="text" id="newUserName" style="width:100%" />';
   html += '<label>密码</label><input type="password" id="newUserPass" style="width:100%" />';
   html += '<label>角色</label><select id="newUserRole" style="width:100%"><option value="editor">编辑者</option><option value="custom">自定义(custom)</option><option value="admin">管理员</option></select>';
-  html += '<label>权限（逗号分隔，留空=全部）</label><input type="text" id="newUserPerms" value="media,navbar,pages,passwords" style="width:100%" />';
+  html += '<label>权限（逗号分隔，留空=全部）</label><input type="text" id="newUserPerms" value="media,navbar,pages,passwords,sidebar" style="width:100%" />';
   html += '<div id="customWrap" style="display:none"><label>可写路径（custom 角色专用，逗号分隔；目录结尾加 /，如 docs/csharp/ 或 docs/csharp/a.md）</label><input type="text" id="newUserWritePaths" placeholder="docs/csharp/" style="width:100%" /></div>';
   html += '<div class="btns"><button class="btn" onclick="createUser()">创建</button><button class="btn btn-red" onclick="closeModal()">取消</button></div></div></div>';
   var div = document.createElement('div');
@@ -1239,25 +1241,42 @@ function loadNavbar() {
   });
 }
 
+// 导航编辑器：支持顶层链接 + children 下拉（完整保留结构）
 function renderNavEditor() {
   var main = document.getElementById('main');
   var items = window._navItems || [];
   var listHtml = '';
   items.forEach(function(item, i) {
+    var hasChildren = Array.isArray(item.children) && item.children.length > 0;
+    var kind = hasChildren ? '<span class="dim" style="font-size:11px">▾下拉</span>' : '';
     listHtml += '<tr>';
     listHtml += '<td style="cursor:move;font-size:18px;opacity:.4" onclick="moveNavItem(' + i + ',-1)">↑</td>';
     listHtml += '<td style="cursor:move;font-size:18px;opacity:.4" onclick="moveNavItem(' + i + ',1)">↓</td>';
-    listHtml += '<td><input type="text" id="nlabel' + i + '" value="' + escHtml(item.text) + '" style="width:100%" /></td>';
-    listHtml += '<td><input type="text" id="nhref' + i + '" value="' + escHtml(item.link) + '" style="width:100%;font-size:12px;" /></td>';
-    listHtml += '<td><button class="btn btn-sm btn-red" onclick="delNavItem(' + i + ')">✕</button></td>';
+    listHtml += '<td><input type="text" id="nlabel' + i + '" value="' + escHtml(item.text || '') + '" style="width:100%" /> ' + kind + '</td>';
+    listHtml += '<td><input type="text" id="nhref' + i + '" value="' + escHtml(item.link || '') + '" style="width:100%;font-size:12px;" placeholder="(下拉菜单可留空)" /></td>';
+    listHtml += '<td>';
+    listHtml += '<button class="btn btn-sm" onclick="addNavChild(' + i + ')">＋子项</button> ';
+    listHtml += '<button class="btn btn-sm btn-red" onclick="delNavItem(' + i + ')">✕</button>';
+    listHtml += '</td>';
     listHtml += '</tr>';
+    // 子项（children）
+    if (hasChildren) {
+      item.children.forEach(function(child, j) {
+        listHtml += '<tr style="background:rgba(99,102,241,.06)">';
+        listHtml += '<td></td><td style="text-align:center;opacity:.5">└</td>';
+        listHtml += '<td><input type="text" id="nchild_label' + i + '_' + j + '" value="' + escHtml(child.text || '') + '" style="width:100%;font-size:13px;" /></td>';
+        listHtml += '<td><input type="text" id="nchild_href' + i + '_' + j + '" value="' + escHtml(child.link || '') + '" style="width:100%;font-size:12px;" /></td>';
+        listHtml += '<td><button class="btn btn-sm btn-red" onclick="delNavChild(' + i + ',' + j + ')">✕</button></td>';
+        listHtml += '</tr>';
+      });
+    }
   });
 
   main.innerHTML = `
 <div class="page-bar"><h2>🔗 导航栏</h2></div>
-<div class="warn"><b>💡</b> 添加、删除、排序导航链接。点 ↑↓ 调整顺序。</div>
+<div class="warn"><b>💡</b> 添加、删除、排序导航项。带 ▾下拉 的可展开子项。点 ↑↓ 调整顺序。</div>
 <table>
-<tr><th style="width:30px"></th><th style="width:30px"></th><th>名称</th><th>链接</th><th style="width:50px"></th></tr>
+<tr><th style="width:30px"></th><th style="width:30px"></th><th>名称</th><th>链接</th><th style="width:140px"></th></tr>
 ${listHtml}
 </table>
 <div style="margin:12px 0"><button class="btn btn-sm" onclick="addNavItem()">+ 添加链接</button></div>
@@ -1266,12 +1285,25 @@ ${listHtml}
 
 window.addNavItem = function() {
   if (!window._navItems) window._navItems = [];
-  window._navItems.push({ text: '新页面', link: '/new-page/' });
+  window._navItems.push({ text: '新链接', link: '/new-page/' });
+  renderNavEditor();
+};
+
+window.addNavChild = function(i) {
+  var items = window._navItems;
+  if (!items[i].children) items[i].children = [];
+  items[i].children.push({ text: '新子项', link: '/child-page/' });
   renderNavEditor();
 };
 
 window.delNavItem = function(i) {
   window._navItems.splice(i, 1);
+  renderNavEditor();
+};
+
+window.delNavChild = function(i, j) {
+  var items = window._navItems;
+  if (items[i] && items[i].children) items[i].children.splice(j, 1);
   renderNavEditor();
 };
 
@@ -1293,7 +1325,20 @@ window.saveNavbar = function() {
     var href = document.getElementById('nhref' + idx);
     var text = (label ? label.value.trim() : item.text) || '';
     var link = (href ? href.value.trim() : item.link) || '';
-    if (text || link) newItems.push({ text: text, link: link });
+    var childArr = (item.children && item.children.length) ? [] : null;
+    if (childArr !== null) {
+      item.children.forEach(function(child, j) {
+        var cl = document.getElementById('nchild_label' + idx + '_' + j);
+        var ch = document.getElementById('nchild_href' + idx + '_' + j);
+        var ct = (cl ? cl.value.trim() : child.text) || '';
+        var ck = (ch ? ch.value.trim() : child.link) || '';
+        if (ct || ck) childArr.push({ text: ct, link: ck });
+      });
+    }
+    var out = { text: text };
+    if (childArr && childArr.length) out.children = childArr;
+    else if (link) out.link = link;
+    if (text || link || (childArr && childArr.length)) newItems.push(out);
   });
 
   document.getElementById('navStatus').textContent = '保存中...';
@@ -1308,9 +1353,194 @@ window.saveNavbar = function() {
     if (d.content) {
       window._navSha = d.content.sha;
       window._navItems = newItems;
-      document.getElementById('navStatus').textContent = '✅ 已保存，Actions 自动重建中（约 1-2 分钟）';
+      document.getElementById('navStatus').textContent = '✅ 已保存，构建部署中（约 1-2 分钟）';
     } else {
       document.getElementById('navStatus').textContent = '❌ 保存失败: ' + (d.message||'');
+    }
+  });
+};
+
+// ── Sidebar Editor（完整三层嵌套）──
+function loadSidebar() {
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p>';
+  gh('/repos/' + REPO + '/contents/.vuepress/sidebar.json?ref=' + BRANCH).then(function(meta) {
+    if (!meta || meta.message) { main.innerHTML = '<p class="red">' + (meta ? meta.message : '空响应') + '</p>'; return; }
+    if (!meta.content) { main.innerHTML = '<p class="red">响应中没有文件内容</p>'; return; }
+    window._sideSha = meta.sha;
+    var raw = meta.content.replace(/\n/g, '').replace(/\r/g, '');
+    var content = atob(raw);
+    try { content = decodeURIComponent(escape(content)); } catch(e) {}
+    var data = {};
+    try { data = JSON.parse(content || '{}'); } catch(e) { data = {}; }
+    window._sideData = data;
+    renderSidebar();
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">请求失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+// 递归渲染侧边栏路径分组
+function renderSidebar() {
+  var main = document.getElementById('main');
+  var data = window._sideData || {};
+  var paths = Object.keys(data);
+  var html = '<div class="page-bar"><h2>📑 侧边栏</h2></div>';
+  html += '<div class="warn"><b>💡</b> 侧边栏按路径分组，每组可含子分组与文件名列表。支持 /cpp/ /csharp/ 等多个路径。</div>';
+  paths.forEach(function(p, i) {
+    html += '<div style="border:1px solid #2a2a3a;border-radius:8px;margin:10px 0;padding:12px;">';
+    html += '<b>路径:</b> <input id="spath' + i + '" value="' + escHtml(p) + '" style="width:120px;margin-right:8px" /> ';
+    html += '<button class="btn btn-sm btn-red" onclick="delSidePath(' + i + ')">✕ 删路径</button>';
+    // 分组
+    var groups = data[p] || [];
+    html += '<div style="margin-left:12px;margin-top:8px;">';
+    groups.forEach(function(g, gi) {
+      html += renderSideGroup(i, gi, g);
+    });
+    html += '<button class="btn btn-sm" onclick="addSideGroup(' + i + ')">+ 添加分组</button>';
+    html += '</div>';
+    html += '</div>';
+  });
+  html += '<button class="btn btn-sm" onclick="addSidePath()">+ 添加路径</button>';
+  html += '<div style="margin-top:16px"><button class="btn" onclick="saveSidebar()">💾 保存侧边栏</button> <span id="sideStatus" class="dim"></span></div>';
+  main.innerHTML = html;
+}
+
+// 渲染一个分组（支持 children 为字符串数组或子分组）
+function renderSideGroup(pi, gi, g) {
+  var idp = pi + '_' + gi;
+  var hasChildren = Array.isArray(g.children);
+  var isFileList = hasChildren && g.children.length > 0 && typeof g.children[0] === 'string';
+  var h = '<div style="border-left:3px solid #6366f1;padding-left:8px;margin:6px 0;">';
+  h += '<input id="sgroup_label' + idp + '" value="' + escHtml(g.text||'') + '" placeholder="分组名" style="width:160px" /> ';
+  h += '<input id="sgroup_prefix' + idp + '" value="' + escHtml(g.prefix||'') + '" placeholder="prefix" style="width:120px;font-size:12px" /> ';
+  h += '<label style="font-size:12px">折叠<input type="checkbox" id="sgroup_col' + idp + '"' + (g.collapsible ? ' checked' : '') + ' /></label> ';
+  h += '<button class="btn btn-sm" onclick="addSideChild(' + pi + ',' + gi + ')">+文件</button> ';
+  h += '<button class="btn btn-sm" onclick="addSideSubgroup(' + pi + ',' + gi + ')">+子分组</button> ';
+  h += '<button class="btn btn-sm btn-red" onclick="delSideGroup(' + pi + ',' + gi + ')">✕</button>';
+  h += '</div>';
+  // children 渲染
+  if (hasChildren) {
+    h += '<div style="margin-left:16px;">';
+    g.children.forEach(function(c, ci) {
+      if (typeof c === 'string') {
+        h += '<div><span style="opacity:.4">•</span> <input id="sfile' + pi + '_' + gi + '_' + ci + '" value="' + escHtml(c) + '" style="width:200px;font-size:12px" /> <button class="btn btn-sm btn-red" onclick="delSideChild(' + pi + ',' + gi + ',' + ci + ')">✕</button></div>';
+      } else {
+        // 子分组（递归）
+        h += '<div style="background:rgba(99,102,241,.05);padding:4px 8px;margin:4px 0;border-radius:4px;">';
+        h += '<b style="font-size:12px">└ 子分组</b> <input id="sgroup_label' + pi + '_' + gi + '_' + ci + '" value="' + escHtml(c.text||'') + '" placeholder="子分组名" style="width:120px;font-size:12px" /> ';
+        h += '<input id="sgroup_prefix' + pi + '_' + gi + '_' + ci + '" value="' + escHtml(c.prefix||'') + '" placeholder="prefix" style="width:100px;font-size:12px" /> ';
+        h += '<button class="btn btn-sm" onclick="addSubFile(' + pi + ',' + gi + ',' + ci + ')">+文件</button> ';
+        h += '<button class="btn btn-sm btn-red" onclick="delSideChild(' + pi + ',' + gi + ',' + ci + ')">✕</button>';
+        h += '<div style="margin-left:14px;">';
+        (c.children||[]).forEach(function(sf, si) {
+          h += '<div><span style="opacity:.4">–</span> <input id="sfile' + pi + '_' + gi + '_' + ci + '_' + si + '" value="' + escHtml(sf) + '" style="width:180px;font-size:12px" /> <button class="btn btn-sm btn-red" onclick="delSubFile(' + pi + ',' + gi + ',' + ci + ',' + si + ')">✕</button></div>';
+        });
+        h += '</div>';
+        h += '</div>';
+      }
+    });
+    h += '</div>';
+  }
+  return h;
+}
+
+// ---- 操作函数 ----
+window.addSidePath = function() {
+  window._sideData['/new-path/'] = [];
+  renderSidebar();
+};
+window.delSidePath = function(i) {
+  var paths = Object.keys(window._sideData);
+  delete window._sideData[paths[i]];
+  renderSidebar();
+};
+window.addSideGroup = function(pi) {
+  var p = Object.keys(window._sideData)[pi];
+  window._sideData[p].push({ text: '新分组', prefix: '', collapsible: true, children: [] });
+  renderSidebar();
+};
+window.delSideGroup = function(pi, gi) {
+  var p = Object.keys(window._sideData)[pi];
+  window._sideData[p].splice(gi, 1);
+  renderSidebar();
+};
+window.addSideChild = function(pi, gi) {
+  var p = Object.keys(window._sideData)[pi];
+  window._sideData[p][gi].children.push('new-file');
+  renderSidebar();
+};
+window.delSideChild = function(pi, gi, ci) {
+  var p = Object.keys(window._sideData)[pi];
+  window._sideData[p][gi].children.splice(ci, 1);
+  renderSidebar();
+};
+window.addSideSubgroup = function(pi, gi) {
+  var p = Object.keys(window._sideData)[pi];
+  var g = window._sideData[p][gi];
+  if (g.children.some(function(c){return typeof c === 'object';})) g.children.push({ text: '新子分组', prefix: '', collapsible: true, children: [] });
+  else g.children.push({ text: '新子分组', prefix: '', collapsible: true, children: [] });
+  renderSidebar();
+};
+window.addSubFile = function(pi, gi, ci) {
+  var p = Object.keys(window._sideData)[pi];
+  var child = window._sideData[p][gi].children[ci];
+  child.children = child.children || [];
+  child.children.push('new-file');
+  renderSidebar();
+};
+window.delSubFile = function(pi, gi, ci, si) {
+  var p = Object.keys(window._sideData)[pi];
+  var child = window._sideData[p][gi].children[ci];
+  child.children.splice(si, 1);
+  renderSidebar();
+};
+
+window.saveSidebar = function() {
+  var data = window._sideData || {};
+  var out = {};
+  var paths = Object.keys(data);
+  paths.forEach(function(p, i) {
+    var newPath = document.getElementById('spath' + i).value.trim();
+    if (!newPath) return;
+    var groups = (data[p] || []).map(function(g, gi) {
+      var gLabel = document.getElementById('sgroup_label' + i + '_' + gi);
+      var gPrefix = document.getElementById('sgroup_prefix' + i + '_' + gi);
+      var gCol = document.getElementById('sgroup_col' + i + '_' + gi);
+      var ng = { text: gLabel ? gLabel.value.trim() : (g.text||''), collapsible: gCol ? gCol.checked : (g.collapsible||false) };
+      if (gPrefix && gPrefix.value.trim()) ng.prefix = gPrefix.value.trim();
+      var children = (g.children||[]).map(function(c, ci) {
+        if (typeof c === 'string') {
+          var el = document.getElementById('sfile' + i + '_' + gi + '_' + ci);
+          return el ? el.value.trim() : c;
+        } else {
+          var cl = document.getElementById('sgroup_label' + i + '_' + gi + '_' + ci);
+          var cp = document.getElementById('sgroup_prefix' + i + '_' + gi + '_' + ci);
+          var nc = { text: cl ? cl.value.trim() : (c.text||''), collapsible: true };
+          if (cp && cp.value.trim()) nc.prefix = cp.value.trim();
+          nc.children = (c.children||[]).map(function(sf, si) {
+            var el2 = document.getElementById('sfile' + i + '_' + gi + '_' + ci + '_' + si);
+            return el2 ? el2.value.trim() : sf;
+          }).filter(Boolean);
+          return nc;
+        }
+      }).filter(function(x){ return typeof x === 'string' ? x : x && (x.text || (x.children && x.children.length)); });
+      if (children.length) ng.children = children;
+      return ng;
+    }).filter(function(g){ return g.text || (g.children && g.children.length); });
+    if (groups.length) out[newPath] = groups;
+  });
+
+  document.getElementById('sideStatus').textContent = '保存中...';
+  var body = { message: 'update sidebar', content: b64enc(JSON.stringify(out, null, 2) + '\n'), branch: BRANCH };
+  if (window._sideSha) body.sha = window._sideSha;
+  gh('/repos/' + REPO + '/contents/.vuepress/sidebar.json', { method: 'PUT', body: JSON.stringify(body) }).then(function(d) {
+    if (d.content) {
+      window._sideSha = d.content.sha;
+      window._sideData = out;
+      document.getElementById('sideStatus').textContent = '✅ 已保存，构建部署中（约 1-2 分钟）';
+    } else {
+      document.getElementById('sideStatus').textContent = '❌ 保存失败: ' + (d.message||'');
     }
   });
 };
