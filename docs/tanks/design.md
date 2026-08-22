@@ -1,4 +1,5 @@
 ---
+author: Hejuxiao And Lxy
 title: 坦克设计图鉴
 date: 2026-07-05
 category:
