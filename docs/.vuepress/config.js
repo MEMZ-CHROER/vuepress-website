@@ -50,6 +50,10 @@ export default defineUserConfig({
         ],
       },
       {
+        text: "🌐 C# 社区",
+        link: "/csharp/",
+      },
+      {
         text: "📋 附件表",
         link: "/fujian/",
       },
@@ -164,6 +168,13 @@ export default defineUserConfig({
             filePathRelative.startsWith("cpp/") &&
             !filePathRelative.endsWith("/README.md") &&
             filePathRelative !== "cpp/README.md"
+          )
+            return true;
+          // csharp 社区区（排除 README 入口页）
+          if (
+            filePathRelative.startsWith("csharp/") &&
+            !filePathRelative.endsWith("/README.md") &&
+            filePathRelative !== "csharp/README.md"
           )
             return true;
           return false;
