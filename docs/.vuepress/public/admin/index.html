@@ -302,6 +302,7 @@ function loadPage() {
   else if (state === 'pagesbuild') { if (!isAdmin()) { go('dashboard'); return; } loadPagesBuild(); }
   else if (state === 'sitemap') { if (!isAdmin()) { go('dashboard'); return; } loadSitemap(); }
   else if (state === 'users') { if (!isAdmin()) { go('dashboard'); return; } loadUsers(); }
+  else if (state === 'search') loadSearch();
 }
 
 // ── Dashboard ──
