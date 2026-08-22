@@ -1,7 +1,7 @@
 ---
 title: 函数
 author: Lxy
-date: "2024-01-09"
+date: 2024-01-09
 category:
   - C++入门
 tag:

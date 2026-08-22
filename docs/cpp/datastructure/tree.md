@@ -1,7 +1,7 @@
 ---
 title: 树
 author: Lxy
-date: "2024-07-20"
+date: 2024-07-20
 category:
   - 数据结构
 tag:

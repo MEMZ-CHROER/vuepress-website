@@ -1,7 +1,7 @@
 ---
 title: 排序算法
 author: Lxy
-date: "2024-04-26"
+date: 2024-04-26
 category:
   - 算法
 tag:

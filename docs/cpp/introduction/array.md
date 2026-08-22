@@ -1,7 +1,7 @@
 ---
 title: 数组
 author: Lxy
-date: "2023-11-30"
+date: 2023-11-30
 category:
   - C++入门
 tag:

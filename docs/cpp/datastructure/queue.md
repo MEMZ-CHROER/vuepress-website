@@ -1,7 +1,7 @@
 ---
 title: 队列
 author: Lxy
-date: "2024-07-06"
+date: 2024-07-06
 category:
   - 数据结构
 tag:

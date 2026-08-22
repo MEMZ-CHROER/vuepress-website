@@ -1,7 +1,7 @@
 ---
 title: 递推算法
 author: Lxy
-date: "2024-06-1"
+date: 2024-06-01
 category:
   - 算法
 tag:

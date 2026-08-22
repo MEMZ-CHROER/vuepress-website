@@ -1,7 +1,7 @@
 ---
 title: 运算符与表达式
 author: Lxy
-date: "2023-10-16"
+date: 2023-10-16
 category:
   - C++入门
 tag:

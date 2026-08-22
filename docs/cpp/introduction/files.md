@@ -1,7 +1,7 @@
 ---
 title: 文件和结构体
 author: Lxy
-date: "2024-01-25"
+date: 2024-01-25
 category:
   - C++入门
 tag:

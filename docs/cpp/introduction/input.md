@@ -1,7 +1,7 @@
 ---
 title: 输入输出
 author: Lxy
-date: "2023-11-08"
+date: 2023-11-08
 category:
   - C++入门
 tag:

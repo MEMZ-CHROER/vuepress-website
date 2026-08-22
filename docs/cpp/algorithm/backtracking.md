@@ -1,7 +1,7 @@
 ---
 title: 搜索与回溯算法
 author: Lxy
-date: "2024-06-10"
+date: 2024-06-10
 category:
   - 算法
 tag:

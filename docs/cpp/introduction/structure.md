@@ -1,7 +1,7 @@
 ---
 title: C++语言基础程序结构
 author: Lxy
-date: "2023-10-16"
+date: 2023-10-16
 category:
   - C++入门
 tag:

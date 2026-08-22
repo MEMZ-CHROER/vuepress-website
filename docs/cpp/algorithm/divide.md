@@ -1,7 +1,7 @@
 ---
 title: 分治算法
 author: Lxy
-date: "2024-09-01"
+date: 2024-09-01
 category:
   - 算法
 tag:

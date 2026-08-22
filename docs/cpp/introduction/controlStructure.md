@@ -1,7 +1,7 @@
 ---
 title: C++控制结构
 author: Lxy
-date: "2023-11-16"
+date: 2023-11-16
 category:
   - C++入门
 tag:

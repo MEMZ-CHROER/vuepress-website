@@ -1,7 +1,7 @@
 ---
 title: 线上学习
 author: Lxy
-date: "2023-10-16"
+date: 2023-10-16
 category:
   - C++入门
 tag:

@@ -1,7 +1,7 @@
 ---
 title: 高精度计算
 author: Lxy
-date: "2024-03-30"
+date: 2024-03-30
 category:
   - 算法
 tag:

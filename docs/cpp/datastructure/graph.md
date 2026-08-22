@@ -1,7 +1,7 @@
 ---
 title: 图
 author: Lxy
-date: "2024-08-17"
+date: 2024-08-17
 category:
   - 数据结构
 tag:

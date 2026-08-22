@@ -1,7 +1,7 @@
 ---
 title: 指针与链表
 author: Lxy
-date: "2024-02-28"
+date: 2024-02-28
 category:
   - C++入门
 tag:

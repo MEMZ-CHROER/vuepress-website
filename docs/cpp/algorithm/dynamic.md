@@ -1,7 +1,7 @@
 ---
 title: 动态规划
 author: Lxy
-date: "2024-09-15"
+date: 2024-09-15
 category:
   - 算法
 tag:
