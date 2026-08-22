@@ -224,8 +224,7 @@ function render() {
   html += '<a class="nav-item'+(state==='dashboard'?' active':'')+'" onclick="go(\'dashboard\')">🏠 仪表盘</a>';
   if (hasPerm('pages')) html += '<a class="nav-item'+(state==='pages'?' active':'')+'" onclick="go(\'pages\')">📄 页面管理</a>';
   if (hasPerm('media')) html += '<a class="nav-item'+(state==='media'?' active':'')+'" onclick="go(\'media\')">🖼 媒体库</a>';
-  // 导航栏暂隐藏：本博客导航配置在 config.js，不支持 navbar.json 图形化编辑
-  // if (hasPerm('navbar')) html += '<a class="nav-item'+(state==='navbar'?' active':'')+'" onclick="go(\'navbar\')">🔗 导航栏</a>';
+  if (hasPerm('navbar')) html += '<a class="nav-item'+(state==='navbar'?' active':'')+'" onclick="go(\'navbar\')">🔗 导航栏</a>';
   if (hasPerm('pages')) html += '<a class="nav-item'+(state==='new'?' active':'')+'" onclick="go(\'new\')">➕ 新建页面</a>';
   if (hasPerm('passwords')) html += '<a class="nav-item'+(state==='passwords'?' active':'')+'" onclick="go(\'passwords\')">🔐 页面密码</a>';
   if (isAdmin()) html += '<a class="nav-item'+(state==='users'?' active':'')+'" onclick="go(\'users\')">👥 用户管理</a>';
@@ -248,7 +247,7 @@ function render() {
 
 function go(s) {
   // 导航栏/站点设置/样式编辑器暂不可用（本博客用 config.js + theme-hope，无 JSON 配置）
-  if (s === 'navbar' || s === 'settings' || s === 'style') { alert('此功能暂不可用（博客使用 config.js 配置，不支持图形化编辑）'); return; }
+  if (s === 'settings' || s === 'style') { alert('此功能暂不可用（博客使用 config.js 配置，不支持图形化编辑）'); return; }
   state=s; render();
 }
 
@@ -1231,13 +1230,7 @@ function loadNavbar() {
     var items = [];
     try { items = JSON.parse(content || '[]'); } catch(e) { items = []; }
     if (!Array.isArray(items) || items.length === 0) {
-      items = [
-        { text: '首页', link: '/' },
-        { text: 'Markdown教程', link: '/md-jc/' },
-        { text: 'Hacknet 百科', link: '/hacknet/' },
-        { text: '编程知识', link: '/programming/' },
-        { text: 'CSEL Mod', link: '/csel-mod/' }
-      ];
+      items = [];  // 空导航（避免误载 Dllhn 的默认项）
     }
     window._navItems = items;
     renderNavEditor();

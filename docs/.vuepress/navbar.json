@@ -1,0 +1,64 @@
+[
+  "/",
+  {
+    "text": "📝 博客",
+    "children": [
+      { "text": "📚 全部文章", "link": "/article/" },
+      { "text": "🏷️ 标签", "link": "/tag/" },
+      { "text": "📂 分类", "link": "/category/" },
+      { "text": "🕐 时间线", "link": "/timeline/" }
+    ]
+  },
+  {
+    "text": "📘 C++ 讲义",
+    "children": [
+      { "text": "📘 讲义首页", "link": "/cpp/" },
+      { "text": "🚀 C++ 入门", "link": "/cpp/introduction/" },
+      { "text": "⚡ 算法", "link": "/cpp/algorithm/" },
+      { "text": "🌳 数据结构", "link": "/cpp/datastructure/" }
+    ]
+  },
+  {
+    "text": "🌐 C# 社区",
+    "link": "/csharp/"
+  },
+  {
+    "text": "📋 附件表",
+    "link": "/fujian/"
+  },
+  {
+    "text": "🛠️ 工具下载",
+    "link": "/tools/"
+  },
+  {
+    "text": "🤖 信息AI",
+    "link": "/InformationAI/"
+  },
+  {
+    "text": "🎨 坦克们",
+    "children": [
+      { "text": "🎨 坦克图鉴", "link": "/tanks/" },
+      { "text": "📖 坦克设计图鉴", "link": "/tanks/design.html" }
+    ]
+  },
+  {
+    "text": "🌱 种花",
+    "link": "/planting/"
+  },
+  {
+    "text": "🔢 Maths",
+    "link": "/maths/"
+  },
+  {
+    "text": "🤝 友链",
+    "link": "/friends/"
+  },
+  {
+    "text": "👤 关于",
+    "link": "/about/"
+  },
+  {
+    "text": "🐙 GitHub",
+    "link": "https://www.github.com/MEMZ-CHROER/vuepress-test"
+  }
+]

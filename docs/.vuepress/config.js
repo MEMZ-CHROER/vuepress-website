@@ -1,6 +1,7 @@
 import { defineUserConfig } from "vuepress";
 import { viteBundler } from "@vuepress/bundler-vite";
 import { hopeTheme } from "vuepress-theme-hope";
+import navbar from "./navbar.json";
 
 // base 路径：默认根路径（Vercel 主站 / 本地 dev），
 // GitHub Pages 构建时通过环境变量 VUEPRESS_BASE 注入子路径 /vuepress-website/
@@ -29,70 +30,7 @@ export default defineUserConfig({
     author: "lxy",
     logo: asset("/icons/icon-512.png"),
 
-    navbar: [
-      "/",
-      {
-        text: "📝 博客",
-        children: [
-          { text: "📚 全部文章", link: "/article/" },
-          { text: "🏷️ 标签", link: "/tag/" },
-          { text: "📂 分类", link: "/category/" },
-          { text: "🕐 时间线", link: "/timeline/" },
-        ],
-      },
-      {
-        text: "📘 C++ 讲义",
-        children: [
-          { text: "📘 讲义首页", link: "/cpp/" },
-          { text: "🚀 C++ 入门", link: "/cpp/introduction/" },
-          { text: "⚡ 算法", link: "/cpp/algorithm/" },
-          { text: "🌳 数据结构", link: "/cpp/datastructure/" },
-        ],
-      },
-      {
-        text: "🌐 C# 社区",
-        link: "/csharp/",
-      },
-      {
-        text: "📋 附件表",
-        link: "/fujian/",
-      },
-      {
-        text: "🛠️ 工具下载",
-        link: "/tools/",
-      },
-      {
-        text: "🤖 信息AI",
-        link: "/InformationAI/",
-      },
-      {
-        text: "🎨 坦克们",
-        children: [
-          { text: "🎨 坦克图鉴", link: "/tanks/" },
-          { text: "📖 坦克设计图鉴", link: "/tanks/design.html" },
-        ],
-      },
-      {
-        text: "🌱 种花",
-        link: "/planting/",
-      },
-      {
-        text: "🔢 Maths",
-        link: "/maths/",
-      },
-      {
-        text: "🤝 友链",
-        link: "/friends/",
-      },
-      {
-        text: "👤 关于",
-        link: "/about/",
-      },
-      {
-        text: "🐙 GitHub",
-        link: "https://www.github.com/MEMZ-CHROER/vuepress-test",
-      },
-    ],
+    navbar,  // 导航栏来自 navbar.json（供社区协作编辑）
 
     // C++ 讲义区侧边栏（按目录自动分组，便于导航）
     sidebar: {
