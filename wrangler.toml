@@ -1,0 +1,13 @@
+compatibility_date = "2026-07-26"
+name = "lxy-blog-admin"
+main = "worker.js"
+workers_dev = true
+
+routes = [
+  "blog-api.liuxiyu.cn/*"
+]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lxy-admin"
+database_id = "a7ae99f2-37a0-4c20-aead-2e88c02ba02b"

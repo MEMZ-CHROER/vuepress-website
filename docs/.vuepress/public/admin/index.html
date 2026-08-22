@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CSEL 后台管理</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css" />
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0a0f; color:#c8c8d0; font:15px/1.7 'Consolas',monospace; min-height:100vh; }
+a { color:#1e90ff; text-decoration:none; }
+input,textarea,select { font:14px/1.5 'Consolas',monospace; background:#111; border:1px solid #2a2a3a; color:#fff; padding:8px 10px; }
+input:focus,textarea:focus,select:focus { border-color:#00d4aa; outline:none; }
+button { font:14px 'Consolas',monospace; cursor:pointer; }
+.green { color:#00d4aa; }
+.red { color:#e74c3c; }
+.dim { opacity:.6; }
+
+/* Layout */
+.app { display:flex; height:100vh; }
+.sidebar { width:220px; background:#0e0e16; border-right:1px solid #2a2a3a; padding:16px 0; flex-shrink:0; }
+.sidebar .logo { padding:8px 20px 16px; font-weight:bold; color:#00d4aa; font-size:17px; border-bottom:1px solid #2a2a3a; margin-bottom:8px; }
+.sidebar .nav-item { display:block; padding:8px 20px; color:#aaa; cursor:pointer; }
+.sidebar .nav-item:hover, .sidebar .nav-item.active { color:#fff; background:#1a1a28; }
+.main { flex:1; overflow-y:auto; padding:24px 32px; }
+
+/* Login */
+.login-wrap { max-width:400px; margin:120px auto; padding:0 20px; }
+.login-wrap h1 { color:#00d4aa; margin-bottom:16px; }
+.login-wrap input { width:100%; margin:8px 0; }
+.login-wrap .btn { width:100%; padding:12px; background:#00d4aa; color:#000; border:none; font-weight:bold; margin:12px 0; }
+.login-wrap .hint { font-size:13px; }
+
+/* Page */
+.page-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.page-bar h2 { color:#00d4aa; }
+.btn { padding:8px 16px; border:1px solid #00d4aa; background:transparent; color:#00d4aa; }
+.btn:hover { background:#00d4aa; color:#000; }
+.btn-sm { padding:4px 10px; font-size:12px; }
+.btn-red { border-color:#e74c3c; color:#e74c3c; }
+.btn-red:hover { background:#e74c3c; color:#fff; }
+.btn-amber { border-color:#f39c12; color:#f39c12; }
+.btn-amber:hover { background:#f39c12; color:#000; }
+
+/* Table */
+table { width:100%; border-collapse:collapse; }
+th, td { text-align:left; padding:10px 12px; border-bottom:1px solid #2a2a3a; }
+th { color:#666; font-weight:normal; font-size:13px; }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:100; }
+.modal { background:#1a1a28; border:1px solid #2a2a3a; width:680px; max-width:90vw; max-height:85vh; overflow-y:auto; padding:24px; }
+.modal h3 { color:#00d4aa; margin-bottom:16px; }
+.modal label { display:block; margin:12px 0 4px; font-size:13px; opacity:.7; }
+.modal input, .modal textarea { width:100%; }
+.modal textarea { min-height:50vh; }
+.modal .btns { display:flex; gap:10px; margin-top:16px; }
+
+/* Rich Editor */
+.editor-wrap { display:flex; flex-direction:column; gap:0; }
+.editor-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:8px; background:#111; border:1px solid #2a2a3a; border-bottom:none; }
+.editor-toolbar button { background:#1a1a28; border:1px solid #2a2a3a; color:#c8c8d0; padding:4px 10px; font-size:13px; cursor:pointer; }
+.editor-toolbar button:hover { border-color:#00d4aa; }
+.editor-panes { display:flex; gap:0; border:1px solid #2a2a3a; }
+.editor-panes textarea, .editor-preview { width:50%; min-height:55vh; padding:12px; font:14px/1.6 'Consolas',monospace; }
+.editor-panes textarea { background:#0a0a0f; color:#c8c8d0; border:none; resize:none; }
+.editor-preview { background:#0e0e16; color:#c8c8d0; border-left:1px solid #2a2a3a; overflow-y:auto; }
+.editor-preview h1, .editor-preview h2 { color:#00d4aa; }
+.editor-preview a { color:#1e90ff; }
+.editor-preview code { background:#1a1a28; padding:2px 6px; border-radius:3px; }
+.editor-preview pre { background:#1a1a28; padding:12px; overflow-x:auto; }
+.editor-preview img { max-width:100%; }
+.editor-preview blockquote { border-left:3px solid #00d4aa; padding-left:12px; opacity:.8; }
+.katex { font-size:1.1em; }
+
+/* Warning */
+.warn { background:#1a1a28; border:1px solid #f39c12; padding:12px 16px; margin:12px 0; font-size:13px; }
+.warn b { color:#f39c12; }
+
+/* ── Light Theme ── */
+body.theme-light { background:#f5f5f0; color:#2c2c2c; }
+.theme-light input, .theme-light textarea, .theme-light select { background:#fff; border-color:#ccc; color:#333; }
+.theme-light button { color:#333; }
+.theme-light .sidebar { background:#eee; border-right-color:#ccc; }
+.theme-light .sidebar .logo { color:#1a7a5a; }
+.theme-light .sidebar .nav-item { color:#555; }
+.theme-light .sidebar .nav-item:hover, .theme-light .sidebar .nav-item.active { background:#ddd; color:#000; }
+.theme-light .main { background:#f5f5f0; }
+.theme-light table th, .theme-light table td { border-bottom-color:#ddd; }
+.theme-light .modal { background:#fff; border-color:#ccc; }
+.theme-light .editor-toolbar { background:#eee; border-color:#ccc; }
+.theme-light .editor-toolbar button { background:#fff; border-color:#ccc; color:#333; }
+.theme-light .editor-panes textarea { background:#fff; color:#333; }
+.theme-light .editor-preview { background:#fafaf5; color:#333; border-left-color:#ccc; }
+.theme-light .editor-preview code { background:#eee; }
+.theme-light .editor-preview pre { background:#eee; }
+.theme-light .warn { background:#fff8e1; border-color:#f39c12; }
+.theme-light .warn b { color:#e67e22; }
+.theme-light .green { color:#1a7a5a; }
+.theme-light .dim { opacity:.6; }
+.theme-light .btn { border-color:#1a7a5a; color:#1a7a5a; }
+.theme-light .btn:hover { background:#1a7a5a; color:#fff; }
+.theme-light .btn-red { border-color:#c0392b; color:#c0392b; }
+.theme-light .btn-red:hover { background:#c0392b; color:#fff; }
+.theme-light .btn-amber { border-color:#e67e22; color:#e67e22; }
+.theme-light .btn-amber:hover { background:#e67e22; color:#fff; }
+.theme-light [class^="btn"]:disabled { opacity:.4; cursor:default; }
+.theme-light .page-bar h2 { color:#1a7a5a; }
+.theme-light .hamburger { color:#1a7a5a; border-color:#ccc; }
+
+/* ── Mobile Responsive ── */
+.hamburger { display:none; position:fixed; top:12px; left:12px; z-index:200; background:none; border:1px solid #2a2a3a; color:#00d4aa; font-size:22px; padding:4px 12px; cursor:pointer; }
+.sidebar-overlay { display:none; }
+@media (max-width:768px) {
+  body { font-size:14px; }
+  .hamburger { display:block; }
+  .app { display:block; position:relative; padding-top:50px; }
+  .sidebar { position:fixed; left:-240px; top:0; bottom:0; width:240px; z-index:150; transition:left .25s; }
+  .sidebar.open { left:0; }
+  .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:140; }
+  .sidebar-overlay.show { display:block; }
+  .main { padding:16px; }
+  .page-bar { flex-direction:column; align-items:stretch; gap:8px; }
+  .page-bar h2 { font-size:18px; }
+  table { display:block; overflow-x:auto; }
+  th, td { padding:8px; font-size:13px; white-space:nowrap; }
+  .btn { padding:10px 16px; min-height:44px; }
+  .btn-sm { padding:8px 12px; min-height:36px; }
+  input, textarea { font-size:16px !important; } /* 防 iOS 缩放 */
+  .modal { width:95vw; max-width:none; margin:10px; padding:16px; }
+  .modal textarea { min-height:40vh; }
+  .login-wrap { margin:80px auto; }
+  .login-wrap input { font-size:16px; min-height:44px; }
+  .login-wrap .btn { min-height:48px; }
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+const REPO = 'MEMZ-CHROER/vuepress-website';
+const BRANCH = 'master';
+const SITE = '.';
+// ⚠️ Cloudflare Worker 后端地址（admin API 由 blog-api.liuxiyu.cn 提供）
+const API_BASE = 'https://blog-api.liuxiyu.cn';
+var shaMap = {};
+
+// ── VuePress 迁移：路径工具 ──
+// 仓库真实路径 → 站点 URL（docs/hacknet/foo.md → /hacknet/foo）
+function repoPathToUrl(p) {
+  // 目录式：docs/hacknet/commands/README.md → /hacknet/commands
+  var url = '/' + p.replace(/^docs\//, '').replace(/\.md$/, '').replace(/\/README$/, '');
+  if (url === '/') return '/';
+  return url;
+}
+// 确保路径带 docs/ 前缀（新建/复制/上传）
+function ensureDocsPath(p) {
+  if (!p) return p;
+  return p.indexOf('docs/') === 0 ? p : 'docs/' + p;
+}
+
+// ── 密码 ──
+var _session = null;
+
+// ── GitHub API ──
+function gh(url, opts) {
+  opts = opts || {};
+  // Auto-inject session token into write operations for backend permission check
+  if (opts.body && _session && _session.token) {
+    try {
+      var bodyObj = JSON.parse(opts.body);
+      bodyObj._token = _session.token;
+      opts.body = JSON.stringify(bodyObj);
+    } catch(e) {}
+  }
+  return fetch(API_BASE + '/api' + url, Object.assign({
+    headers: { Accept: 'application/vnd.github.v3+json' }
+  }, opts)).then(function(r) {
+    if (r.status === 204) return {};   // 无内容响应（如 Actions dispatch）
+    return r.json().catch(function() {
+      return r.text().then(function(t) { throw new Error('HTTP ' + r.status + ': ' + t.substring(0,80)); });
+    });
+  });
+}
+
+function ghRaw(url) {
+  return fetch(API_BASE + '/raw' + url, {
+    headers: { Accept: 'application/vnd.github.v3.raw' }
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url);
+    return r.text().then(function(t) {
+      // Check if API returned JSON instead of raw content
+      if (t.charAt(0) === '{' || t.charAt(0) === '[') {
+        try { var j = JSON.parse(t); if (j.name || j.message) throw new Error('API returned JSON: ' + (j.message || j.name)); } catch(e) { if (e.message.indexOf('API')>-1) throw e; }
+      }
+      return t;
+    });
+  });
+}
+
+function b64enc(s) { return btoa(unescape(encodeURIComponent(s))); }
+function b64dec(s) { return decodeURIComponent(escape(atob(s))); }
+
+// ── Page States ──
+var state = 'dashboard';
+
+function toggleSidebar() {
+  var s = document.querySelector('.sidebar');
+  var o = document.querySelector('.sidebar-overlay');
+  if (s) s.classList.toggle('open');
+  if (o) o.classList.toggle('show');
+}
+
+function render() {
+  if (!_session) return renderLogin();
+  var html = '';
+  html += '<button class="hamburger" onclick="toggleSidebar()">☰</button>';
+  html += '<div class="sidebar-overlay" onclick="toggleSidebar()"></div>';
+  html += '<div class="app">';
+  html += '<div class="sidebar">';
+  html += '<div class="logo">[CSEL] Admin</div>';
+  html += '<a class="nav-item'+(state==='dashboard'?' active':'')+'" onclick="go(\'dashboard\')">🏠 仪表盘</a>';
+  if (hasPerm('pages')) html += '<a class="nav-item'+(state==='pages'?' active':'')+'" onclick="go(\'pages\')">📄 页面管理</a>';
+  if (hasPerm('media')) html += '<a class="nav-item'+(state==='media'?' active':'')+'" onclick="go(\'media\')">🖼 媒体库</a>';
+  if (hasPerm('navbar')) html += '<a class="nav-item'+(state==='navbar'?' active':'')+'" onclick="go(\'navbar\')">🔗 导航栏</a>';
+  if (hasPerm('pages')) html += '<a class="nav-item'+(state==='new'?' active':'')+'" onclick="go(\'new\')">➕ 新建页面</a>';
+  if (hasPerm('passwords')) html += '<a class="nav-item'+(state==='passwords'?' active':'')+'" onclick="go(\'passwords\')">🔐 页面密码</a>';
+  if (isAdmin()) html += '<a class="nav-item'+(state==='users'?' active':'')+'" onclick="go(\'users\')">👥 用户管理</a>';
+  if (isAdmin()) html += '<a class="nav-item'+(state==='settings'?' active':'')+'" onclick="go(\'settings\')">⚙ 站点设置</a>';
+  if (isAdmin()) html += '<a class="nav-item'+(state==='style'?' active':'')+'" onclick="go(\'style\')">🎨 样式编辑器</a>';
+  if (isAdmin()) html += '<a class="nav-item'+(state==='pagesbuild'?' active':'')+'" onclick="go(\'pagesbuild\')">🚀 Pages 构建</a>';
+  html += '<a class="nav-item'+(state==='search'?' active':'')+'" onclick="go(\'search\')">🔍 搜索</a>';
+  if (isAdmin()) html += '<a class="nav-item'+(state==='sitemap'?' active':'')+'" onclick="go(\'sitemap\')">🗺 站点地图</a>';
+  html += '<div style="padding:8px 12px;font-size:12px;opacity:.6">' + _session.username + ' (' + _session.role + ')</div>';
+  var currentTheme = localStorage.getItem('csel_theme') || 'dark';
+  html += '<a class="nav-item" onclick="toggleTheme()" style="color:#666">' + (currentTheme === 'dark' ? '☀️ 亮色主题' : '🌙 暗色主题') + '</a>';
+  html += '<a class="nav-item" onclick="logout()" style="color:#666">🚪 退出</a>';
+  html += '</div>';
+  html += '<div class="main" id="main"></div>';
+  html += '</div>';
+  document.getElementById('app').innerHTML = html;
+  loadPage();
+}
+
+function go(s) { state=s; render(); }
+
+function logout() {
+  fetch(API_BASE + '/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: _session.token }) });
+  _session = null; localStorage.removeItem('csel_session'); render();
+}
+
+// ── Render Login ──
+function hasPerm(p) {
+  return _session && (_session.permissions === 'all' || (_session.permissions && _session.permissions.indexOf(p) > -1));
+}
+
+function isAdmin() { return _session && _session.role === 'admin'; }
+
+window.login = function() {
+  var user = document.getElementById('loginUser').value.trim();
+  var pass = document.getElementById('loginPass').value;
+  if (!user || !pass) return;
+  fetch(API_BASE + '/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: user, password: pass })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.token) {
+      _session = d;
+      localStorage.setItem('csel_session', JSON.stringify(d));
+      render();
+    } else {
+      document.getElementById('app').innerHTML = '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="red">❌ ' + (d.error || '登录失败') + '</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><button class="btn" onclick="login()">登录</button></div>';
+    }
+  }).catch(function() {
+    document.getElementById('app').innerHTML = '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="red">❌ 网络错误</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><button class="btn" onclick="login()">登录</button></div>';
+  });
+};
+
+function renderLogin() {
+  document.getElementById('app').innerHTML = '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="dim">登录</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><button class="btn" onclick="login()">登录</button></div>';
+}
+
+// ── Page List ──
+function loadPage() {
+  if (state === 'dashboard') loadDashboard();
+  else if (state === 'pages') loadList();
+  else if (state === 'media') loadMedia();
+  else if (state === 'navbar') loadNavbar();
+  else if (state === 'new') { if (!hasPerm('pages')) { go('dashboard'); return; } loadNew(); }
+  else if (state === 'settings') loadSettings();
+  else if (state === 'style') loadStyle();
+  else if (state === 'passwords') { if (!hasPerm('passwords')) { go('dashboard'); return; } loadPasswords(); }
+  else if (state === 'pagesbuild') { if (!isAdmin()) { go('dashboard'); return; } loadPagesBuild(); }
+  else if (state === 'sitemap') { if (!isAdmin()) { go('dashboard'); return; } loadSitemap(); }
+  else if (state === 'users') { if (!isAdmin()) { go('dashboard'); return; } loadUsers(); }
+}
+
+// ── Dashboard ──
+function loadDashboard() {
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p>';
+  Promise.all([
+    gh('/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1'),
+    gh('/repos/' + REPO + '/commits?per_page=10').catch(function() { return []; })
+  ]).then(function(results) {
+    var data = results[0];
+    var commits = results[1] || [];
+    if (data.message) { main.innerHTML = '<p class="red">' + data.message + '</p>'; return; }
+    var mds = data.tree.filter(function(f) { return f.path.endsWith('.md') && f.path !== 'README.md'; });
+    var imgs = data.tree.filter(function(f) { return f.path.startsWith('.vuepress/public/assets/img/'); });
+    var recent = data.tree.slice(-10).reverse();
+    var html = '<div class="page-bar"><h2>🏠 仪表盘</h2></div>';
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px;">';
+    html += '<div style="background:#111;border:1px solid #2a2a3a;padding:20px;text-align:center"><div style="font-size:32px;color:#00d4aa;font-weight:bold">' + mds.length + '</div><div class="dim">页面</div></div>';
+    html += '<div style="background:#111;border:1px solid #2a2a3a;padding:20px;text-align:center"><div style="font-size:32px;color:#00d4aa;font-weight:bold">' + imgs.length + '</div><div class="dim">图片</div></div>';
+    html += '<div style="background:#111;border:1px solid #2a2a3a;padding:20px;text-align:center"><div style="font-size:32px;color:#00d4aa;font-weight:bold">' + data.tree.length + '</div><div class="dim">文件</div></div>';
+    html += '<div style="background:#111;border:1px solid #2a2a3a;padding:20px;text-align:center"><div style="font-size:32px;color:#00d4aa;font-weight:bold">' + (Array.isArray(commits) ? commits.length : 0) + '</div><div class="dim">最近提交</div></div>';
+    html += '</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">';
+    if (hasPerm('pages')) html += '<button class="btn" onclick="go(\'new\')">➕ 新建页面</button>';
+    if (hasPerm('media')) html += '<button class="btn" onclick="go(\'media\')">🖼 上传图片</button>';
+    if (hasPerm('navbar')) html += '<button class="btn" onclick="go(\'navbar\')">🔗 编辑导航</button>';
+    html += '<button class="btn" onclick="go(\'style\')">🎨 编辑样式</button>';
+    html += '<button class="btn" onclick="go(\'sitemap\')">🗺 站点地图</button>';
+    html += '</div>';
+
+    // Recent commits
+    if (Array.isArray(commits) && commits.length > 0) {
+      html += '<b>最近提交</b><table><tr><th>时间</th><th>作者</th><th>描述</th></tr>';
+      commits.forEach(function(c) {
+        var date = c.commit ? c.commit.author.date.substring(0, 10) : '?';
+        var author = c.commit ? c.commit.author.name : '?';
+        var msg = c.commit ? c.commit.message.split('\n')[0] : '?';
+        html += '<tr><td style="white-space:nowrap">' + date + '</td><td>' + escHtml(author) + '</td><td class="dim">' + escHtml(msg) + '</td></tr>';
+      });
+      html += '</table>';
+    }
+
+    html += '<b>最近文件变更</b><table><tr><th>文件</th><th>大小</th></tr>';
+    recent.slice(0,10).forEach(function(f) {
+      html += '<tr><td>' + escHtml(f.path) + '</td><td>' + (f.size ? (f.size/1024).toFixed(1) + 'KB' : '-') + '</td></tr>';
+    });
+    html += '</table>';
+    main.innerHTML = html;
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">加载失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+// ── Media Library ──
+function loadMedia() {
+  if (!hasPerm('media')) { go('dashboard'); return; }
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p><div style="margin-top:12px"><input type="file" id="mediaUpload" accept="image/*" onchange="uploadMedia()" /></div>';
+  gh('/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1').then(function(data) {
+    if (data.message) { main.innerHTML = '<p class="red">' + data.message + '</p>'; return; }
+    var imgs = data.tree.filter(function(f) { return f.path.startsWith('.vuepress/public/assets/img/'); });
+    var html = '<div class="page-bar"><h2>🖼 媒体库</h2></div>';
+    html += '<div style="margin-bottom:12px"><input type="file" id="mediaUpload" accept="image/*" onchange="uploadMedia()" /> <span id="mediaStatus" class="dim"></span></div>';
+    if (imgs.length === 0) { html += '<p class="dim">暂无图片</p>'; main.innerHTML = html; return; }
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;">';
+    imgs.forEach(function(f) {
+      var url = 'https://raw.githubusercontent.com/MEMZ-CHROER/vuepress-website/master/' + f.path;
+      var name = f.path.split('/').pop();
+      html += '<div style="background:#111;border:1px solid #2a2a3a;overflow:hidden;">';
+      html += '<a href="' + url + '" target="_blank"><img src="' + url + '" style="width:100%;height:120px;object-fit:cover;display:block;" /></a>';
+      html += '<div style="padding:8px;font-size:12px;">';
+      html += '<div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + name + '</div>';
+      html += '<div class="dim">' + (f.size ? (f.size/1024).toFixed(1) + 'KB' : '') + '</div>';
+      html += '<div style="margin-top:4px;display:flex;gap:4px;">';
+      html += '<button class="btn btn-sm" onclick="copyMarkdown(\'' + url + '\',\'' + name + '\')">📋 MD</button>';
+      html += '<button class="btn btn-sm btn-red" onclick="delMedia(\'' + f.path + '\')">删除</button>';
+      html += '</div></div></div>';
+    });
+    html += '</div>';
+    main.innerHTML = html;
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">加载失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+window.uploadMedia = function() {
+  var file = document.getElementById('mediaUpload').files[0];
+  if (!file) return;
+  document.getElementById('mediaStatus').textContent = '上传中...';
+  var reader = new FileReader();
+  reader.onload = function() {
+    var base64 = reader.result.split(',')[1];
+    var name = '.vuepress/public/assets/img/' + file.name;
+    gh('/repos/' + REPO + '/contents/' + name, { method: 'PUT', body: JSON.stringify({
+      message: 'upload ' + file.name,
+      content: base64,
+      branch: BRANCH
+    })}).then(function(d) {
+      if (d.content) { document.getElementById('mediaStatus').textContent = '✅ 已上传'; loadMedia(); }
+      else document.getElementById('mediaStatus').textContent = '❌ 失败: ' + (d.message||'');
+    });
+  };
+  reader.readAsDataURL(file);
+};
+
+window.copyMarkdown = function(url, name) {
+  var md = '![' + name.replace(/\.[^.]+$/, '') + '](' + url + ')';
+  navigator.clipboard.writeText(md).then(function() {
+    var st = document.getElementById('mediaStatus');
+    if (st) st.textContent = '✅ 已复制 Markdown 链接';
+  });
+};
+
+window.delMedia = function(path) {
+  if (!confirm('确定删除 ' + path + ' ？')) return;
+  gh('/repos/' + REPO + '/contents/' + path, { method: 'DELETE', body: JSON.stringify({
+    message: 'delete ' + path, sha: shaMap[path], branch: BRANCH
+  })}).then(function(d) {
+    loadMedia();
+  });
+};
+
+// ── Page Passwords ──
+function loadPasswords() {
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p>';
+  // Load both the password config and the page list
+  Promise.all([
+    gh('/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1'),
+    gh('/repos/' + REPO + '/contents/_passwords.json?ref=' + BRANCH).then(function(meta) {
+      window._pwSha = meta.sha;
+      var raw = meta.content.replace(/\n/g, '');
+      var txt = atob(raw);
+      try { txt = decodeURIComponent(escape(txt)); } catch(e) {}
+      return JSON.parse(txt);
+    }).catch(function() { return {}; })
+  ]).then(function(results) {
+    var tree = results[0];
+    if (tree.message) { main.innerHTML = '<p class="red">' + tree.message + '</p>'; return; }
+    var pwData = results[1] || {};
+    var pages = tree.tree.filter(function(f) { return f.path.startsWith('docs/') && f.path.endsWith('.md') && f.path !== 'docs/README.md'; });
+    var html = '<div class="page-bar"><h2>🔐 页面密码</h2></div>';
+    html += '<p class="dim">为页面设置访问密码。密码留空 = 不加密。（首页不支持设密码）</p>';
+    html += '<table><tr><th>页面</th><th>密码</th><th>操作</th></tr>';
+    pages.forEach(function(f) {
+      var pagePath = repoPathToUrl(f.path);
+      if (pagePath === '/') return; // 首页密码键边界，跳过
+      var hasPw = pwData[pagePath] ? pwData[pagePath] : '';
+      html += '<tr><td>' + pagePath + '</td>';
+      html += '<td><input type="text" data-page-path="' + escHtml(pagePath) + '" value="' + escHtml(hasPw) + '" placeholder="留空 = 不加密" style="width:160px;font-size:13px;" /></td>';
+      html += '<td><button class="btn btn-sm" onclick="savePw(this)">保存</button></td></tr>';
+    });
+    html += '</table>';
+    html += '<div style="margin-top:12px"><button class="btn" onclick="saveAllPw()">💾 保存全部密码</button> <span id="pwStatus" class="dim"></span></div>';
+    main.innerHTML = html;
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">加载失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+window.savePw = function(btn) {
+  var row = btn.closest('tr');
+  var inp = row ? row.querySelector('input[data-page-path]') : null;
+  if (!inp) return;
+  var pagePath = inp.getAttribute('data-page-path');
+  var val = inp.value.trim();
+  document.getElementById('pwStatus').textContent = '保存中...';
+  gh('/repos/' + REPO + '/contents/_passwords.json?ref=' + BRANCH).then(function(meta) {
+    var raw = meta.content.replace(/\n/g, '');
+    var txt = atob(raw);
+    try { txt = decodeURIComponent(escape(txt)); } catch(e) {}
+    var pwData = JSON.parse(txt);
+    if (val) pwData[pagePath] = val;
+    else delete pwData[pagePath];
+    var newContent = JSON.stringify(pwData, null, 2);
+    gh('/repos/' + REPO + '/contents/_passwords.json', { method: 'PUT', body: JSON.stringify({
+      message: 'update password for ' + pagePath,
+      content: b64enc(newContent),
+      sha: meta.sha,
+      branch: BRANCH
+    })}).then(function(d) {
+      if (d.content) { document.getElementById('pwStatus').textContent = '✅ 已保存（Pages 重建后生效）'; }
+      else document.getElementById('pwStatus').textContent = '❌ 保存失败';
+    });
+  });
+};
+
+window.saveAllPw = function() {
+  document.getElementById('pwStatus').textContent = '保存中...';
+  gh('/repos/' + REPO + '/contents/_passwords.json?ref=' + BRANCH).then(function(meta) {
+    // Read all password inputs using data attributes
+    var inputs = document.querySelectorAll('input[data-page-path]');
+    var newData = {};
+    inputs.forEach(function(inp) {
+      var pagePath = inp.getAttribute('data-page-path');
+      if (inp.value.trim()) newData[pagePath] = inp.value.trim();
+    });
+    var newContent = JSON.stringify(newData, null, 2);
+    gh('/repos/' + REPO + '/contents/_passwords.json', { method: 'PUT', body: JSON.stringify({
+      message: 'update all passwords',
+      content: b64enc(newContent),
+      sha: meta.sha,
+      branch: BRANCH
+    })}).then(function(d) {
+      if (d.content) { document.getElementById('pwStatus').textContent = '✅ 已保存，触发 Pages 重建...'; }
+      else document.getElementById('pwStatus').textContent = '❌ 保存失败';
+    });
+  });
+};
+
+// ── User Management ──
+function loadUsers() {
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p>';
+  fetch(API_BASE + '/api/auth/users?token=' + _session.token).then(function(r) { return r.json(); }).then(function(users) {
+    if (users.error) { main.innerHTML = '<p class="red">' + users.error + '</p>'; return; }
+    var html = '<div class="page-bar"><h2>👥 用户管理</h2><button class="btn" onclick="showAddUser()">+ 添加用户</button></div>';
+    html += '<table><tr><th>ID</th><th>用户名</th><th>角色</th><th>权限</th><th>创建时间</th><th>操作</th></tr>';
+    (users || []).forEach(function(u) {
+      html += '<tr><td>' + u.id + '</td><td>' + escHtml(u.username) + '</td><td>' + u.role + '</td><td>' + (u.permissions || 'all') + '</td><td>' + (u.created_at || '-') + '</td>';
+      html += '<td>' + (u.id > 1 ? '<button class="btn btn-sm btn-red" onclick="delUser(' + u.id + ')">删除</button>' : '-') + '</td></tr>';
+    });
+    html += '</table>';
+    main.innerHTML = html;
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">加载失败: ' + e.message + '</p>';
+  });
+}
+
+window.showAddUser = function() {
+  var html = '<div class="modal-overlay"><div class="modal"><h3>添加用户</h3>';
+  html += '<label>用户名</label><input type="text" id="newUserName" style="width:100%" />';
+  html += '<label>密码</label><input type="password" id="newUserPass" style="width:100%" />';
+  html += '<label>角色</label><select id="newUserRole" style="width:100%"><option value="editor">编辑者</option><option value="admin">管理员</option></select>';
+  html += '<label>权限（逗号分隔，留空=全部）</label><input type="text" id="newUserPerms" value="media,navbar,pages,passwords" style="width:100%" />';
+  html += '<div class="btns"><button class="btn" onclick="createUser()">创建</button><button class="btn btn-red" onclick="closeModal()">取消</button></div></div></div>';
+  var div = document.createElement('div');
+  div.innerHTML = html;
+  document.body.appendChild(div.firstElementChild);
+};
+
+window.createUser = function() {
+  var username = document.getElementById('newUserName').value.trim();
+  var password = document.getElementById('newUserPass').value;
+  var role = document.getElementById('newUserRole').value;
+  var perms = document.getElementById('newUserPerms').value.trim();
+  if (!username || !password) { alert('请填写用户名和密码'); return; }
+  fetch(API_BASE + '/api/auth/users', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: _session.token, username: username, password: password, role: role, permissions: perms || 'all' })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    closeModal();
+    if (d.ok) loadUsers();
+    else alert(d.error || '创建失败');
+  });
+};
+
+window.delUser = function(id) {
+  if (!confirm('确定删除此用户？')) return;
+  fetch(API_BASE + '/api/auth/users/delete', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: _session.token, id: id })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.ok) loadUsers();
+    else alert(d.error || '删除失败');
+  });
+};
+
+// ── Search ──
+function loadSearch() {
+  var main = document.getElementById('main');
+  main.innerHTML = '<div class="page-bar"><h2>🔍 搜索全站</h2></div>' +
+    '<input type="text" id="searchQuery" placeholder="输入关键词搜索所有页面…" onkeyup="if(event.key==\'Enter\')doSearch()" style="width:100%;padding:10px;font-size:15px;" />' +
+    '<div style="margin-top:8px"><button class="btn" onclick="doSearch()">搜索</button></div>' +
+    '<div id="searchResults" style="margin-top:16px"></div>';
+  document.getElementById('searchQuery').focus();
+}
+
+window.doSearch = function() {
+  var q = document.getElementById('searchQuery').value.trim().toLowerCase();
+  var results = document.getElementById('searchResults');
+  if (!q) { results.innerHTML = ''; return; }
+  results.innerHTML = '<p>搜索中...</p>';
+  gh('/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1').then(function(data) {
+    if (data.message) { results.innerHTML = '<p class="red">' + data.message + '</p>'; return; }
+    var mds = data.tree.filter(function(f) { return f.path.startsWith('docs/') && f.path.endsWith('.md') && f.path !== 'docs/README.md'; });
+    var found = [];
+    var loaded = 0;
+    mds.forEach(function(f) {
+      ghRaw('/repos/' + REPO + '/contents/' + f.path + '?ref=' + BRANCH).then(function(content) {
+        loaded++;
+        var text = content.toLowerCase();
+        if (text.indexOf(q) > -1) {
+          var excerpt = '';
+          var idx = text.indexOf(q);
+          var start = Math.max(0, idx - 40);
+          var end = Math.min(text.length, idx + q.length + 40);
+          excerpt = content.substring(start, end).replace(/\n/g, ' ').trim();
+          if (start > 0) excerpt = '...' + excerpt;
+          if (end < content.length) excerpt += '...';
+          found.push({ path: f.path, excerpt: excerpt });
+        }
+        if (loaded >= mds.length) {
+          renderSearchResults(q, found, results);
+        }
+      });
+    });
+    if (mds.length === 0) results.innerHTML = '<p class="dim">没有页面</p>';
+  });
+};
+
+function renderSearchResults(q, found, results) {
+  if (found.length === 0) {
+    results.innerHTML = '<p class="dim">未找到包含 "' + q + '" 的页面</p>';
+    return;
+  }
+  var html = '<p>找到 ' + found.length + ' 个结果：</p><table>';
+  found.forEach(function(f) {
+    var pagePath = repoPathToUrl(f.path);
+    html += '<tr><td><a href="' + SITE + pagePath + '" target="_blank">' + f.path + '</a><br><span class="dim" style="font-size:12px;">' + escHtml(f.excerpt) + '</span></td>';
+    html += '<td style="width:80px"><button class="btn btn-sm" onclick="editFile(\'' + f.path + '\')">编辑</button></td></tr>';
+  });
+  html += '</table>';
+  results.innerHTML = html;
+}
+
+function loadList() {
+  if (!hasPerm('pages')) { go('dashboard'); return; }
+  document.getElementById('main').innerHTML = '<p>加载中...</p>';
+  gh('/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1').then(function(data) {
+    if (data.message) { document.getElementById('main').innerHTML = '<p class="red">' + data.message + '</p>'; return; }
+    var mds = data.tree.filter(function(f) { return f.path.startsWith('docs/') && f.path.endsWith('.md') && f.path !== 'docs/README.md'; });
+    data.tree.forEach(function(f) { shaMap[f.path] = f.sha; });
+
+    var html = '<div class="page-bar"><h2>📄 页面管理</h2><button class="btn" onclick="go(\'new\')">+ 新建页面</button></div>';
+    html += '<table><tr><th>文件</th><th>标题</th><th style="width:240px">操作</th></tr>';
+    mds.forEach(function(f) {
+      var title = f.path.replace(/^docs\//,'').replace(/\.md$/,'').replace(/\/README$/,'').replace(/\//g,' / ');
+      html += '<tr><td><a href="' + SITE + repoPathToUrl(f.path) + '" target="_blank">' + f.path + '</a></td>';
+      html += '<td class="dim">' + title + '</td>';
+      html += '<td><button class="btn btn-sm" onclick="editFile(\'' + f.path + '\')">编辑</button> ';
+      html += '<button class="btn btn-sm" onclick="dupFile(\'' + f.path + '\')">📋复制</button> ';
+      if (isAdmin()) html += '<button class="btn btn-sm btn-amber" onclick="triggerPagesBuild()">🚀构建</button> ';
+      html += '<button class="btn btn-sm btn-red" onclick="delFile(\'' + f.path + '\')">删除</button></td></tr>';
+    });
+    html += '</table><p class="dim" style="margin-top:8px">保存页面后自动触发 VuePress 构建部署（约 1-2 分钟生效）。🚀构建 = 手动触发。</p>';
+    document.getElementById('main').innerHTML = html;
+  });
+}
+
+// ── Edit File ──
+function editFile(path) {
+  ghRaw('/repos/' + REPO + '/contents/' + path + '?ref=' + BRANCH).then(function(content) {
+    showModal(path, content);
+  });
+}
+
+function parseFrontmatter(raw) {
+  var m = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!m) return { meta: {}, body: raw };
+  var meta = {};
+  m[1].split('\n').forEach(function(line) {
+    var kv = line.match(/^\s*(\w+)\s*:\s*(.+)$/);
+    if (kv) meta[kv[1]] = kv[2].trim().replace(/^["']|["']$/g, '');
+  });
+  return { meta: meta, body: (m[2]||'').trimStart() };
+}
+
+function buildFrontmatter(meta, body) {
+  var fm = '---\n';
+  if (meta.title) fm += 'title: ' + meta.title + '\n';
+  fm += '---\n\n' + body.trimStart();
+  return fm;
+}
+
+// ── Draft Auto-Save ──
+const DRAFT_PREFIX = 'csel_draft_';
+
+function draftKey(path) { return DRAFT_PREFIX + path; }
+
+function saveDraft(path, content) {
+  try { localStorage.setItem(draftKey(path), content); } catch(e) {}
+}
+
+function loadDraft(path) {
+  try { return localStorage.getItem(draftKey(path)); } catch(e) { return null; }
+}
+
+function clearDraft(path) {
+  try { localStorage.removeItem(draftKey(path)); } catch(e) {}
+}
+
+function hasDraft(path) {
+  return loadDraft(path) !== null;
+}
+
+function wordCount(text) {
+  var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  var lines = text ? text.split('\n').length : 0;
+  var paras = text ? text.split(/\n\s*\n/).filter(function(p) { return p.trim(); }).length : 0;
+  return { words: words, lines: lines, paras: paras };
+}
+
+function updateEditorStats(prefix) {
+  var el = document.getElementById(prefix + '_stats');
+  if (!el) return;
+  var ta = document.getElementById(prefix === 'modal' ? 'mcontent' : 'ncontent');
+  if (!ta) { el.textContent = ''; return; }
+  var wc = wordCount(ta.value);
+  el.textContent = wc.lines + ' 行 · ' + wc.words + ' 字 · ' + wc.paras + ' 段';
+}
+
+function showModal(path, content) {
+  var parsed = parseFrontmatter(content || '');
+  var meta = parsed.meta;
+  var body = parsed.body;
+  var isNew = !content || content.trim() === '';
+  // Check for draft
+  var draft = loadDraft(path);
+  var draftNotice = '';
+  if (draft !== null) {
+    var draftParsed = parseFrontmatter(draft);
+    if (draftParsed.body !== body && !isNew) {
+      draftNotice = '<div class="warn" style="margin-bottom:8px"><b>💾 草稿已恢复</b> 上次未保存的编辑已自动加载。 <button class="btn btn-sm" onclick="discardDraft(\'' + path + '\')">丢弃草稿</button></div>';
+      body = draftParsed.body;
+      if (draftParsed.meta.title) meta.title = draftParsed.meta.title;
+    }
+  }
+  var overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  var h = [];
+  h.push('<div class="modal" style="width:90vw;max-width:960px;">');
+  h.push('<h3>编辑: ' + escHtml(path) + '</h3>');
+  h.push('<label style="margin-bottom:4px">文件名</label><input type="text" id="mpath" value="' + escHtml(path) + '" style="width:100%;margin-bottom:8px;" />');
+  h.push(draftNotice);
+  h.push('<div style="display:flex;gap:12px;margin-bottom:8px;">');
+  h.push('<div style="flex:1"><label style="display:block;font-size:13px;opacity:.7;margin-bottom:2px">标题（YAML title）</label><input type="text" id="mtitle" value="' + escHtml(meta.title||'') + '" style="width:100%;font-size:13px;" oninput="updatePreviewFromMeta()" /></div>');
+  h.push('</div>');
+  h.push('<div class="editor-wrap"><div class="editor-toolbar" id="modalToolbar"></div><div class="editor-panes">');
+  h.push('<textarea id="mcontent" oninput="onModalEdit(\'' + path + '\')">' + escHtml(body||'') + '</textarea>');
+  h.push('<div class="editor-preview" id="mdPreview"></div>');
+  h.push('</div></div>');
+  h.push('<div id="modal_stats" class="dim" style="text-align:right;font-size:12px;padding:4px 0;"></div>');
+  h.push('<div class="btns" style="margin-top:4px">');
+  h.push('<button class="btn" onclick="saveModal()">💾 保存</button>');
+  h.push('<button class="btn" onclick="viewHistory(\'' + path + '\')">📜 历史</button>');
+  h.push('<button class="btn btn-red" onclick="closeModal()">取消</button></div>');
+  h.push('</div>');
+  overlay.innerHTML = h.join('');
+  document.body.appendChild(overlay);
+  overlay.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveModal(); }
+  });
+  window._modalPath = path;
+  window._modalDraftPath = path;
+  buildToolbar('modalToolbar', 'modal');
+  if (!window.marked) loadEditorLibs(function() { updateModalPreview(); });
+  else setTimeout(updateModalPreview, 100);
+  updateModalStats();
+}
+
+function onModalEdit(path) {
+  // Auto-save draft
+  var titleEl = document.getElementById('mtitle');
+  var bodyEl = document.getElementById('mcontent');
+  if (!bodyEl) return;
+  var full = buildFrontmatter(
+    { title: titleEl ? titleEl.value.trim() : '' },
+    bodyEl.value
+  );
+  saveDraft(path, full);
+  updateModalPreview();
+}
+
+window.discardDraft = function(path) {
+  clearDraft(path);
+  editFile(path); // Reload from server
+};
+
+function updateModalStats() {
+  updateEditorStats('modal');
+}
+
+function updateModalPreview() {
+  updateModalStats();
+  previewMd();
+}
+
+function buildToolbar(containerId, fnPrefix) {
+  var tb = document.getElementById(containerId);
+  if (!tb) return;
+  var btns = [
+    ['**','**','B','粗体'],['*','*','I','斜体'],['## ','','H','标题'],
+    ['---\n','','—','分隔线'],['[','](url)','🔗','链接'],['![](','?)','🖼','图片'],
+    ['\n\n```\n','\n```\n','</>','代码'],['\n- ','','•','列表'],
+    ['\n> ','','❝','引用'],['$$\n','\n$$','∑','公式'],['$','$','∫','行内公式']
+  ];
+  btns.forEach(function(b) {
+    var btn = document.createElement('button');
+    btn.innerHTML = b[2];
+    btn.title = b[3];
+    btn.onclick = function() {
+      var ta = document.getElementById(fnPrefix === 'modal' ? 'mcontent' : 'ncontent');
+      if (!ta) return;
+      var start = ta.selectionStart, end = ta.selectionEnd;
+      var sel = ta.value.substring(start, end) || b[3];
+      ta.value = ta.value.substring(0, start) + b[0] + sel + b[1] + ta.value.substring(end);
+      ta.focus();
+      if (fnPrefix === 'modal') previewMd(); else previewNew();
+    };
+    tb.appendChild(btn);
+  });
+}
+
+function ins(before, after, hint) {} // legacy
+
+function loadEditorLibs(cb) {
+  var loaded = 0;
+  function check() { if (++loaded >= 2 && cb) cb(); }
+  var s1 = document.createElement('script');
+  s1.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+  s1.onload = check;
+  document.head.appendChild(s1);
+  var s2 = document.createElement('script');
+  s2.src = 'https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js';
+  s2.onload = check;
+  document.head.appendChild(s2);
+}
+
+function previewMd() {
+  var ta = document.getElementById('mcontent');
+  var preview = document.getElementById('mdPreview');
+  if (!ta || !preview) return;
+  if (!window.marked) { preview.innerHTML = '<p class="dim">加载渲染器...</p>'; return; }
+  // Strip frontmatter if present (safety net)
+  var text = (ta.value || '').replace(/^---[\s\S]*?---\s*/, '');
+  var html = window.marked.parse(text, { breaks: true });
+  // Render LaTeX blocks
+  if (window.katex) {
+    html = html.replace(/\$\$([\s\S]*?)\$\$/g, function(_, m) {
+      try { return '<div style="text-align:center;padding:8px 0">' + katex.renderToString(m.trim(), {displayMode:true,throwOnError:false}) + '</div>'; } catch(e) { return '<div class="red">❌ ' + escHtml(m) + '</div>'; }
+    });
+    html = html.replace(/\$([^$\n]+?)\$/g, function(_, m) {
+      try { return katex.renderToString(m.trim(), {displayMode:false,throwOnError:false}); } catch(e) { return '$' + escHtml(m) + '$'; }
+    });
+  }
+  preview.innerHTML = html;
+}
+
+window.saveModal = function() {
+  var path = document.getElementById('mpath').value.trim();
+  var titleEl = document.getElementById('mtitle');
+  var contentEl = document.getElementById('mcontent');
+  var title = titleEl ? titleEl.value.trim() : '';
+  var body = contentEl ? contentEl.value : '';
+  if (!path) return;
+  // Reconstruct full content with frontmatter
+  var fullContent = buildFrontmatter({ title: title }, body);
+  // Clear draft before closing
+  clearDraft(window._modalDraftPath || path);
+  closeModal();
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>保存中...</p>';
+
+  var body2 = { message: 'update ' + path, content: b64enc(fullContent), branch: BRANCH };
+  if (shaMap[path]) body2.sha = shaMap[path];
+
+  gh('/repos/' + REPO + '/contents/' + path, { method: 'PUT', body: JSON.stringify(body2) }).then(function(d) {
+    if (d.content) { shaMap[path] = d.content.sha; loadList(); }
+    else main.innerHTML = '<p class="red">保存失败: ' + (d.message||'unknown') + '</p>';
+  });
+};
+
+window.closeModal = function() {
+  var el = document.querySelector('.modal-overlay');
+  if (el) el.remove();
+};
+
+// ── Git History Viewer ──
+window.viewHistory = function(path) {
+  var overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = '<div class="modal" style="width:800px;"><h3>📜 ' + escHtml(path) + ' 修改历史</h3><div id="historyContent"><p class="dim">加载中...</p></div><div class="btns" style="margin-top:12px"><button class="btn btn-red" onclick="closeModal()">关闭</button></div></div>';
+  document.body.appendChild(overlay);
+
+  gh('/repos/' + REPO + '/commits?path=' + encodeURIComponent(path) + '&per_page=15').then(function(commits) {
+    if (!Array.isArray(commits) || commits.length === 0) {
+      document.getElementById('historyContent').innerHTML = '<p class="dim">暂无提交记录</p>';
+      return;
+    }
+    var html = '<table><tr><th>时间</th><th>作者</th><th>提交信息</th><th>操作</th></tr>';
+    commits.forEach(function(c, i) {
+      var sha = c.sha ? c.sha.substring(0, 7) : '?';
+      var date = c.commit ? c.commit.author.date.substring(0, 19).replace('T', ' ') : '?';
+      var author = c.commit ? c.commit.author.name : '?';
+      var msg = c.commit ? c.commit.message.split('\n')[0] : '?';
+      var isLatest = i === 0;
+      html += '<tr>';
+      html += '<td style="white-space:nowrap;font-size:12px;">' + date + '</td>';
+      html += '<td style="font-size:12px;">' + escHtml(author) + '</td>';
+      html += '<td style="font-size:12px;">' + escHtml(msg) + '<br><code style="font-size:11px;">' + sha + '</code></td>';
+      html += '<td style="white-space:nowrap">';
+      if (!isLatest) html += '<button class="btn btn-sm" onclick="restoreVersion(\'' + path + '\',\'' + c.sha + '\',\'' + sha + '\')">↩ 恢复</button>';
+      else html += '<span class="dim" style="font-size:12px;">当前版本</span>';
+      html += '</td></tr>';
+    });
+    html += '</table>';
+    document.getElementById('historyContent').innerHTML = html;
+  }).catch(function(e) {
+    document.getElementById('historyContent').innerHTML = '<p class="red">加载失败: ' + (e.message||e) + '</p>';
+  });
+};
+
+window.restoreVersion = function(path, sha, shortSha) {
+  if (!confirm('确定恢复到 ' + shortSha + ' 版本？这将覆盖当前文件内容。')) return;
+  document.getElementById('historyContent').innerHTML = '<p>加载版本中...</p>';
+  gh('/repos/' + REPO + '/contents/' + encodeURIComponent(path) + '?ref=' + sha).then(function(meta) {
+    if (!meta || meta.message) { document.getElementById('historyContent').innerHTML = '<p class="red">获取失败: ' + (meta ? meta.message : '') + '</p>'; return; }
+    var raw = meta.content.replace(/\n/g, '');
+    var content = atob(raw);
+    try { content = decodeURIComponent(escape(content)); } catch(e) {}
+    // Put the old content into the current editor
+    closeModal(); // close history
+    showModal(path, content);
+    // Show a notice
+    setTimeout(function() {
+      var notice = document.querySelector('.warn');
+      if (notice) notice.innerHTML = '<b>📜 已加载 ' + shortSha + ' 版本</b> 保存后才会生效。';
+    }, 200);
+  }).catch(function(e) {
+    document.getElementById('historyContent').innerHTML = '<p class="red">加载失败: ' + e.message + '</p>';
+  });
+};
+// ── 触发构建（VuePress 迁移后：⚡发布 → 🚀构建）──
+window.quickPublish = function() {
+  triggerPagesBuild();
+};
+
+window.delFile = function(path) {
+  if (!confirm('确定删除 ' + path + ' ？')) return;
+  var sha = shaMap[path];
+  if (!sha) { alert('找不到文件 SHA'); return; }
+  document.getElementById('main').innerHTML = '<p>删除中...</p>';
+  gh('/repos/' + REPO + '/contents/' + path, {
+    method: 'DELETE',
+    body: JSON.stringify({ message: 'delete ' + path, sha: sha, branch: BRANCH })
+  }).then(function(d) {
+    if (!d.message || d.message === 'delete ' + path) loadList();
+    else document.getElementById('main').innerHTML = '<p class="red">删除失败: ' + (d.message||'unknown') + '</p>';
+  });
+};
+
+window.dupFile = function(path) {
+  var newName = prompt('复制为（输入新文件名，不含 .md）：', path.replace('.md','') + '-copy');
+  if (!newName) return;
+  var newPath = ensureDocsPath(newName.replace(/\.md$/,'').replace(/\/+$/,'') + '/README.md');
+  document.getElementById('main').innerHTML = '<p>复制中...</p>';
+  ghRaw('/repos/' + REPO + '/contents/' + path + '?ref=' + BRANCH).then(function(content) {
+    gh('/repos/' + REPO + '/contents/' + newPath, {
+      method: 'PUT',
+      body: JSON.stringify({ message: 'copy ' + path + ' -> ' + newPath, content: b64enc(content), branch: BRANCH })
+    }).then(function(d) {
+      if (d.content) { shaMap[newPath] = d.content.sha; loadList(); }
+      else document.getElementById('main').innerHTML = '<p class="red">复制失败: ' + (d.message||'') + '</p>';
+    });
+  }).catch(function(e) {
+    document.getElementById('main').innerHTML = '<p class="red">读取源文件失败: ' + e.message + '</p>';
+  });
+};
+
+// ── New Page ──
+const PAGE_TEMPLATES = {
+  blank: { label: '空白页', content: '在这里写内容...\n\n---\n> 需要在顶部加上 YAML 头：\n> ```\n> ---\n> title: 页面标题\n> ---\n> ```' },
+  wiki: { label: '百科条目', content: '---\ntitle: 条目名称\n---\n\n# 条目名称\n\n## 概述\n\n在这里写概述...\n\n## 详细说明\n\n在这里写详细内容...\n\n## 相关条目\n\n- [相关条目1](/path)\n- [相关条目2](/path)\n\n## 参考资料\n\n- 参考链接' },
+  command: { label: '命令参考', content: '---\ntitle: 命令名称\n---\n\n# 命令名称\n\n## 语法\n\n```\n命令名 [参数...]\n```\n\n## 功能\n\n在这里描述命令功能...\n\n## 参数\n\n| 参数 | 说明 |\n|---|---|\n| 参数1 | 说明1 |\n| 参数2 | 说明2 |\n\n## 示例\n\n```\n命令名 参数1 参数2\n```\n\n## 提示\n\n使用提示...' },
+  hacknet: { label: 'Hacknet 页面', content: '---\ntitle: 页面标题\n---\n\n# 页面标题\n\n基于源码的分析说明。\n\n---\n\n## 核心功能\n\n功能描述...\n\n## 源码分析\n\n关键文件：\n\n```\n相关源码路径\n```\n\n## 使用示例\n\n示例说明...\n\n---\n\n> 引用来源或提示' },
+};
+
+function applyTemplate(name) {
+  var t = PAGE_TEMPLATES[name];
+  if (!t) return;
+  var ta = document.getElementById('ncontent');
+  if (ta) { ta.value = t.content; previewNew(); }
+}
+
+function loadNew() {
+  var defaultContent = PAGE_TEMPLATES.blank.content;
+  var templOptions = '';
+  for (var k in PAGE_TEMPLATES) {
+    if (PAGE_TEMPLATES.hasOwnProperty(k)) {
+      templOptions += '<option value="' + k + '">' + PAGE_TEMPLATES[k].label + '</option>';
+    }
+  }
+  var html = '<div class="page-bar"><h2>➕ 新建页面</h2></div>';
+  html += '<label style="display:block;margin:8px 0 4px;opacity:.7">文件名 (不含 .md)</label>';
+  html += '<input type="text" id="npath" placeholder="my-page" style="width:100%;margin-bottom:8px;" />';
+  html += '<label style="display:block;margin:4px 0;opacity:.7">模板</label>';
+  html += '<select id="ntemplate" onchange="applyTemplate(this.value)" style="width:100%;margin-bottom:8px;' +
+    'font:14px Consolas,monospace;background:#111;border:1px solid #2a2a3a;color:#fff;padding:8px 10px;">' + templOptions + '</select>';
+  html += '<div class="editor-wrap"><div class="editor-toolbar" id="newToolbar"></div>';
+  html += '<div class="editor-panes">';
+  html += '<textarea id="ncontent" oninput="previewNew()">' + escHtml(defaultContent) + '</textarea>';
+  html += '<div class="editor-preview" id="newPreview"></div></div></div>';
+  html += '<div id="new_stats" class="dim" style="text-align:right;font-size:12px;padding:4px 0;"></div>';
+  html += '<div style="margin-top:8px"><button class="btn" onclick="createPage()">创建页面</button></div>';
+  document.getElementById('main').innerHTML = html;
+  buildToolbar('newToolbar', 'new');
+  loadEditorLibs(function() { previewNew(); });
+}
+
+function previewNew() {
+  var ta = document.getElementById('ncontent');
+  var preview = document.getElementById('newPreview');
+  if (!ta || !preview) return;
+  if (!window.marked) { preview.innerHTML = '<p class="dim">加载渲染器...</p>'; return; }
+  var text = (ta.value || '').replace(/^---[\s\S]*?---\s*/, '');
+  var html = window.marked.parse(text, { breaks: true });
+  if (window.katex) {
+    html = html.replace(/\$\$([\s\S]*?)\$\$/g, function(_, m) {
+      try { return '<div style="text-align:center;padding:8px 0">' + katex.renderToString(m.trim(), {displayMode:true,throwOnError:false}) + '</div>'; } catch(e) { return '<div class="red">❌ ' + escHtml(m) + '</div>'; }
+    });
+    html = html.replace(/\$([^$\n]+?)\$/g, function(_, m) {
+      try { return katex.renderToString(m.trim(), {displayMode:false,throwOnError:false}); } catch(e) { return '$' + escHtml(m) + '$'; }
+    });
+  }
+  preview.innerHTML = html;
+  updateEditorStats('new');
+}
+
+window.createPage = function() {
+  var name = document.getElementById('npath').value.trim();
+  var content = document.getElementById('ncontent').value;
+  if (!name) { alert('请输入文件名'); return; }
+  var path = ensureDocsPath(name.replace(/\.md$/,'').replace(/\/+$/,'') + '/README.md');
+  document.getElementById('main').innerHTML = '<p>创建中...</p>';
+  gh('/repos/' + REPO + '/contents/' + path, {
+    method: 'PUT',
+    body: JSON.stringify({ message: 'create ' + path, content: b64enc(content), branch: BRANCH })
+  }).then(function(d) {
+    if (d.content) { shaMap[path] = d.content.sha; go('pages'); }
+    else document.getElementById('main').innerHTML = '<p class="red">创建失败: ' + (d.message||'unknown') + '</p>';
+  });
+};
+
+// ── Navbar Editor ──
+// ── 站点设置 ──
+function loadSettings() {
+  if (!isAdmin()) { go('dashboard'); return; }
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p>';
+  gh('/repos/' + REPO + '/contents/.vuepress/config.json?ref=' + BRANCH).then(function(meta) {
+    if (!meta || meta.message) { main.innerHTML = '<p class="red">' + (meta ? meta.message : '空响应') + '</p>'; return; }
+    window._cfgSha = meta.sha;
+    var raw = meta.content.replace(/\n/g, '').replace(/\r/g, '');
+    var txt = atob(raw);
+    try { txt = decodeURIComponent(escape(txt)); } catch(e) {}
+    var fields = {};
+    try { fields = JSON.parse(txt || '{}'); } catch(e) { fields = {}; }
+    main.innerHTML =
+      '<div class="page-bar"><h2>⚙ 站点设置</h2></div>' +
+      '<p class="dim">修改后保存，推送 master 自动触发 VuePress 构建（约 1-2 分钟生效）。</p>' +
+      '<label style="display:block;margin:12px 0 4px;opacity:.7">网站标题</label>' +
+      '<input type="text" id="s_title" value="' + escHtml(fields.title||'') + '" style="width:100%" />' +
+      '<label style="display:block;margin:12px 0 4px;opacity:.7">描述</label>' +
+      '<input type="text" id="s_desc" value="' + escHtml(fields.description||'') + '" style="width:100%" />' +
+      '<label style="display:block;margin:12px 0 4px;opacity:.7">站点 URL</label>' +
+      '<input type="text" id="s_url" value="' + escHtml(fields.url||'') + '" style="width:100%" />' +
+      '<div style="margin-top:16px"><button class="btn" onclick="saveSettings()">💾 保存设置</button> <span id="cfgStatus" class="dim"></span></div>';
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">加载失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+window.saveSettings = function() {
+  var sha = window._cfgSha;
+  var data = {
+    title: document.getElementById('s_title').value.trim(),
+    description: document.getElementById('s_desc').value.trim(),
+    url: document.getElementById('s_url').value.trim()
+  };
+  document.getElementById('cfgStatus').textContent = '保存中...';
+  gh('/repos/' + REPO + '/contents/.vuepress/config.json', { method: 'PUT', body: JSON.stringify({
+    message: 'update site settings',
+    content: b64enc(JSON.stringify(data, null, 2) + '\n'),
+    sha: sha,
+    branch: BRANCH
+  })}).then(function(d) {
+    if (d.content) { window._cfgSha = d.content.sha; document.getElementById('cfgStatus').textContent = '✅ 已保存，Actions 自动重建中（约 1-2 分钟）'; }
+    else document.getElementById('cfgStatus').textContent = '❌ 保存失败: ' + (d.message||'');
+  });
+};
+
+// ── 样式编辑器（图形化）──
+var _styleVars = {};
+
+function loadStyle() {
+  if (!isAdmin()) { go('dashboard'); return; }
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p>';
+  gh('/repos/' + REPO + '/contents/.vuepress/theme.json?ref=' + BRANCH).then(function(meta) {
+    if (!meta || meta.message) { main.innerHTML = '<p class="red">' + (meta ? meta.message : '空响应') + '</p>'; return; }
+    window._stySha = meta.sha;
+    var raw = meta.content.replace(/\n/g, '');
+    var txt = atob(raw);
+    try { txt = decodeURIComponent(escape(txt)); } catch(e) {}
+    var theme = {};
+    try { theme = JSON.parse(txt || '{}'); } catch(e) { theme = {}; }
+    window._themeData = theme;
+
+    // Build GUI（6 个主题色，来自 theme.json）
+    var html = '<div class="page-bar"><h2>🎨 样式编辑器</h2></div>';
+    html += '<p class="dim">修改主题色，保存后推送 master 自动触发 VuePress 构建（约 1-2 分钟生效）。</p>';
+    html += '<div style="margin-bottom:12px"><button class="btn" onclick="saveStyleGui()">💾 保存样式</button> <span id="styStatus" class="dim"></span></div>';
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">';
+
+    var colorKeys = ['bg','fg','accent','accent2','border','cardBg'];
+    colorKeys.forEach(function(k) {
+      var val = theme[k] || '#000000';
+      html += '<div style="background:#111;border:1px solid #2a2a3a;padding:14px;">';
+      html += '<label style="display:block;font-size:13px;opacity:.7;margin-bottom:6px;">' + k + '</label>';
+      html += '<div style="display:flex;gap:10px;align-items:center;">';
+      html += '<input type="color" id="cv_' + k + '" value="' + toHex(val) + '" style="width:50px;height:36px;border:none;padding:2px;background:transparent;cursor:pointer;" />';
+      html += '<input type="text" id="ct_' + k + '" value="' + escHtml(val) + '" style="flex:1;font-size:13px;" oninput="previewStyle()" />';
+      html += '<div id="cp_' + k + '" style="width:28px;height:28px;border-radius:4px;border:1px solid #333;background:' + val + ';"></div>';
+      html += '</div></div>';
+    });
+
+    html += '</div>';
+
+    // Preview
+    html += '<div style="margin-top:16px"><b style="color:#00d4aa">预览</b></div>';
+    html += '<div id="stylePreview" style="background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:4px;padding:20px;margin-top:8px;">';
+    html += '<span style="color:var(--accent)">强调色文本</span> · ';
+    html += '<span style="color:var(--accent2)">链接色</span> · ';
+    html += '<span style="background:var(--card-bg);padding:4px 10px;">卡片背景</span>';
+    html += '</div>';
+
+    main.innerHTML = html;
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">加载失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+function toHex(color) {
+  if (color.startsWith('#')) return color;
+  // Simple named or rgb conversion
+  var d = document.createElement('div');
+  d.style.color = color;
+  document.body.appendChild(d);
+  var cs = getComputedStyle(d).color;
+  document.body.removeChild(d);
+  var m = cs.match(/(\d+)/g);
+  if (!m) return '#000000';
+  return '#' + (1<<24|parseInt(m[0])<<16|parseInt(m[1])<<8|parseInt(m[2])).toString(16).slice(1);
+}
+
+function previewStyle() {
+  var colorKeys = ['bg','fg','accent','accent2','border','cardBg'];
+  var preview = document.getElementById('stylePreview');
+  if (!preview) return;
+  colorKeys.forEach(function(k) {
+    var el = document.getElementById('ct_' + k);
+    if (el) preview.style.setProperty('--' + k, el.value);
+    var cp = document.getElementById('cp_' + k);
+    if (cp) cp.style.background = el ? el.value : '';
+  });
+}
+
+window.saveStyleGui = function() {
+  var theme = window._themeData || {};
+  var colorKeys = ['bg','fg','accent','accent2','border','cardBg'];
+  colorKeys.forEach(function(k) {
+    var el = document.getElementById('ct_' + k);
+    if (el && el.value) theme[k] = el.value.trim();
+  });
+  document.getElementById('styStatus').textContent = '保存中...';
+  gh('/repos/' + REPO + '/contents/.vuepress/theme.json', { method: 'PUT', body: JSON.stringify({
+    message: 'update theme.json',
+    content: b64enc(JSON.stringify(theme, null, 2) + '\n'),
+    sha: window._stySha,
+    branch: BRANCH
+  })}).then(function(d) {
+    if (d.content) {
+      window._stySha = d.content.sha; window._themeData = theme;
+      document.getElementById('styStatus').textContent = '✅ 已保存，Actions 自动重建中（约 1-2 分钟）';
+    }
+    else document.getElementById('styStatus').textContent = '❌ 保存失败: ' + (d.message||'');
+  }).catch(function(e) {
+    document.getElementById('styStatus').textContent = '❌ 保存失败: ' + e.message;
+  });
+};
+
+function loadNavbar() {
+  if (!hasPerm('navbar')) { go('dashboard'); return; }
+  var main = document.getElementById('main');
+  if (!main) { alert('main element missing'); return; }
+  main.innerHTML = '<p>加载中...</p>';
+  gh('/repos/' + REPO + '/contents/.vuepress/navbar.json?ref=' + BRANCH).then(function(meta) {
+    if (!meta || meta.message) { main.innerHTML = '<p class="red">' + (meta ? meta.message : '空响应') + '</p>'; return; }
+    if (!meta.content) { main.innerHTML = '<p class="red">响应中没有文件内容</p>'; return; }
+    window._navSha = meta.sha;
+    var raw = meta.content.replace(/\n/g, '').replace(/\r/g, '');
+    var content = atob(raw);
+    try { content = decodeURIComponent(escape(content)); } catch(e) {}
+    var items = [];
+    try { items = JSON.parse(content || '[]'); } catch(e) { items = []; }
+    if (!Array.isArray(items) || items.length === 0) {
+      items = [
+        { text: '首页', link: '/' },
+        { text: 'Markdown教程', link: '/md-jc/' },
+        { text: 'Hacknet 百科', link: '/hacknet/' },
+        { text: '编程知识', link: '/programming/' },
+        { text: 'CSEL Mod', link: '/csel-mod/' }
+      ];
+    }
+    window._navItems = items;
+    renderNavEditor();
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">请求失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+function renderNavEditor() {
+  var main = document.getElementById('main');
+  var items = window._navItems || [];
+  var listHtml = '';
+  items.forEach(function(item, i) {
+    listHtml += '<tr>';
+    listHtml += '<td style="cursor:move;font-size:18px;opacity:.4" onclick="moveNavItem(' + i + ',-1)">↑</td>';
+    listHtml += '<td style="cursor:move;font-size:18px;opacity:.4" onclick="moveNavItem(' + i + ',1)">↓</td>';
+    listHtml += '<td><input type="text" id="nlabel' + i + '" value="' + escHtml(item.text) + '" style="width:100%" /></td>';
+    listHtml += '<td><input type="text" id="nhref' + i + '" value="' + escHtml(item.link) + '" style="width:100%;font-size:12px;" /></td>';
+    listHtml += '<td><button class="btn btn-sm btn-red" onclick="delNavItem(' + i + ')">✕</button></td>';
+    listHtml += '</tr>';
+  });
+
+  main.innerHTML = `
+<div class="page-bar"><h2>🔗 导航栏</h2></div>
+<div class="warn"><b>💡</b> 添加、删除、排序导航链接。点 ↑↓ 调整顺序。</div>
+<table>
+<tr><th style="width:30px"></th><th style="width:30px"></th><th>名称</th><th>链接</th><th style="width:50px"></th></tr>
+${listHtml}
+</table>
+<div style="margin:12px 0"><button class="btn btn-sm" onclick="addNavItem()">+ 添加链接</button></div>
+<div style="margin-top:16px"><button class="btn" onclick="saveNavbar()">💾 保存导航栏</button> <span id="navStatus" class="dim"></span></div>`;
+}
+
+window.addNavItem = function() {
+  if (!window._navItems) window._navItems = [];
+  window._navItems.push({ text: '新页面', link: '/new-page/' });
+  renderNavEditor();
+};
+
+window.delNavItem = function(i) {
+  window._navItems.splice(i, 1);
+  renderNavEditor();
+};
+
+window.moveNavItem = function(i, dir) {
+  var items = window._navItems;
+  var j = i + dir;
+  if (j < 0 || j >= items.length) return;
+  var tmp = items[i];
+  items[i] = items[j];
+  items[j] = tmp;
+  renderNavEditor();
+};
+
+window.saveNavbar = function() {
+  var items = window._navItems || [];
+  var newItems = [];
+  items.forEach(function(item, idx) {
+    var label = document.getElementById('nlabel' + idx);
+    var href = document.getElementById('nhref' + idx);
+    var text = (label ? label.value.trim() : item.text) || '';
+    var link = (href ? href.value.trim() : item.link) || '';
+    if (text || link) newItems.push({ text: text, link: link });
+  });
+
+  document.getElementById('navStatus').textContent = '保存中...';
+  var body = {
+    message: 'update navbar',
+    content: b64enc(JSON.stringify(newItems, null, 2) + '\n'),
+    branch: BRANCH
+  };
+  if (window._navSha) body.sha = window._navSha;
+
+  gh('/repos/' + REPO + '/contents/.vuepress/navbar.json', { method: 'PUT', body: JSON.stringify(body) }).then(function(d) {
+    if (d.content) {
+      window._navSha = d.content.sha;
+      window._navItems = newItems;
+      document.getElementById('navStatus').textContent = '✅ 已保存，Actions 自动重建中（约 1-2 分钟）';
+    } else {
+      document.getElementById('navStatus').textContent = '❌ 保存失败: ' + (d.message||'');
+    }
+  });
+};
+
+// ── Pages Build Management ──
+function loadPagesBuild() {
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p>';
+  Promise.all([
+    gh('/repos/' + REPO + '/pages').catch(function() { return null; }),
+    gh('/repos/' + REPO + '/actions/runs?per_page=20').catch(function() { return { total_count: 0, workflow_runs: [] }; })
+  ]).then(function(results) {
+    var info = results[0];
+    var runs = (results[1] && results[1].workflow_runs) || [];
+    var html = '<div class="page-bar"><h2>🚀 构建部署</h2><button class="btn" onclick="triggerPagesBuild()" id="buildBtn">▶ 触发构建</button></div>';
+
+    // 当前状态（Pages 信息：域名 / HTTPS）
+    if (info && !info.message) {
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px;">';
+      var statusColor = info.status === 'built' ? '#00d4aa' : (info.status === 'building' ? '#f39c12' : '#e74c3c');
+      html += '<div style="background:#111;border:1px solid #2a2a3a;padding:20px;"><div style="font-size:14px;color:' + statusColor + ';font-weight:bold">' + (info.status || 'unknown') + '</div><div class="dim">Pages 状态</div></div>';
+      html += '<div style="background:#111;border:1px solid #2a2a3a;padding:20px;"><div style="font-size:14px;color:#00d4aa">' + (info.cname || '-') + '</div><div class="dim">自定义域名</div></div>';
+      var httpsStatus = info.https_certificate ? '✅ 已启用' : '❌ 未配置';
+      var httpsEnforced = info.https_enforced ? '✅ 已强制' : '❌ 未强制';
+      var httpsForceBtn = info.https_certificate && !info.https_enforced
+        ? '<button class="btn btn-sm" onclick="enforceHTTPS()" style="margin-left:8px">🔒 启用强制 HTTPS</button>'
+        : '';
+      html += '<div style="background:#111;border:1px solid #2a2a3a;padding:20px;"><div style="font-size:14px">' + httpsStatus + ' · ' + httpsEnforced + httpsForceBtn + '</div><div class="dim">HTTPS</div></div>';
+      html += '</div>';
+    } else {
+      html += '<div class="warn"><b>⚠</b> 无法获取 Pages 信息（token 可能需要 pages 权限）</div>';
+    }
+
+    // Actions runs 历史
+    if (runs.length > 0) {
+      html += '<b>Actions 构建历史</b><table><tr><th>状态</th><th>工作流</th><th>触发</th><th>时间</th><th>提交</th></tr>';
+      runs.forEach(function(r) {
+        var done = r.status === 'completed';
+        var status = done ? (r.conclusion || 'completed') : 'running';
+        var statusCls = r.conclusion === 'success' ? 'green' : (done ? 'red' : 'dim');
+        var actor = r.actor ? r.actor.login : '?';
+        var date = r.created_at ? r.created_at.substring(0, 19).replace('T', ' ') : '?';
+        var commit = r.head_sha ? r.head_sha.substring(0, 7) : '?';
+        html += '<tr><td class="' + statusCls + '">' + status + '</td><td>' + escHtml(r.name || 'deploy') + '</td><td>' + escHtml(actor) + '</td><td style="white-space:nowrap">' + date + '</td><td><code>' + commit + '</code></td></tr>';
+      });
+      html += '</table>';
+    } else {
+      html += '<p class="dim">暂无构建记录</p>';
+    }
+
+    html += '<div id="buildResult" class="dim" style="margin-top:8px"></div>';
+    main.innerHTML = html;
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">加载失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+window.triggerPagesBuild = function() {
+  var btn = document.getElementById('buildBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ 触发中...'; }
+  var result = document.getElementById('buildResult');
+  if (result) result.textContent = '⏫ 触发 Actions 构建...';
+  gh('/repos/' + REPO + '/actions/workflows/deploy.yml/dispatches', { method: 'POST', body: JSON.stringify({ ref: BRANCH }) }).then(function(d) {
+    if (d && d.message) {
+      if (result) result.innerHTML = '<span class="red">❌ 触发失败: ' + d.message + '</span>';
+      if (btn) { btn.disabled = false; btn.textContent = '▶ 触发构建'; }
+    } else {
+      if (result) result.innerHTML = '<span class="green">✅ 构建已触发！</span> 约 1-2 分钟完成。';
+      setTimeout(loadPagesBuild, 3000);
+    }
+  }).catch(function(e) {
+    if (result) result.innerHTML = '<span class="red">❌ 请求失败: ' + e.message + '</span>';
+    if (btn) { btn.disabled = false; btn.textContent = '▶ 触发构建'; }
+  });
+};
+
+window.enforceHTTPS = function() {
+  var result = document.getElementById('buildResult');
+  if (result) result.textContent = '🔒 启用 HTTPS 强制...';
+  gh('/repos/' + REPO + '/pages', { method: 'PUT', body: JSON.stringify({
+    cname: 'hn.liuxiyu.cn',
+    https_enforced: true,
+    branch: 'master'
+  })}).then(function(d) {
+    if (d && !d.message) {
+      if (result) result.innerHTML = '<span class="green">✅ HTTPS 强制已启用！</span>';
+      setTimeout(loadPagesBuild, 2000);
+    } else {
+      if (result) result.innerHTML = '<span class="red">❌ 启用失败: ' + (d ? d.message : 'unknown') + '</span>';
+    }
+  }).catch(function(e) {
+    if (result) result.innerHTML = '<span class="red">❌ 请求失败: ' + e.message + '</span>';
+  });
+};
+
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── Theme Switcher ──
+function toggleTheme() {
+  var current = localStorage.getItem('csel_theme') || 'dark';
+  var next = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('csel_theme', next);
+  applyTheme(next);
+  render(); // Re-render sidebar to update toggle text
+}
+
+function applyTheme(theme) {
+  if (theme === 'light') document.body.classList.add('theme-light');
+  else document.body.classList.remove('theme-light');
+}
+
+// ── Sitemap Generator ──
+function loadSitemap() {
+  var main = document.getElementById('main');
+  main.innerHTML = '<p>加载中...</p>';
+  gh('/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1').then(function(data) {
+    if (data.message) { main.innerHTML = '<p class="red">' + data.message + '</p>'; return; }
+    var pages = data.tree.filter(function(f) { return f.path.startsWith('docs/') && f.path.endsWith('.md') && f.path !== 'docs/README.md' && f.path !== 'docs/test.md'; });
+    var html = '<div class="page-bar"><h2>🗺 站点地图</h2><button class="btn" onclick="generateSitemap()" id="sitemapBtn">📄 生成 sitemap.xml</button></div>';
+    html += '<p class="dim">扫描到 ' + pages.length + ' 个页面，生成 sitemap.xml 写入 .vuepress/public/，构建后随站点发布。</p>';
+    html += '<table><tr><th>页面</th><th>URL</th></tr>';
+    var siteUrl = 'https://hn.liuxiyu.cn';
+    pages.forEach(function(f) {
+      var urlPath = repoPathToUrl(f.path);
+      html += '<tr><td>' + escHtml(f.path) + '</td><td><a href="' + siteUrl + urlPath + '" target="_blank" class="dim">' + siteUrl + urlPath + '</a></td></tr>';
+    });
+    html += '</table>';
+    html += '<div id="sitemapResult" class="dim" style="margin-top:8px"></div>';
+    main.innerHTML = html;
+  }).catch(function(e) {
+    main.innerHTML = '<p class="red">加载失败: ' + (e.message||e) + '</p>';
+  });
+}
+
+window.generateSitemap = function() {
+  var btn = document.getElementById('sitemapBtn');
+  if (btn) btn.disabled = true;
+  var result = document.getElementById('sitemapResult');
+  if (result) result.textContent = '⏫ 扫描页面并生成...';
+  gh('/repos/' + REPO + '/git/trees/' + BRANCH + '?recursive=1').then(function(data) {
+    if (data.message) { if (result) result.innerHTML = '<span class="red">' + data.message + '</span>'; if (btn) btn.disabled = false; return; }
+    var pages = data.tree.filter(function(f) { return f.path.startsWith('docs/') && f.path.endsWith('.md') && f.path !== 'docs/README.md' && f.path !== 'docs/test.md'; });
+    var siteUrl = 'https://hn.liuxiyu.cn';
+    var now = new Date().toISOString().split('T')[0];
+    var xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    // Home page
+    xml += '  <url><loc>' + siteUrl + '/</loc><priority>1.0</priority><lastmod>' + now + '</lastmod></url>\n';
+    pages.forEach(function(f) {
+      var urlPath = repoPathToUrl(f.path);
+      if (urlPath === '/') return;   // 首页已在上面
+      var priority = f.path.startsWith('docs/hacknet/') ? '0.7' : '0.8';
+      xml += '  <url><loc>' + siteUrl + urlPath + '</loc><priority>' + priority + '</priority><lastmod>' + now + '</lastmod></url>\n';
+    });
+    xml += '</urlset>\n';
+
+    if (result) result.textContent = '⏫ 提交 sitemap.xml...';
+    gh('/repos/' + REPO + '/contents/.vuepress/public/sitemap.xml', { method: 'PUT', body: JSON.stringify({
+      message: 'update sitemap.xml',
+      content: b64enc(xml),
+      sha: shaMap['.vuepress/public/sitemap.xml'] || undefined,
+      branch: BRANCH
+    })}).then(function(d) {
+      if (d && d.content) {
+        shaMap['.vuepress/public/sitemap.xml'] = d.content.sha;
+        if (result) result.innerHTML = '<span class="green">✅ sitemap.xml 已提交！</span> 构建后随站点发布。';
+      } else {
+        if (result) result.innerHTML = '<span class="red">❌ 提交失败: ' + (d ? d.message : 'unknown') + '</span>';
+      }
+      if (btn) btn.disabled = false;
+    });
+  }).catch(function(e) {
+    if (result) result.innerHTML = '<span class="red">❌ 错误: ' + e.message + '</span>';
+    if (btn) btn.disabled = false;
+  });
+};
+
+// ── Init ──
+// Apply saved theme
+applyTheme(localStorage.getItem('csel_theme') || 'dark');
+var savedSession = localStorage.getItem('csel_session');
+if (savedSession) {
+  try {
+    var s = JSON.parse(savedSession);
+    fetch(API_BASE + '/api/auth/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: s.token }) })
+      .then(function(r) { return r.json(); }).then(function(d) {
+        if (d.valid) { _session = s; render(); }
+        else { localStorage.removeItem('csel_session'); render(); }
+      }).catch(function() { render(); });
+  } catch(e) { render(); }
+} else { render(); }
+</script>
+</body>
+</html>
