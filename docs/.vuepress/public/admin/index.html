@@ -537,20 +537,20 @@ window.showAddUser = function() {
   var html = '<div class="modal-overlay"><div class="modal"><h3>添加用户</h3>';
   html += '<label>用户名</label><input type="text" id="newUserName" style="width:100%" />';
   html += '<label>密码</label><input type="password" id="newUserPass" style="width:100%" />';
-  html += '<label>角色</label><select id="newUserRole" style="width:100%"><option value="editor">编辑者</option><option value="admin">管理员</option></select>';
-  html += '<label>权限（留空=全部；填 custom 使用可写路径白名单）</label><input type="text" id="newUserPerms" value="media,navbar,pages,passwords" style="width:100%" />';
-  html += '<div id="customWrap" style="display:none"><label>可写路径（custom 专用，逗号分隔；目录结尾加 /，如 docs/csharp/ 或 docs/csharp/a.md）</label><input type="text" id="newUserWritePaths" placeholder="docs/csharp/" style="width:100%" /></div>';
+  html += '<label>角色</label><select id="newUserRole" style="width:100%"><option value="editor">编辑者</option><option value="custom">自定义(custom)</option><option value="admin">管理员</option></select>';
+  html += '<label>权限（逗号分隔，留空=全部）</label><input type="text" id="newUserPerms" value="media,navbar,pages,passwords" style="width:100%" />';
+  html += '<div id="customWrap" style="display:none"><label>可写路径（custom 角色专用，逗号分隔；目录结尾加 /，如 docs/csharp/ 或 docs/csharp/a.md）</label><input type="text" id="newUserWritePaths" placeholder="docs/csharp/" style="width:100%" /></div>';
   html += '<div class="btns"><button class="btn" onclick="createUser()">创建</button><button class="btn btn-red" onclick="closeModal()">取消</button></div></div></div>';
   var div = document.createElement('div');
   div.innerHTML = html;
   document.body.appendChild(div.firstElementChild);
-  // 监听权限输入，custom 时显示可写路径框
-  var permsEl = document.getElementById('newUserPerms');
+  // 监听角色选择，custom 时显示可写路径框
+  var roleEl = document.getElementById('newUserRole');
   var wrapEl = document.getElementById('customWrap');
   function toggleCustom() {
-    wrapEl.style.display = (permsEl.value.trim().toLowerCase() === 'custom') ? 'block' : 'none';
+    wrapEl.style.display = (roleEl.value === 'custom') ? 'block' : 'none';
   }
-  permsEl.addEventListener('input', toggleCustom);
+  roleEl.addEventListener('change', toggleCustom);
   toggleCustom();
 };
 

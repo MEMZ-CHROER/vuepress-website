@@ -37,19 +37,19 @@ async function isAdmin(token, db) {
   return user && user.role === "admin";
 }
 
-// custom 权限模型：允许写入指定路径（pwd/文件名），读不受限
+// custom 角色：允许写入指定路径（pwd/文件名），读不受限
 // write_paths 存逗号分隔的路径/目录前缀；支持目录（结尾 /）与精确文件名
+// custom 角色可以有 permissions 节点（如 pages），但写操作一律受 write_paths 白名单约束
 async function canWrite(token, db, targetPath) {
   const user = await getSession(token, db);
   if (!user) return false;
-  // admin 或 all 全权放行
+  // admin 或 all 全权放行（不受白名单限制）
   if (user.permissions === "all" || user.role === "admin") return true;
-  // 非 custom：走原有 requirePerm 逻辑（由调用方决定用哪个节点）
-  if (user.permissions !== "custom") return null;  // null = 不拦截，交给原逻辑
-  // custom：检查目标路径是否匹配允许列表
+  // 非 custom 角色：走原有 requirePerm 逻辑（由调用方决定用哪个节点）
+  if (user.role !== "custom") return null;  // null = 不拦截，交给原逻辑
+  // custom 角色：无论有什么权限节点，写操作都受白名单约束
   const allowed = (user.write_paths || "").split(",").map(s => s.trim()).filter(Boolean);
   if (allowed.length === 0) return false;
-  // 规范化：去掉开头的 / 或 docs/ 冗余
   let t = targetPath.replace(/^\/(api|raw)\//, "/");
   // GitHub API 路径形如 /repos/OWNER/REPO/contents/docs/csharp/a.md
   const m = t.match(/\/contents\/(.+)$/);
@@ -189,7 +189,8 @@ export default {
       if (!username || username.length < 2) return json({ error: "invalid username" }, 400);
       const password = typeof body.password === "string" ? body.password : "";
       if (password.length < 6) return json({ error: "password too short (min 6)" }, 400);
-      const role = body.role === "admin" ? "admin" : "editor";
+      // role 支持 admin / custom / editor（custom = 写操作受 write_paths 白名单约束）
+      const role = body.role === "admin" ? "admin" : (body.role === "custom" ? "custom" : "editor");
       const perms = body.permissions === "all" ? "all" : (body.permissions || "media,navbar,pages,passwords");
       // custom 权限：write_paths 存允许写入的路径/文件名（逗号分隔）
       const writePaths = (typeof body.write_paths === "string" ? body.write_paths : "").trim();
