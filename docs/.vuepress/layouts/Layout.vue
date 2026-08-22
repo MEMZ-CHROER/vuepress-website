@@ -17,6 +17,9 @@ const frontmatter = usePageFrontmatter();
 
   <!-- 全局彩蛋 -->
   <EasterEgg />
+
+  <!-- 前台编辑（登录后右下角可编辑此页） -->
+  <FrontEditor />
 </template>
 
 <style scoped>
