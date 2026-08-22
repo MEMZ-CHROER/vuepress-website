@@ -520,9 +520,10 @@ function loadUsers() {
   fetch(API_BASE + '/api/auth/users?token=' + _session.token).then(function(r) { return r.json(); }).then(function(users) {
     if (users.error) { main.innerHTML = '<p class="red">' + users.error + '</p>'; return; }
     var html = '<div class="page-bar"><h2>👥 用户管理</h2><button class="btn" onclick="showAddUser()">+ 添加用户</button></div>';
-    html += '<table><tr><th>ID</th><th>用户名</th><th>角色</th><th>权限</th><th>创建时间</th><th>操作</th></tr>';
+    html += '<table><tr><th>ID</th><th>用户名</th><th>角色</th><th>权限</th><th>可写路径</th><th>创建时间</th><th>操作</th></tr>';
     (users || []).forEach(function(u) {
-      html += '<tr><td>' + u.id + '</td><td>' + escHtml(u.username) + '</td><td>' + u.role + '</td><td>' + (u.permissions || 'all') + '</td><td>' + (u.created_at || '-') + '</td>';
+      var wp = u.write_paths || '';
+      html += '<tr><td>' + u.id + '</td><td>' + escHtml(u.username) + '</td><td>' + u.role + '</td><td>' + (u.permissions || 'all') + '</td><td>' + (u.permissions === 'custom' ? escHtml(wp) : '-') + '</td><td>' + (u.created_at || '-') + '</td>';
       html += '<td>' + (u.id > 1 ? '<button class="btn btn-sm btn-red" onclick="delUser(' + u.id + ')">删除</button>' : '-') + '</td></tr>';
     });
     html += '</table>';
@@ -537,11 +538,20 @@ window.showAddUser = function() {
   html += '<label>用户名</label><input type="text" id="newUserName" style="width:100%" />';
   html += '<label>密码</label><input type="password" id="newUserPass" style="width:100%" />';
   html += '<label>角色</label><select id="newUserRole" style="width:100%"><option value="editor">编辑者</option><option value="admin">管理员</option></select>';
-  html += '<label>权限（逗号分隔，留空=全部）</label><input type="text" id="newUserPerms" value="media,navbar,pages,passwords" style="width:100%" />';
+  html += '<label>权限（留空=全部；填 custom 使用可写路径白名单）</label><input type="text" id="newUserPerms" value="media,navbar,pages,passwords" style="width:100%" />';
+  html += '<div id="customWrap" style="display:none"><label>可写路径（custom 专用，逗号分隔；目录结尾加 /，如 docs/csharp/ 或 docs/csharp/a.md）</label><input type="text" id="newUserWritePaths" placeholder="docs/csharp/" style="width:100%" /></div>';
   html += '<div class="btns"><button class="btn" onclick="createUser()">创建</button><button class="btn btn-red" onclick="closeModal()">取消</button></div></div></div>';
   var div = document.createElement('div');
   div.innerHTML = html;
   document.body.appendChild(div.firstElementChild);
+  // 监听权限输入，custom 时显示可写路径框
+  var permsEl = document.getElementById('newUserPerms');
+  var wrapEl = document.getElementById('customWrap');
+  function toggleCustom() {
+    wrapEl.style.display = (permsEl.value.trim().toLowerCase() === 'custom') ? 'block' : 'none';
+  }
+  permsEl.addEventListener('input', toggleCustom);
+  toggleCustom();
 };
 
 window.createUser = function() {
@@ -549,10 +559,11 @@ window.createUser = function() {
   var password = document.getElementById('newUserPass').value;
   var role = document.getElementById('newUserRole').value;
   var perms = document.getElementById('newUserPerms').value.trim();
+  var writePaths = document.getElementById('newUserWritePaths') ? document.getElementById('newUserWritePaths').value.trim() : '';
   if (!username || !password) { alert('请填写用户名和密码'); return; }
   fetch(API_BASE + '/api/auth/users', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: _session.token, username: username, password: password, role: role, permissions: perms || 'all' })
+    body: JSON.stringify({ token: _session.token, username: username, password: password, role: role, permissions: perms || 'all', write_paths: writePaths })
   }).then(function(r) { return r.json(); }).then(function(d) {
     closeModal();
     if (d.ok) loadUsers();
