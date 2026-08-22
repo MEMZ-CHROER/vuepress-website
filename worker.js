@@ -20,7 +20,7 @@ function json(data, status = 200) {
 async function getSession(token, db) {
   if (!token || typeof token !== "string") return null;
   const { results } = await db.prepare(
-    "SELECT u.id, u.username, u.role, u.permissions FROM sessions s JOIN users u ON s.user_id = u.id WHERE s.token = ?"
+    "SELECT u.id, u.username, u.role, u.permissions, u.write_paths FROM sessions s JOIN users u ON s.user_id = u.id WHERE s.token = ?"
   ).bind(token).all();
   if (!results || results.length === 0) return null;
   return results[0];
@@ -35,6 +35,36 @@ async function requirePerm(token, db, perm) {
 async function isAdmin(token, db) {
   const user = await getSession(token, db);
   return user && user.role === "admin";
+}
+
+// custom 权限模型：允许写入指定路径（pwd/文件名），读不受限
+// write_paths 存逗号分隔的路径/目录前缀；支持目录（结尾 /）与精确文件名
+async function canWrite(token, db, targetPath) {
+  const user = await getSession(token, db);
+  if (!user) return false;
+  // admin 或 all 全权放行
+  if (user.permissions === "all" || user.role === "admin") return true;
+  // 非 custom：走原有 requirePerm 逻辑（由调用方决定用哪个节点）
+  if (user.permissions !== "custom") return null;  // null = 不拦截，交给原逻辑
+  // custom：检查目标路径是否匹配允许列表
+  const allowed = (user.write_paths || "").split(",").map(s => s.trim()).filter(Boolean);
+  if (allowed.length === 0) return false;
+  // 规范化：去掉开头的 / 或 docs/ 冗余
+  let t = targetPath.replace(/^\/(api|raw)\//, "/");
+  // GitHub API 路径形如 /repos/OWNER/REPO/contents/docs/csharp/a.md
+  const m = t.match(/\/contents\/(.+)$/);
+  if (!m) return false;
+  const filePath = m[1];
+  for (const rule of allowed) {
+    if (!rule) continue;
+    // 目录规则（结尾 /）：前缀匹配
+    if (rule.endsWith("/")) {
+      if (filePath === rule.slice(0, -1) || filePath.startsWith(rule)) return true;
+    }
+    // 精确文件名规则
+    else if (filePath === rule) return true;
+  }
+  return false;
 }
 
 async function sha256(input) {
@@ -147,7 +177,7 @@ export default {
     if (path === "/api/auth/users" && request.method === "GET") {
       const token = url.searchParams.get("token");
       if (!await isAdmin(token, env.DB)) return json({ error: "unauthorized" }, 403);
-      const { results } = await env.DB.prepare("SELECT id, username, role, permissions, created_at FROM users ORDER BY id").all();
+      const { results } = await env.DB.prepare("SELECT id, username, role, permissions, write_paths, created_at FROM users ORDER BY id").all();
       return json(results || []);
     }
 
@@ -161,9 +191,11 @@ export default {
       if (password.length < 6) return json({ error: "password too short (min 6)" }, 400);
       const role = body.role === "admin" ? "admin" : "editor";
       const perms = body.permissions === "all" ? "all" : (body.permissions || "media,navbar,pages,passwords");
+      // custom 权限：write_paths 存允许写入的路径/文件名（逗号分隔）
+      const writePaths = (typeof body.write_paths === "string" ? body.write_paths : "").trim();
       const hash = await sha256(password);
       try {
-        await env.DB.prepare("INSERT INTO users (username, password_hash, role, permissions) VALUES (?, ?, ?, ?)").bind(username, hash, role, perms).run();
+        await env.DB.prepare("INSERT INTO users (username, password_hash, role, permissions, write_paths) VALUES (?, ?, ?, ?, ?)").bind(username, hash, role, perms, writePaths).run();
         return json({ ok: true });
       } catch (e) {
         if (e.message && e.message.includes("UNIQUE")) return json({ error: "username already exists" }, 409);
@@ -239,19 +271,28 @@ export default {
       const isPage = /\/contents\/docs\/.*\.md$/.test(targetPath);
       const isPagesBuild = targetPath.includes("/pages/builds");
 
-      if (isPasswords) {
-        if (!await requirePerm(token, env.DB, "passwords")) return json({ error: "need 'passwords' permission" }, 403);
-      } else if (isConfig || isStyle) {
-        if (!await isAdmin(token, env.DB)) return json({ error: "admin only" }, 403);
-      } else if (isMedia) {
-        if (!await requirePerm(token, env.DB, "media")) return json({ error: "need 'media' permission" }, 403);
-      } else if (isNavbar) {
-        if (!await requirePerm(token, env.DB, "navbar")) return json({ error: "need 'navbar' permission" }, 403);
-      } else if (isPage || isPagesBuild) {
-        if (!await requirePerm(token, env.DB, "pages")) return json({ error: "need 'pages' permission" }, 403);
+      // custom 权限模型优先：按 write_paths 白名单校验（仅限文件写操作，读不拦截）
+      const cw = await canWrite(token, env.DB, targetPath);
+      if (cw === true) {
+        // custom 放行，直接继续
+      } else if (cw === false) {
+        return json({ error: "not allowed to write this path" }, 403);
       } else {
-        // Unknown path — admin only for safety
-        if (!await isAdmin(token, env.DB)) return json({ error: "unauthorized" }, 403);
+        // 非 custom 用户，走原有权限矩阵
+        if (isPasswords) {
+          if (!await requirePerm(token, env.DB, "passwords")) return json({ error: "need 'passwords' permission" }, 403);
+        } else if (isConfig || isStyle) {
+          if (!await isAdmin(token, env.DB)) return json({ error: "admin only" }, 403);
+        } else if (isMedia) {
+          if (!await requirePerm(token, env.DB, "media")) return json({ error: "need 'media' permission" }, 403);
+        } else if (isNavbar) {
+          if (!await requirePerm(token, env.DB, "navbar")) return json({ error: "need 'navbar' permission" }, 403);
+        } else if (isPage || isPagesBuild) {
+          if (!await requirePerm(token, env.DB, "pages")) return json({ error: "need 'pages' permission" }, 403);
+        } else {
+          // Unknown path — admin only for safety
+          if (!await isAdmin(token, env.DB)) return json({ error: "unauthorized" }, 403);
+        }
       }
 
       // Strip _token before forwarding, rebuild body
