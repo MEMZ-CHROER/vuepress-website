@@ -170,11 +170,13 @@ export default defineUserConfig({
             filePathRelative !== "cpp/README.md"
           )
             return true;
-          // csharp 社区区（排除 README 入口页）
+          // csharp 社区区（排除 README 入口页 + 投稿指南/模板）
           if (
             filePathRelative.startsWith("csharp/") &&
             !filePathRelative.endsWith("/README.md") &&
-            filePathRelative !== "csharp/README.md"
+            filePathRelative !== "csharp/README.md" &&
+            filePathRelative !== "csharp/CONTRIBUTING.md" &&
+            filePathRelative !== "csharp/template.md"
           )
             return true;
           return false;
