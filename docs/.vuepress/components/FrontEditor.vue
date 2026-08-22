@@ -9,9 +9,19 @@ const BRANCH = "master";
 const page = usePageData();
 
 // 当前页面对应的 md 路径（VuePress 提供源文件相对路径）
+// 当前页面对应的 md 路径（VuePress 的 filePathRelative 相对 docs 根，需补 docs/ 前缀）
 const mdPath = computed(() => {
   const f = page.value.filePathRelative || "";
-  return f ? f : null;
+  if (!f) return null;
+  return f.indexOf("docs/") === 0 ? f : "docs/" + f;
+});
+
+// 候选路径：优先带 docs/ 前缀，备选不带（应对 filePathRelative 格式不确定）
+const mdCandidates = computed(() => {
+  const f = page.value.filePathRelative || "";
+  if (!f) return [];
+  const withDocs = f.indexOf("docs/") === 0 ? f : "docs/" + f;
+  return [withDocs, f];
 });
 
 // 状态
@@ -79,21 +89,29 @@ function openEditor() {
 
 function closeEditor() { showEditor.value = false; editorStatus.value = ""; }
 
-// 读当前页 md 内容
+// 读当前页 md 内容（自动尝试候选路径）
 async function loadContent() {
   loadingContent.value = true;
   editorStatus.value = "加载中...";
-  try {
-    const r = await fetch(API_BASE + "/raw/repos/" + REPO + "/contents/" + mdPath.value + "?ref=" + BRANCH);
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    const text = await r.text();
-    const parsed = parseFrontmatter(text);
-    editorTitle.value = parsed.meta.title || "";
-    editorContent.value = parsed.body;
-    editorStatus.value = "";
-  } catch (e) {
-    editorStatus.value = "读取失败: " + e.message;
+  let text = null;
+  let usedPath = null;
+  for (const p of mdCandidates.value) {
+    try {
+      const r = await fetch(API_BASE + "/raw/repos/" + REPO + "/contents/" + p + "?ref=" + BRANCH);
+      if (r.ok) { text = await r.text(); usedPath = p; break; }
+    } catch (e) {}
   }
+  if (text === null || usedPath === null) {
+    editorStatus.value = "读取失败: 未找到对应的源文件";
+    loadingContent.value = false;
+    return;
+  }
+  // 记录实际使用的路径，供保存用
+  window.__fe_path = usedPath;
+  const parsed = parseFrontmatter(text);
+  editorTitle.value = parsed.meta.title || "";
+  editorContent.value = parsed.body;
+  editorStatus.value = "";
   loadingContent.value = false;
 }
 
@@ -125,22 +143,24 @@ function b64enc(s) { return btoa(unescape(encodeURIComponent(s))); }
 // 保存到 GitHub（复用 admin 的 worker 代理逻辑）
 async function saveContent() {
   if (!session.value) return;
+  const savePath = window.__fe_path || mdPath.value;
+  if (!savePath) { editorStatus.value = "❌ 未知保存路径"; return; }
   editorStatus.value = "保存中...";
   // 重新读取原文件的 sha（GitHub 更新需要）
   try {
-    const metaRes = await fetch(API_BASE + "/api/repos/" + REPO + "/contents/" + mdPath.value + "?ref=" + BRANCH, {
+    const metaRes = await fetch(API_BASE + "/api/repos/" + REPO + "/contents/" + savePath + "?ref=" + BRANCH, {
       headers: { Accept: "application/vnd.github.v3+json" },
     });
     const meta = await metaRes.json();
     const full = buildFrontmatter({ ...parseFrontmatter(editorContent.value).meta, title: editorTitle.value }, editorContent.value);
     const body = {
-      message: "docs: 前台编辑 " + mdPath.value,
+      message: "docs: 前台编辑 " + savePath,
       content: b64enc(full),
       branch: BRANCH,
       sha: meta.sha,
       _token: session.value.token,
     };
-    const r = await fetch(API_BASE + "/api/repos/" + REPO + "/contents/" + mdPath.value, {
+    const r = await fetch(API_BASE + "/api/repos/" + REPO + "/contents/" + savePath, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Accept: "application/vnd.github.v3+json" },
       body: JSON.stringify(body),
