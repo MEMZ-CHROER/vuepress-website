@@ -2321,9 +2321,9 @@
     "@vercel/cli-exec" "1.0.1"
     jose "^5.9.6"
 
-"@vitejs/plugin-vue@^6.0.6":
+"@vitejs/plugin-vue@^6.0.8":
   version "6.0.8"
-  resolved "https://registry.npmmirror.com/@vitejs/plugin-vue/-/plugin-vue-6.0.8.tgz#1809d090b7c93b8f4ae83d3e7536655cbbb1c793"
+  resolved "https://registry.npmjs.org/@vitejs/plugin-vue/-/plugin-vue-6.0.8.tgz#1809d090b7c93b8f4ae83d3e7536655cbbb1c793"
   integrity sha512-0ZjgOg7oO6farnNGup7yvoM/YXZV84OZxHAwtflItNa/6zzQyVb5LNxyea3FEKEX2XlagIKzrlH7wwxkKgtiew==
   dependencies:
     "@rolldown/pluginutils" "^1.0.1"
@@ -2381,14 +2381,14 @@
     "@vue/compiler-dom" "3.5.41"
     "@vue/shared" "3.5.41"
 
-"@vue/devtools-api@^8.1.1", "@vue/devtools-api@^8.1.2", "@vue/devtools-api@^8.1.5":
+"@vue/devtools-api@^8.1.2", "@vue/devtools-api@^8.1.5":
   version "8.2.1"
   resolved "https://registry.npmmirror.com/@vue/devtools-api/-/devtools-api-8.2.1.tgz#9d95de2b908aa80b9957d737ddca51790e70c3b5"
   integrity sha512-6u4vXBlIBAC1wMplIZgpyPn7uh/s4Bf6F5bMzvLv+EdJ0aHs/+4B7Ygv864EStQSjRbsRzTko/kUG1A1IejQ3A==
   dependencies:
     "@vue/devtools-kit" "^8.2.1"
 
-"@vue/devtools-kit@^8.1.1", "@vue/devtools-kit@^8.2.1":
+"@vue/devtools-kit@^8.1.5", "@vue/devtools-kit@^8.2.1":
   version "8.2.1"
   resolved "https://registry.npmmirror.com/@vue/devtools-kit/-/devtools-kit-8.2.1.tgz#ad45babb12c51931d32d1b67ffaebc251f550ce9"
   integrity sha512-FIGIuq3AWReEpbAHY/cRGeHDfI0qOb8OCQ3YjbEAX04uaxIDbGc9rhkbVcG7rnfHPXE3RsU5KrWOu9V/okd8AQ==
@@ -2442,72 +2442,73 @@
   resolved "https://registry.npmmirror.com/@vue/shared/-/shared-3.5.41.tgz#ac476497f74495f7525087270849841756555cf2"
   integrity sha512-IOnwSCma8j+9xJT6b8H0dEYidC80NsYmNMlZxRsukYcSoGaDBohog5hDxzeUXdFeGWFA++vWvxqOmrr96VlqMA==
 
-"@vuepress/bundler-vite@2.0.0-rc.30", "@vuepress/bundler-vite@^2.0.0-rc.30":
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/@vuepress/bundler-vite/-/bundler-vite-2.0.0-rc.30.tgz#81921d15df0d53c8b4aef3bded2bd4efe9fc952d"
-  integrity sha512-Glfi6JQIbSTpQDuYR3e4VDF6iMgdZixQLHtry4tidYSeSudeZgL1yzxIxO4B5hRoflP+Xre7Fy3r0ilGZSitXg==
+"@vuepress/bundler-vite@2.0.0-rc.31":
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/@vuepress/bundler-vite/-/bundler-vite-2.0.0-rc.31.tgz#d20c83f9173ff570744114e40c109bb99bb68c1b"
+  integrity sha512-4ptpbmDvAf9KvME7xY4OhYT4M/fAyk4qnP97jl5+kdRkOcv/XsRW2WKhP2lC8ckr9hMwVoRdBRE2/qgrtX+iDQ==
   dependencies:
-    "@vitejs/plugin-vue" "^6.0.6"
-    "@vuepress/bundlerutils" "2.0.0-rc.30"
-    "@vuepress/client" "2.0.0-rc.30"
-    "@vuepress/core" "2.0.0-rc.30"
-    "@vuepress/shared" "2.0.0-rc.30"
-    "@vuepress/utils" "2.0.0-rc.30"
-    autoprefixer "^10.5.0"
+    "@vitejs/plugin-vue" "^6.0.8"
+    "@vuepress/bundlerutils" "2.0.0-rc.31"
+    "@vuepress/client" "2.0.0-rc.31"
+    "@vuepress/core" "2.0.0-rc.31"
+    "@vuepress/shared" "2.0.0-rc.31"
+    "@vuepress/utils" "2.0.0-rc.31"
+    autoprefixer "^10.5.4"
     connect-history-api-fallback "^2.0.0"
-    postcss "^8.5.14"
+    postcss "^8.5.22"
     postcss-load-config "^6.0.1"
-    rolldown "^1.0.0"
-    vite "^8.0.11"
-    vue "^3.5.34"
-    vue-router "^5.0.6"
+    rolldown "^1.2.0"
+    vite "^8.1.5"
+    vue "^3.5.40"
+    vue-router "^5.2.0"
 
-"@vuepress/bundlerutils@2.0.0-rc.30":
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/@vuepress/bundlerutils/-/bundlerutils-2.0.0-rc.30.tgz#0249929e401d911bbf0da490ec3e02a144178f4f"
-  integrity sha512-pDB1mc4d6PluzDbr4jDgHBMbcTjl1U+RyMMDy/6JaV934T5iaJLOrHe/FrDXq39qM5rvQTMkTh6KesJ6qHxrLA==
+"@vuepress/bundlerutils@2.0.0-rc.31":
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/@vuepress/bundlerutils/-/bundlerutils-2.0.0-rc.31.tgz#4cb20b158906f61e5fd3b41913573149e87f2dab"
+  integrity sha512-CSk4gR0fvJ419ocipH3cbk/xt0IFK92XwqzFX3N7BzPVFlWE74iaBfT3VUFQHQN2vYPwMMou4wlEdnK4PS4cvQ==
   dependencies:
-    "@vuepress/client" "2.0.0-rc.30"
-    "@vuepress/core" "2.0.0-rc.30"
-    "@vuepress/shared" "2.0.0-rc.30"
-    "@vuepress/utils" "2.0.0-rc.30"
-    vue "^3.5.34"
-    vue-router "^5.0.6"
+    "@vuepress/client" "2.0.0-rc.31"
+    "@vuepress/core" "2.0.0-rc.31"
+    "@vuepress/markdown" "2.0.0-rc.31"
+    "@vuepress/shared" "2.0.0-rc.31"
+    "@vuepress/utils" "2.0.0-rc.31"
+    vue "^3.5.40"
+    vue-router "^5.2.0"
 
-"@vuepress/cli@2.0.0-rc.30":
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/@vuepress/cli/-/cli-2.0.0-rc.30.tgz#ee4716765527dc2cc42720deb226e9ee37d4e586"
-  integrity sha512-AE77SLQyaebUqqLp6SAjno9jMjgjARqZlE3db4Vwrnd2g3W2LDLOdxs6MCbA5OiZmoasr2XtKGNbf0mW3EVSRg==
+"@vuepress/cli@2.0.0-rc.31":
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/@vuepress/cli/-/cli-2.0.0-rc.31.tgz#6f76cf1061ee10f26f6690b7703b32bd6c256edd"
+  integrity sha512-X75edJjhacYCzrYSOhXvlakh+/1fm2eCGJcrcZqKGfeZXcKhDrF154E7meLqfEkiHDb3zPCg+C2wAs1m6ujoxQ==
   dependencies:
-    "@vuepress/core" "2.0.0-rc.30"
-    "@vuepress/shared" "2.0.0-rc.30"
-    "@vuepress/utils" "2.0.0-rc.30"
+    "@vuepress/core" "2.0.0-rc.31"
+    "@vuepress/shared" "2.0.0-rc.31"
+    "@vuepress/utils" "2.0.0-rc.31"
     cac "^7.0.0"
     chokidar "^5.0.0"
     envinfo "^7.21.0"
-    esbuild "^0.28.0"
+    rolldown "^1.2.0"
 
-"@vuepress/client@2.0.0-rc.30":
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/@vuepress/client/-/client-2.0.0-rc.30.tgz#6669e099ba38960cd20946e98854466692b1a78a"
-  integrity sha512-bIAY32Z3Rx6ONBriY+8K2K5wjKxQXzA1jMao4cVTOgMfapHyzhyfNCp1FTkWw6iHoccM9xIDniuyeT8W6JDWPg==
+"@vuepress/client@2.0.0-rc.31":
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/@vuepress/client/-/client-2.0.0-rc.31.tgz#93b636a21cddc3582759462a9109129a851d2e4a"
+  integrity sha512-F1mVj2NCblUwweGjfsmfLiC7GrO0YN5rnej14nMSGfHP3ch1FHpZeACiiRk1L0MolpBd7OYskx5rYyh7vY0tCg==
   dependencies:
-    "@vue/devtools-api" "^8.1.1"
-    "@vue/devtools-kit" "^8.1.1"
-    "@vuepress/shared" "2.0.0-rc.30"
-    vue "^3.5.34"
-    vue-router "^5.0.6"
+    "@vue/devtools-api" "^8.1.5"
+    "@vue/devtools-kit" "^8.1.5"
+    "@vuepress/shared" "2.0.0-rc.31"
+    vue "^3.5.40"
+    vue-router "^5.2.0"
 
-"@vuepress/core@2.0.0-rc.30":
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/@vuepress/core/-/core-2.0.0-rc.30.tgz#8d7925e24a76d42a6f8558c3c62608753a6513be"
-  integrity sha512-Sxe+S0xC0Yn7eh4P4TlnzolYqDBo62ZnfbY3qaLc5nlKW4sgJY+pJDBqSOHBL5Z5I4q0V43+9WULNtHXeDHVMg==
+"@vuepress/core@2.0.0-rc.31":
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/@vuepress/core/-/core-2.0.0-rc.31.tgz#654e571b57c3cc0a3dddb7988d26ff2477035def"
+  integrity sha512-b01o8GkukVSZwQYn0DZirEr5ghiAiX2m8yNUeptOJ6nJgLyPGO02zmGlmERCxR9qsfHnTsc5UcbjJpmOr/cFiQ==
   dependencies:
-    "@vuepress/client" "2.0.0-rc.30"
-    "@vuepress/markdown" "2.0.0-rc.30"
-    "@vuepress/shared" "2.0.0-rc.30"
-    "@vuepress/utils" "2.0.0-rc.30"
-    vue "^3.5.34"
+    "@vuepress/client" "2.0.0-rc.31"
+    "@vuepress/markdown" "2.0.0-rc.31"
+    "@vuepress/shared" "2.0.0-rc.31"
+    "@vuepress/utils" "2.0.0-rc.31"
+    vue "^3.5.40"
 
 "@vuepress/helper@2.0.0-rc.130":
   version "2.0.0-rc.130"
@@ -2526,10 +2527,10 @@
   resolved "https://registry.npmmirror.com/@vuepress/highlighter-helper/-/highlighter-helper-2.0.0-rc.130.tgz#3a1d0751c0c7ccd305d460f7cf32a4a1c9c638c8"
   integrity sha512-5tWF5I9gRFEcY8LIPUkPoe391LZeblMIrsJqhSSgJkoFUUe664DiEVpyBTpGGikd7q9+Wn9w8OWionBtR5POgg==
 
-"@vuepress/markdown@2.0.0-rc.30":
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/@vuepress/markdown/-/markdown-2.0.0-rc.30.tgz#2a3ad12ed2fcbaf0b7b40573945cff0e8b37f378"
-  integrity sha512-4wloGD4xBVm09yi48rPg9LOBXHh/aHGMxpks1GuF79yifS78n8cHSZilWaDryM5nimcUrPtK21XUAXFjyZHjBA==
+"@vuepress/markdown@2.0.0-rc.31":
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/@vuepress/markdown/-/markdown-2.0.0-rc.31.tgz#b9d3a81cf09f0357a3dcf253f4f733f05aa5946a"
+  integrity sha512-W4UdVwYob3sZ794BFd53dolhXVOma0JzN15k6CwmmhOy/3wWuIZ8pV3YQsxxyAQJ8ZxQWGZ4Wf5u/w7G/1/IkQ==
   dependencies:
     "@mdit-vue/plugin-component" "^3.0.2"
     "@mdit-vue/plugin-frontmatter" "^3.0.2"
@@ -2541,12 +2542,12 @@
     "@mdit-vue/types" "^3.0.2"
     "@types/markdown-it" "^14.1.2"
     "@types/markdown-it-emoji" "^3.0.1"
-    "@vuepress/shared" "2.0.0-rc.30"
-    "@vuepress/utils" "2.0.0-rc.30"
-    markdown-it "^14.1.1"
-    markdown-it-anchor "^9.2.0"
-    markdown-it-emoji "^3.0.0"
-    mdurl "^2.0.0"
+    "@vuepress/shared" "2.0.0-rc.31"
+    "@vuepress/utils" "2.0.0-rc.31"
+    markdown-it "^14.3.0"
+    markdown-it-anchor "^9.2.1"
+    markdown-it-emoji "^3.1.0"
+    mdurl "^2.1.0"
 
 "@vuepress/plugin-active-header-links@2.0.0-rc.130":
   version "2.0.0-rc.130"
@@ -2874,31 +2875,31 @@
     "@vue/devtools-api" "^8.1.2"
     vue "^3.5.34"
 
-"@vuepress/shared@2.0.0-rc.30":
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/@vuepress/shared/-/shared-2.0.0-rc.30.tgz#52299983db0c7ccb01df73bce7dacccd14769b21"
-  integrity sha512-tW2bUobo96UQjBtnq6VkFG8ytWTwFT/3jjSVp75kDUb6N6D5ogXZdQIMvX7q+9OW0ogNKjLkCyRM3xK5eJbojA==
+"@vuepress/shared@2.0.0-rc.31":
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/@vuepress/shared/-/shared-2.0.0-rc.31.tgz#4048f3a512565ce0fa5705a06fa9a2c04ac66da5"
+  integrity sha512-FCBYbDrRd8rbRdj7osw2liS+gGsx7eyYktEm0efJlZavPh5O9nqC6e1ryUc0Mjzo04ZCgS+8EY3B+NHa5W2t8A==
   dependencies:
     "@mdit-vue/types" "^3.0.2"
 
-"@vuepress/utils@2.0.0-rc.30":
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/@vuepress/utils/-/utils-2.0.0-rc.30.tgz#87a4d51a5acd548b967d2d38a9821036cc1ab753"
-  integrity sha512-pIqvCPDAm3puCeJqYtVmxTN35Q3ApKYe5O6xPYt0SExnmmZI6W7QmV1ZsYwanjjjWME2Kqd4OrFVxEw7V+V6ng==
+"@vuepress/utils@2.0.0-rc.31":
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/@vuepress/utils/-/utils-2.0.0-rc.31.tgz#8155c2592e089f1d51c12bc2a91e9a0381cf1508"
+  integrity sha512-UeJYobsP2JuGjGNqh9Tk/iLhV9O0FQLj1ClFRxjG0gl/KUAASxofOODjOFFEsWv4FnkxNEUwejxO6cNqW1zOWg==
   dependencies:
     "@types/debug" "^4.1.13"
     "@types/fs-extra" "^11.0.4"
     "@types/hash-sum" "^1.0.2"
     "@types/picomatch" "^4.0.3"
-    "@vuepress/shared" "2.0.0-rc.30"
+    "@vuepress/shared" "2.0.0-rc.31"
     debug "^4.4.3"
-    fs-extra "^11.3.5"
+    fs-extra "^11.3.6"
     hash-sum "^2.0.0"
-    ora "^9.4.0"
+    ora "^9.4.1"
     picocolors "^1.1.1"
-    picomatch "^4.0.4"
-    tinyglobby "^0.2.16"
-    upath "^3.0.7"
+    picomatch "^4.0.5"
+    tinyglobby "^0.2.17"
+    upath "^3.0.8"
 
 "@vueuse/core@14.3.0":
   version "14.3.0"
@@ -3057,9 +3058,9 @@ at-least-node@^1.0.0:
   resolved "https://registry.npmmirror.com/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
 
-autoprefixer@^10.5.0:
+autoprefixer@^10.5.4:
   version "10.5.4"
-  resolved "https://registry.npmmirror.com/autoprefixer/-/autoprefixer-10.5.4.tgz#3b7dd848b4155514a95ad1f6ce598844bea09697"
+  resolved "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.5.4.tgz#3b7dd848b4155514a95ad1f6ce598844bea09697"
   integrity sha512-MaU0U/za7N3r6brxD4YB/l4NSrFzLPlANv6wEuQVaIPlD3L4W9rFcQPbL/EilY9BHhHvhfcz3gInDLrEtWT4EA==
   dependencies:
     browserslist "^4.28.6"
@@ -4277,9 +4278,9 @@ fs-extra@^10.0.0:
     jsonfile "^6.0.1"
     universalify "^2.0.0"
 
-fs-extra@^11.3.5:
+fs-extra@^11.3.6:
   version "11.4.0"
-  resolved "https://registry.npmmirror.com/fs-extra/-/fs-extra-11.4.0.tgz#f88ed6d180ac9e14b61b08e679468f0b1b6b4730"
+  resolved "https://registry.npmjs.org/fs-extra/-/fs-extra-11.4.0.tgz#f88ed6d180ac9e14b61b08e679468f0b1b6b4730"
   integrity sha512-EQsFzMUJkCKGr1ePqlYADkIUmHW1s3ZXr5Yqy6wbGrfUCphpl2maM/kyOIRA2HpP3AaFQTZXD4ldjek+nccddA==
   dependencies:
     graceful-fs "^4.2.0"
@@ -5251,9 +5252,9 @@ magic-string@^0.30.19, magic-string@^0.30.21, magic-string@^0.30.3:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.5.5"
 
-markdown-it-anchor@^9.2.0:
+markdown-it-anchor@^9.2.1:
   version "9.2.1"
-  resolved "https://registry.npmmirror.com/markdown-it-anchor/-/markdown-it-anchor-9.2.1.tgz#0df1665838d1003f234feed6e864ede30734c203"
+  resolved "https://registry.npmjs.org/markdown-it-anchor/-/markdown-it-anchor-9.2.1.tgz#0df1665838d1003f234feed6e864ede30734c203"
   integrity sha512-p6APiLJDFAW2GEvaavDvhIBn7jrX2jLv77NkBGgNacFTurbORYc4pyYySg/mI6mpR6cHQuAtzKtmqgQr4K8dsQ==
 
 markdown-it-cjk-friendly@^2.0.2:
@@ -5263,12 +5264,12 @@ markdown-it-cjk-friendly@^2.0.2:
   dependencies:
     get-east-asian-width "^1.4.0"
 
-markdown-it-emoji@^3.0.0:
+markdown-it-emoji@^3.1.0:
   version "3.1.0"
-  resolved "https://registry.npmmirror.com/markdown-it-emoji/-/markdown-it-emoji-3.1.0.tgz#67d9a601b6b2255e7e94d445e4e52e2165c31346"
+  resolved "https://registry.npmjs.org/markdown-it-emoji/-/markdown-it-emoji-3.1.0.tgz#67d9a601b6b2255e7e94d445e4e52e2165c31346"
   integrity sha512-NhmMEH2ywduD4Nty1E8uB5NqfLhAT1VR0dyvoJyStKOqCzbZmVdn/+8wj7zpDsb/fLBikpCPsWwxqKlvMmbz4g==
 
-markdown-it@^14.1.0, markdown-it@^14.1.1:
+markdown-it@^14.1.0, markdown-it@^14.3.0:
   version "14.3.0"
   resolved "https://registry.npmmirror.com/markdown-it/-/markdown-it-14.3.0.tgz#8542fa5506e3530f7e2b08dc3885630135c5620e"
   integrity sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==
@@ -5314,7 +5315,7 @@ mdast-util-to-hast@^13.0.0:
     unist-util-visit "^5.0.0"
     vfile "^6.0.0"
 
-mdurl@^2.0.0:
+mdurl@^2.0.0, mdurl@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmmirror.com/mdurl/-/mdurl-2.1.0.tgz#d711d3f7bce7f22c487c91be78545f356fa96573"
   integrity sha512-1+HBaOx0zi/dQWht8rNv9MYf9qqpqL/kxI0hXImU6Y547zM6Sni8BQibt7ifgMcYtQg41ao3Ivd6cnSM86inpg==
@@ -5582,9 +5583,9 @@ open@^7.4.2:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
-ora@^9.4.0:
+ora@^9.4.1:
   version "9.4.1"
-  resolved "https://registry.npmmirror.com/ora/-/ora-9.4.1.tgz#ba7644f3c7c92a8f830fbc48ca770b9eaf4bc55c"
+  resolved "https://registry.npmjs.org/ora/-/ora-9.4.1.tgz#ba7644f3c7c92a8f830fbc48ca770b9eaf4bc55c"
   integrity sha512-6VlU9MLXbjVQD04AZCMX28hVtA5bUoadvUqO76MUCVA0ilwJbMiHsITRPfyVm6p/BC0Av/BXMujx39WCe1LEqw==
   dependencies:
     chalk "^5.6.2"
@@ -5820,7 +5821,7 @@ postcss-value-parser@^4.2.0:
   resolved "https://registry.npmmirror.com/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz#723c09920836ba6d3e5af019f92bc0971c02e514"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@^8.5.14, postcss@^8.5.19, postcss@^8.5.26:
+postcss@^8.5.19, postcss@^8.5.22, postcss@^8.5.26:
   version "8.5.26"
   resolved "https://registry.npmmirror.com/postcss/-/postcss-8.5.26.tgz#6e75135780c7e10df3433bf2266c552d35c8c620"
   integrity sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==
@@ -6018,9 +6019,9 @@ robust-predicates@^3.0.2:
   resolved "https://registry.npmmirror.com/robust-predicates/-/robust-predicates-3.0.3.tgz#1099061b3349e2c5abec6c2ab0acd440d24d4062"
   integrity sha512-NS3levdsRIUOmiJ8FZWCP7LG3QpJyrs/TE0Zpf1yvZu8cAJJ6QMW92H1c7kWpdIHo8RvmLxN/o2JXTKHp74lUA==
 
-rolldown@^1.0.0, rolldown@~1.2.4:
+rolldown@^1.2.0, rolldown@~1.2.4:
   version "1.2.5"
-  resolved "https://registry.npmmirror.com/rolldown/-/rolldown-1.2.5.tgz#1f504a7d05260a769e617d950410bbb051498c50"
+  resolved "https://registry.npmjs.org/rolldown/-/rolldown-1.2.5.tgz#1f504a7d05260a769e617d950410bbb051498c50"
   integrity sha512-VD2IE5PUG4Oj8zz2VGykiYd5wbnjdIiSsNQb8Qu5B+noEp+A78mu2iVvpp27g8es14Tk9rofNs5Tku9iQCS4fA==
   dependencies:
     "@oxc-project/types" "=0.146.0"
@@ -6531,7 +6532,7 @@ tinyexec@^1.0.1:
   resolved "https://registry.npmmirror.com/tinyexec/-/tinyexec-1.3.0.tgz#aacc1dbb1d4e93e6ad8dd64944e09f9ad147a474"
   integrity sha512-QKAl9m8gWWGHV8jZcPeym6j+XULi6tOf1mT83WYJ4Lk2ytW/uwAWkrP0uFsdoYMdueVJ0qs26wZ+23xeB4ibNQ==
 
-tinyglobby@^0.2.16, tinyglobby@^0.2.17:
+tinyglobby@^0.2.17:
   version "0.2.17"
   resolved "https://registry.npmmirror.com/tinyglobby/-/tinyglobby-0.2.17.tgz#562a9a6c9eb2b3b123d39719f9af5bb44fcd7631"
   integrity sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==
@@ -6787,9 +6788,9 @@ upath@^2.0.1:
   resolved "https://registry.npmmirror.com/upath/-/upath-2.0.1.tgz#50c73dea68d6f6b990f51d279ce6081665d61a8b"
   integrity sha512-1uEe95xksV1O0CYKXo8vQvN1JEbtJp7lb7C5U9HMsIp6IVwntkH/oNUzyVNQSd4S1sYk2FpSSW44FqMc8qee5w==
 
-upath@^3.0.7:
+upath@^3.0.8:
   version "3.0.8"
-  resolved "https://registry.npmmirror.com/upath/-/upath-3.0.8.tgz#4c072fbbe04ef2d88d9ec1923457497bc46dc545"
+  resolved "https://registry.npmjs.org/upath/-/upath-3.0.8.tgz#4c072fbbe04ef2d88d9ec1923457497bc46dc545"
   integrity sha512-YAsrLMIlhfSCm9rga5TZsJ1mXgahs7N0qOTokzU8mFz35hUrYMvVkaEPefI3rEb/vkAWAOj1Km/qdije9RC1kQ==
 
 update-browserslist-db@^1.1.3, update-browserslist-db@^1.3.0:
@@ -6840,9 +6841,9 @@ vidstack@^1.12.13:
     media-captions "^1.0.4"
     unplugin "^1.12.0"
 
-vite@^8.0.11, vite@^8.2.2:
+vite@^8.1.5, vite@^8.2.2:
   version "8.2.2"
-  resolved "https://registry.npmmirror.com/vite/-/vite-8.2.2.tgz#399aefad3656145145be110d137a07ea5bb55014"
+  resolved "https://registry.npmjs.org/vite/-/vite-8.2.2.tgz#399aefad3656145145be110d137a07ea5bb55014"
   integrity sha512-cFKLV/PRgAUlIRm5WjMjJ86jrftzpqcgH+Us+DS8mI3CDNiH30Whrz8uHL3+MOLPAgqbMBAqWdAHAphOAM+z/Q==
   dependencies:
     lightningcss "^1.33.0"
@@ -6866,9 +6867,9 @@ vue-component-type-helpers@^3.3.9:
   resolved "https://registry.npmmirror.com/vue-component-type-helpers/-/vue-component-type-helpers-3.3.10.tgz#3e8a7bfd55410b113a9f859835216778bb6e2e6e"
   integrity sha512-t7IQivQ3oD4D01b7s7a9AWzHAcr3DGBIa/1jZREsFQJcFgSL92gqUkqNiHTYgzTt7QDuJa0I9wCeDwEtZICoBQ==
 
-vue-router@^5.0.6:
+vue-router@^5.2.0:
   version "5.2.0"
-  resolved "https://registry.npmmirror.com/vue-router/-/vue-router-5.2.0.tgz#34f03b1012729c33bb23184d96ad8e1b1b5c4546"
+  resolved "https://registry.npmjs.org/vue-router/-/vue-router-5.2.0.tgz#34f03b1012729c33bb23184d96ad8e1b1b5c4546"
   integrity sha512-QAC5i0LEb1GLG0LXDQmHu8L7FX12j0KwU/JTKmLQUJMrn04gQdKP6Du+p0QwpHb3iy71vBlqnHQ8WAfOSAWhqw==
   dependencies:
     "@babel/generator" "^8.0.0"
@@ -6890,7 +6891,7 @@ vue-router@^5.0.6:
     unplugin-utils "^0.3.2"
     yaml "^2.9.0"
 
-vue@3.5.41, vue@^3.5.34, vue@^3.5.41:
+vue@3.5.41, vue@^3.5.34, vue@^3.5.40, vue@^3.5.41:
   version "3.5.41"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.5.41.tgz#8864bddfe59ce128a28c9bad219cd9248916af73"
   integrity sha512-2laE0p+aK+/AOPG/XL/WepOs/GlK755LJ1XECi9kDUrz1FKNw8rb2Xzlw9JS1rqEV55nb0ttsKxVlTCcd+R5cg==
@@ -6986,18 +6987,18 @@ vuepress-theme-hope@2.0.0-rc.107:
     vuepress-plugin-md-enhance "2.0.0-rc.107"
     vuepress-shared "2.0.0-rc.107"
 
-vuepress@2.0.0-rc.30:
-  version "2.0.0-rc.30"
-  resolved "https://registry.npmmirror.com/vuepress/-/vuepress-2.0.0-rc.30.tgz#7b888dd7bc76afccc79473a0d34c02a055172ce1"
-  integrity sha512-GHAIiUzDRvUJ4LW1K3Ha7VsDIuEOM0hlPSP6/8vTkspi23g4/JFGwy27+3IXDymIN7opxqrawjiO1ORTaF30DA==
+vuepress@2.0.0-rc.31:
+  version "2.0.0-rc.31"
+  resolved "https://registry.npmjs.org/vuepress/-/vuepress-2.0.0-rc.31.tgz#74c39ba9d1124845a45279b86990aff9d49fc9df"
+  integrity sha512-IcJ4E5iOL4aoERm5d+W4j6rJeH/gxDx+NGxvLYvEVPInmv2p90Mjj4VFjFoxqlWc7lIwwFNIVYpPI6dw0miH4Q==
   dependencies:
-    "@vuepress/cli" "2.0.0-rc.30"
-    "@vuepress/client" "2.0.0-rc.30"
-    "@vuepress/core" "2.0.0-rc.30"
-    "@vuepress/markdown" "2.0.0-rc.30"
-    "@vuepress/shared" "2.0.0-rc.30"
-    "@vuepress/utils" "2.0.0-rc.30"
-    vue "^3.5.34"
+    "@vuepress/cli" "2.0.0-rc.31"
+    "@vuepress/client" "2.0.0-rc.31"
+    "@vuepress/core" "2.0.0-rc.31"
+    "@vuepress/markdown" "2.0.0-rc.31"
+    "@vuepress/shared" "2.0.0-rc.31"
+    "@vuepress/utils" "2.0.0-rc.31"
+    vue "^3.5.40"
 
 web-namespaces@^2.0.0:
   version "2.0.1"

@@ -16,7 +16,8 @@ export default defineUserConfig({
   base,
 
   title: "Lxy的博客",
-  description: "Lxy Powered by VuePress@2.0.0-rc.30",
+  description: "Lxy Powered by VuePress@2.0.0-rc.31",
+  shouldPrefetch: false, // PWA + 按需预加载（rc.31 默认 as-needed）
   head: [
     ["link", { rel: "icon", href: asset("/icons/icon-192.png"), type: "image/png" }],
     // KaTeX 样式（theme-hope 的 markdown.math 也会注入，重复无害）
