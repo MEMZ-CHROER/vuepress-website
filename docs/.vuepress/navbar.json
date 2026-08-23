@@ -17,7 +17,8 @@
     "children": [
       { "text": "📘 C++ 讲义", "link": "/cpp/" },
       { "text": "📚 学习笔记", "link": "/Learning/" },
-      { "text": "🔢 Maths", "link": "/maths/" }
+      { "text": "🔢 Maths", "link": "/maths/" },
+      { "text": "🥧 π 入门", "link": "/maths/pi-intro.html" }
     ]
   },
   {
@@ -41,7 +42,12 @@
   },
   {
     "text": "🌱 种花",
-    "link": "/planting/"
+    "children": [
+      { "text": "🌱 种花首页", "link": "/planting/" },
+      { "text": "💧 枇杷水培日记", "link": "/planting/loquat-water.html" },
+      { "text": "💦 水培", "link": "/planting/water/" },
+      { "text": "🪴 土培", "link": "/planting/dirt/" }
+    ]
   },
   {
     "text": "🤝 友链",

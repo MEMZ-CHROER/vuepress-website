@@ -94,6 +94,18 @@ export default defineUserConfig({
             filePathRelative !== "Learning/README.md"
           )
             return true;
+          // maths 数学区（排除 README 入口页）
+          if (
+            filePathRelative.startsWith("maths/") &&
+            !filePathRelative.endsWith("/README.md")
+          )
+            return true;
+          // planting 种花区（排除 README 入口页）
+          if (
+            filePathRelative.startsWith("planting/") &&
+            !filePathRelative.endsWith("/README.md")
+          )
+            return true;
           return false;
         },
         excerpt: true,
