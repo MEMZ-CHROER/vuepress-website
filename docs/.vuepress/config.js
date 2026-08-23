@@ -56,6 +56,11 @@ export default defineUserConfig({
       codeTabs: true,
       // markdown-link 死链检查
       linksCheck: true,
+      // markdown-image 图片优化（原生懒加载 + figure 包裹）
+      imgLazyload: true,
+      figure: true,
+      // markdown-include 嵌入其他 md 文件（@include 语法）
+      include: true,
     },
 
     // 插件（内置，替代原独立插件：blog / sitemap2 / feed2 / search / pwa / copyright）

@@ -59,6 +59,8 @@ tag:
 
 本站基于 **VuePress 2 + vuepress-theme-hope**，当前启用的插件：
 
+> 💡 新增亮点：**SEO 优化**（搜索引擎收录）、**链接重定向**（改路径不断链）、**死链检查**（构建时自动校验）、**图片懒加载**、**md 文件嵌入**。
+
 - [@vuepress/bundler-vite@2.0.0-rc.30](https://v2.vuepress.vuejs.org/zh/reference/bundler/vite.html)
 - [@vuepress/plugin-active-header-links@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/development/active-header-links.html)
 - [@vuepress/plugin-back-to-top@2.0.0-rc.130](https://ecosystem.vuejs.press/plugins/features/back-to-top.html)
