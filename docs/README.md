@@ -44,6 +44,12 @@ features:
   <StatsPanel />
   <RelatedPosts />
 </ClientOnly>
+
+<div class="subscribe-bar">
+  <span>📡 订阅更新：</span>
+  <a href="/rss.xml" target="_blank" rel="noopener noreferrer">📄 RSS</a>
+  <a href="/atom.xml" target="_blank" rel="noopener noreferrer">⚛️ Atom</a>
+</div>
 ICP备案号：<a href="https://beian.miit.gov.cn/">津ICP备2026006589号-1</a>
 
 ICP主体备案号：<a href="https://beian.miit.gov.cn/">津ICP备2026006589号</a>
@@ -54,3 +60,23 @@ ICP主体备案号：<a href="https://beian.miit.gov.cn/">津ICP备2026006589号
 <a href="https://www.liuxiyu.cn">回到主站</a>
 
 [Lxy_MIT_License]: ./LICENSE/README.md
+
+<style>
+.subscribe-bar {
+  max-width: 800px;
+  margin: 1rem auto 0;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--c-text-light);
+}
+.subscribe-bar a {
+  margin: 0 0.4rem;
+  text-decoration: none;
+  color: var(--c-brand, #6366f1);
+  font-weight: 600;
+}
+.subscribe-bar a:hover {
+  text-decoration: underline;
+}
+</style>
