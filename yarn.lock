@@ -2437,7 +2437,7 @@
     "@vue/runtime-dom" "3.5.41"
     "@vue/shared" "3.5.41"
 
-"@vue/shared@3.5.41", "@vue/shared@^3.5.34":
+"@vue/shared@3.5.41", "@vue/shared@^3.5.34", "@vue/shared@^3.5.39":
   version "3.5.41"
   resolved "https://registry.npmmirror.com/@vue/shared/-/shared-3.5.41.tgz#ac476497f74495f7525087270849841756555cf2"
   integrity sha512-IOnwSCma8j+9xJT6b8H0dEYidC80NsYmNMlZxRsukYcSoGaDBohog5hDxzeUXdFeGWFA++vWvxqOmrr96VlqMA==
@@ -2522,6 +2522,18 @@
     gray-matter "^4.0.3"
     vue "^3.5.34"
 
+"@vuepress/helper@2.0.0-rc.131":
+  version "2.0.0-rc.131"
+  resolved "https://registry.npmjs.org/@vuepress/helper/-/helper-2.0.0-rc.131.tgz#4a8df751dd1b55d4ae4362d04b1f360189490203"
+  integrity sha512-VlzJre0tJhlyoHpiRzclM9KntYzdip9rUWf8zaqfwlOV8A280fexTfWdxZwDkekgh9E3l6jJTqRJZpVDdXVFYg==
+  dependencies:
+    "@vue/shared" "^3.5.39"
+    "@vueuse/core" "^14.3.0"
+    cheerio "^1.2.0"
+    fflate "^0.8.3"
+    gray-matter "^4.0.3"
+    vue "^3.5.39"
+
 "@vuepress/highlighter-helper@2.0.0-rc.130":
   version "2.0.0-rc.130"
   resolved "https://registry.npmmirror.com/@vuepress/highlighter-helper/-/highlighter-helper-2.0.0-rc.130.tgz#3a1d0751c0c7ccd305d460f7cf32a4a1c9c638c8"
@@ -2565,6 +2577,15 @@
     "@vuepress/helper" "2.0.0-rc.130"
     "@vueuse/core" "^14.3.0"
     vue "^3.5.34"
+
+"@vuepress/plugin-back-to-top@2.0.0-rc.131":
+  version "2.0.0-rc.131"
+  resolved "https://registry.npmjs.org/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-rc.131.tgz#c297f2cd0a97bdca2fd8835cf960696f65552a77"
+  integrity sha512-SKuAT7vcilBae7W7TBMyZU/Toy7GEPxprrBbN9RmdIov/g2NQd9jY1mSuOY4o0cQlM6R91dm8LQCNKhBUW+6Og==
+  dependencies:
+    "@vuepress/helper" "2.0.0-rc.131"
+    "@vueuse/core" "^14.3.0"
+    vue "^3.5.39"
 
 "@vuepress/plugin-blog@2.0.0-rc.130":
   version "2.0.0-rc.130"
@@ -2610,12 +2631,12 @@
     "@vueuse/core" "^14.3.0"
     vue "^3.5.34"
 
-"@vuepress/plugin-feed@2.0.0-rc.130":
-  version "2.0.0-rc.130"
-  resolved "https://registry.npmmirror.com/@vuepress/plugin-feed/-/plugin-feed-2.0.0-rc.130.tgz#0df7626ad119f3a5789c3b73c403393ce5a9d7f6"
-  integrity sha512-IP9CPwXIHmsKBEpxFd6UyOMFcuqgD3peaptPPGDy6mor32OCqL3MRt5NWiA1VVTZ+qXsCaYGSP3lOkDHHoOscw==
+"@vuepress/plugin-feed@2.0.0-rc.132":
+  version "2.0.0-rc.132"
+  resolved "https://registry.npmjs.org/@vuepress/plugin-feed/-/plugin-feed-2.0.0-rc.132.tgz#bfc69c281ddce0f71c2731dce28af7fc0287f433"
+  integrity sha512-riNYKpi5O/KKLpPU1D2qb5nf+6j+/DlqJFruTvmcejUQijgcb+eSmfXqI6MZ8d/W+bsrMkyRA+kS9BJzD/0tAw==
   dependencies:
-    "@vuepress/helper" "2.0.0-rc.130"
+    "@vuepress/helper" "2.0.0-rc.131"
     xml-js "^1.6.11"
 
 "@vuepress/plugin-git@2.0.0-rc.130":
@@ -2782,16 +2803,16 @@
     photoswipe "^5.4.4"
     vue "^3.5.34"
 
-"@vuepress/plugin-pwa@2.0.0-rc.130":
-  version "2.0.0-rc.130"
-  resolved "https://registry.npmmirror.com/@vuepress/plugin-pwa/-/plugin-pwa-2.0.0-rc.130.tgz#721a6af6b49d61ce370db7752275c9aed3c1593a"
-  integrity sha512-OyZj8Vb0vS8174tujXqJAHQbSvykpDK+fgx4znT2/Tcg894SVLhqqcAVKFLfrkR4RZ4H3ei65CmTlOePTUmayA==
+"@vuepress/plugin-pwa@2.0.0-rc.131":
+  version "2.0.0-rc.131"
+  resolved "https://registry.npmjs.org/@vuepress/plugin-pwa/-/plugin-pwa-2.0.0-rc.131.tgz#30fad809d3c8e7d1679b7a907b4a312ff4ae3238"
+  integrity sha512-rbwsyWEmhu+gZqunXzkQW8uC8wURGmfZLikQyjgJsDdqLx+ol1FAHuhdiX8Dehx+GgFNtNDdaNJny6kYEnFmSw==
   dependencies:
-    "@vuepress/helper" "2.0.0-rc.130"
+    "@vuepress/helper" "2.0.0-rc.131"
     "@vueuse/core" "^14.3.0"
     mitt "^3.0.1"
     register-service-worker "^1.7.2"
-    vue "^3.5.34"
+    vue "^3.5.39"
     workbox-build "^7.4.1"
 
 "@vuepress/plugin-reading-time@2.0.0-rc.130":
@@ -2856,16 +2877,16 @@
     "@vuepress/helper" "2.0.0-rc.130"
     sitemap "^9.0.1"
 
-"@vuepress/plugin-slimsearch@2.0.0-rc.130":
-  version "2.0.0-rc.130"
-  resolved "https://registry.npmmirror.com/@vuepress/plugin-slimsearch/-/plugin-slimsearch-2.0.0-rc.130.tgz#2ef9bb7084d1a7d09546a26e4713ea17b12870c7"
-  integrity sha512-CzWioaawlBpkjM0S/Z7Z+8AMNnfalvlvuUZOssHDXMaVRMh4s2tDMh1ZNiS3+xVwbOpQvvoPUsbyTxXiEGbCZQ==
+"@vuepress/plugin-slimsearch@2.0.0-rc.131":
+  version "2.0.0-rc.131"
+  resolved "https://registry.npmjs.org/@vuepress/plugin-slimsearch/-/plugin-slimsearch-2.0.0-rc.131.tgz#a9829da1c18bec82d6d544b444c2b9cb13d03b69"
+  integrity sha512-QVCxtrbAxGLUuMK9bssxfwZ+eFAMiAXXlD70Py5tn24lCWg9XGVeUxzFRjQzCHrgxmOiqlAYdLAhxyhIz9n0Pg==
   dependencies:
-    "@vuepress/helper" "2.0.0-rc.130"
+    "@vuepress/helper" "2.0.0-rc.131"
     "@vueuse/core" "^14.3.0"
     cheerio "^1.2.0"
     slimsearch "^2.3.0"
-    vue "^3.5.34"
+    vue "^3.5.39"
 
 "@vuepress/plugin-theme-data@2.0.0-rc.130":
   version "2.0.0-rc.130"
@@ -4208,7 +4229,7 @@ fetch-blob@^3.1.2, fetch-blob@^3.1.4:
     node-domexception "^1.0.0"
     web-streams-polyfill "^3.0.3"
 
-fflate@^0.8.2:
+fflate@^0.8.2, fflate@^0.8.3:
   version "0.8.3"
   resolved "https://registry.npmmirror.com/fflate/-/fflate-0.8.3.tgz#bc27d8eb30343d4d512abb03480202ce65d825fc"
   integrity sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==
@@ -6891,7 +6912,7 @@ vue-router@^5.2.0:
     unplugin-utils "^0.3.2"
     yaml "^2.9.0"
 
-vue@3.5.41, vue@^3.5.34, vue@^3.5.40, vue@^3.5.41:
+vue@3.5.41, vue@^3.5.34, vue@^3.5.39, vue@^3.5.40, vue@^3.5.41:
   version "3.5.41"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.5.41.tgz#8864bddfe59ce128a28c9bad219cd9248916af73"
   integrity sha512-2laE0p+aK+/AOPG/XL/WepOs/GlK755LJ1XECi9kDUrz1FKNw8rb2Xzlw9JS1rqEV55nb0ttsKxVlTCcd+R5cg==
