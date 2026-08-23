@@ -17,7 +17,7 @@
     "vuepress": "vuepress",
     "gitsync": "git pull --rebase origin master",
     "gitadd": "git add -A",
-    "gitcommit": "git commit",
+    "gitcommit": "git diff --cached --quiet && echo 无改动跳过commit || git commit",
     "gitpush": "git push -u origin master",
     "verceldeploy": "vercel --prod",
     "deploy": "yarn gitadd && yarn gitcommit && yarn gitsync && yarn gitpush"
