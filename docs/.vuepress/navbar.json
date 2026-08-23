@@ -19,6 +19,14 @@
     ]
   },
   {
+    "text": "📚 学习笔记",
+    "children": [
+      { "text": "📚 笔记首页", "link": "/Learning/" },
+      { "text": "🖥️ 编程笔记", "link": "/Learning/programming" },
+      { "text": "🧮 数学推导", "link": "/Learning/math" }
+    ]
+  },
+  {
     "text": "🌐 C# 社区",
     "link": "/csharp/"
   },

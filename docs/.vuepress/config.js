@@ -79,6 +79,13 @@ export default defineUserConfig({
             filePathRelative !== "csharp/template.md"
           )
             return true;
+          // Learning 学习笔记区（排除 README 入口页）
+          if (
+            filePathRelative.startsWith("Learning/") &&
+            !filePathRelative.endsWith("/README.md") &&
+            filePathRelative !== "Learning/README.md"
+          )
+            return true;
           return false;
         },
         excerpt: true,
