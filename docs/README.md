@@ -42,6 +42,7 @@ features:
 <ClientOnly>
   <QuoteOfTheDay />
   <StatsPanel />
+  <RelatedPosts />
 </ClientOnly>
 ICP备案号：<a href="https://beian.miit.gov.cn/">津ICP备2026006589号-1</a>
 

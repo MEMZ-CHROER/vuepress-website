@@ -1,21 +1,45 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useArticles, useCategoryMap, useTagMap } from "vuepress-theme-hope/blog";
 
-const items = ref([
-  { icon: "📝", label: "文章", value: 40, desc: "篇原创内容", color: "#6366f1" },
-  { icon: "📂", label: "分类", value: 6, desc: "个分类", color: "#8b5cf6" },
-  { icon: "🏷️", label: "标签", value: 18, desc: "个标签", color: "#ec4899" },
-  { icon: "📄", label: "页面", value: 101, desc: "页收录", color: "#14b8a6" },
-  { icon: "🎨", label: "坦克", value: 33, desc: "辆原创手绘", color: "#f97316" },
-  { icon: "🔗", label: "友链", value: 5, desc: "个小伙伴", color: "#06b6d4" },
-]);
+// 动态统计（blog 数据）
+const articles = useArticles();
+const categoryMap = useCategoryMap();
+const tagMap = useTagMap();
+
+const statItems = computed(() => {
+  const articleCount = (articles.value && articles.value.items) ? articles.value.items.length : 0;
+  const categoryCount = categoryMap.value ? Object.keys(categoryMap.value).length : 0;
+  const tagCount = tagMap.value ? Object.keys(tagMap.value).length : 0;
+  return [
+    { icon: "📝", label: "文章", value: articleCount, desc: "篇内容", color: "#6366f1" },
+    { icon: "📂", label: "分类", value: categoryCount, desc: "个分类", color: "#8b5cf6" },
+    { icon: "🏷️", label: "标签", value: tagCount, desc: "个标签", color: "#ec4899" },
+    { icon: "🆕", label: "近期", value: recentCount(articles.value), desc: "近 90 天新增", color: "#14b8a6" },
+    { icon: "🎨", label: "坦克", value: 30, desc: "辆原创手绘", color: "#f97316" },
+    { icon: "🔗", label: "友链", value: 5, desc: "个小伙伴", color: "#06b6d4" },
+  ];
+});
+
+function recentCount(articlesData) {
+  if (!articlesData || !articlesData.items) return 0;
+  const now = Date.now();
+  const cutoff = now - 90 * 24 * 3600 * 1000;
+  return articlesData.items.filter((a) => {
+    const info = a.info || {};
+    const t = info.date || info.time || "";
+    if (!t) return false;
+    const d = new Date(t).getTime();
+    return !isNaN(d) && d >= cutoff;
+  }).length;
+}
 </script>
 
 <template>
   <div class="stats-panel">
     <h3 class="stats-title">📊 站点统计</h3>
     <div class="stats-grid">
-      <div v-for="s in items" :key="s.label" class="stat-card" :style="{ '--stat-color': s.color }">
+      <div v-for="s in statItems" :key="s.label" class="stat-card" :style="{ '--stat-color': s.color }">
         <div class="stat-icon">{{ s.icon }}</div>
         <div class="stat-value">{{ s.value }}</div>
         <div class="stat-label">{{ s.label }}</div>

@@ -4,6 +4,7 @@ import QuoteOfTheDay from "./components/QuoteOfTheDay.vue";
 import Comment from "./components/Comment.vue";
 import EasterEgg from "./components/EasterEgg.vue";
 import StatsPanel from "./components/StatsPanel.vue";
+import RelatedPosts from "./components/RelatedPosts.vue";
 import Upload from "./components/upload.vue";
 import LxySortDemo from "./components/LxySortDemo.vue";
 import FrontEditor from "./components/FrontEditor.vue";
@@ -17,6 +18,7 @@ export default defineClientConfig({
     app.component("Comment", Comment);
     app.component("EasterEgg", EasterEgg);
     app.component("StatsPanel", StatsPanel);
+    app.component("RelatedPosts", RelatedPosts);
     app.component("Upload", Upload);
     app.component("LxySortDemo", LxySortDemo);
     app.component("FrontEditor", FrontEditor);
