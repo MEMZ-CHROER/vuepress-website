@@ -54,6 +54,8 @@ export default defineUserConfig({
       // markdown-tab（选项卡）
       tabs: true,
       codeTabs: true,
+      // markdown-link 死链检查
+      linksCheck: true,
     },
 
     // 插件（内置，替代原独立插件：blog / sitemap2 / feed2 / search / pwa / copyright）
@@ -94,6 +96,10 @@ export default defineUserConfig({
       slimsearch: true,
       // 站点地图
       sitemap: true,
+      // URL 重定向（改路径时可配置跳转，避免断链）
+      redirect: true,
+      // SEO 优化（生成搜索引擎友好标签）
+      seo: true,
       // RSS/Atom 订阅
       feed: {
         atom: true,
