@@ -61,9 +61,9 @@ th { color:#666; font-weight:normal; font-size:13px; }
 .editor-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:8px; background:#111; border:1px solid #2a2a3a; border-bottom:none; }
 .editor-toolbar button { background:#1a1a28; border:1px solid #2a2a3a; color:#c8c8d0; padding:4px 10px; font-size:13px; cursor:pointer; }
 .editor-toolbar button:hover { border-color:#00d4aa; }
-.editor-panes { display:flex; gap:0; border:1px solid #2a2a3a; }
-.editor-panes textarea, .editor-preview { width:50%; min-height:55vh; padding:12px; font:14px/1.6 'Consolas',monospace; }
-.editor-panes textarea { background:#0a0a0f; color:#c8c8d0; border:none; resize:none; }
+.editor-panes { display:flex; gap:0; border:1px solid #2a2a3a; height:60vh; }
+.editor-panes textarea, .editor-preview { width:50%; height:100%; padding:12px; font:14px/1.6 'Consolas',monospace; }
+.editor-panes textarea { background:#0a0a0f; color:#c8c8d0; border:none; resize:none; overflow-y:auto; }
 .editor-preview { background:#0e0e16; color:#c8c8d0; border-left:1px solid #2a2a3a; overflow-y:auto; }
 .editor-preview h1, .editor-preview h2 { color:#00d4aa; }
 .editor-preview a { color:#1e90ff; }
@@ -128,7 +128,11 @@ body.theme-light { background:#f5f5f0; color:#2c2c2c; }
   .btn-sm { padding:8px 12px; min-height:36px; }
   input, textarea { font-size:16px !important; } /* 防 iOS 缩放 */
   .modal { width:95vw; max-width:none; margin:10px; padding:16px; }
-  .modal textarea { min-height:40vh; }
+  .modal textarea { min-height:auto; }
+  .editor-panes { display:block; height:auto; }
+  .editor-panes textarea, .editor-preview { width:100%; height:40vh; display:block; }
+  .editor-preview { border-left:none; border-top:1px solid #2a2a3a; }
+  .theme-light .editor-preview { border-top-color:#ccc; }
   .login-wrap { margin:80px auto; }
   .login-wrap input { font-size:16px; min-height:44px; }
   .login-wrap .btn { min-height:48px; }

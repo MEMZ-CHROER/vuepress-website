@@ -273,13 +273,14 @@ onMounted(() => {
   background: var(--c-bg, #111); color: var(--c-text, #fff);
 }
 .fe-title { font-size: 15px; }
-.fe-panes { display: flex; gap: 10px; margin-top: 8px; }
+.fe-panes { display: flex; gap: 10px; margin-top: 8px; height: 55vh; }
 .fe-panes textarea, .fe-preview {
-  width: 50%; min-height: 50vh; box-sizing: border-box; padding: 10px;
+  width: 50%; height: 100%; box-sizing: border-box; padding: 10px;
   border: 1px solid var(--c-border, #333); border-radius: 8px;
   background: var(--c-bg, #111); color: var(--c-text, #c8c8d0);
   font: 13px/1.6 monospace;
 }
+.fe-panes textarea { resize: none; overflow-y: auto; }
 .fe-preview { overflow-y: auto; }
 .fe-preview h1, .fe-preview h2, .fe-preview h3 { color: var(--fe-accent); }
 .fe-preview a { color: #1e90ff; }
@@ -297,7 +298,7 @@ onMounted(() => {
 .fe-label { display: block; font-size: 12px; opacity: .7; margin: 8px 0 2px; }
 .fe-dim { font-size: 12px; opacity: .6; margin-top: 8px; }
 @media (max-width: 700px) {
-  .fe-panes { flex-direction: column; }
-  .fe-panes textarea, .fe-preview { width: 100%; min-height: 30vh; }
+  .fe-panes { flex-direction: column; height: auto; }
+  .fe-panes textarea, .fe-preview { width: 100%; height: 32vh; }
 }
 </style>
