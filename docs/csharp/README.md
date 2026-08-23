@@ -16,5 +16,5 @@ title: C# 社区
 
 这是一个开源协作的专区！如果你也想贡献内容，请阅读 **[投稿指南](./CONTRIBUTING.md)**，通过 GitHub Pull Request 提交你的文章。
 
-- 📝 不知道怎么开始？先看[投稿指南](./CONTRIBUTING.md)
+- 📝 不知道怎么开始？先看**[投稿指南](./CONTRIBUTING.md)**
 - 📄 需要模板？看[文章模板](./template.md)
