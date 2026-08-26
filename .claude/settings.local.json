@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.liuxiyu.cn)",
+      "WebFetch(domain:registry.npmjs.org)",
+      "WebFetch(domain:vuepress-theme-hope.github.io)"
+    ],
+    "additionalDirectories": [
+      "G:\\lecture"
+    ]
+  }
+}

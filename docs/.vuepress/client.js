@@ -6,6 +6,7 @@ import EasterEgg from "./components/EasterEgg.vue";
 import StatsPanel from "./components/StatsPanel.vue";
 import RelatedPosts from "./components/RelatedPosts.vue";
 import Upload from "./components/upload.vue";
+import SummaryButton from "./components/SummaryButton.vue";
 import LxySortDemo from "./components/LxySortDemo.vue";
 import FrontEditor from "./components/FrontEditor.vue";
 

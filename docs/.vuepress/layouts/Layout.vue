@@ -12,6 +12,8 @@ const frontmatter = usePageFrontmatter();
       <div v-if="!frontmatter.home && frontmatter.comment !== false" class="comment-section">
         <Comment />
       </div>
+      <!-- AI 摘要按钮 -->
+      <SummaryButton />
     </template>
   </Layout>
 
