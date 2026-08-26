@@ -55,7 +55,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "GLM-4-Flash-250414",
         messages: [
           { role: "system", content: "You are an assistant that summarizes Chinese technical blog posts. Produce a concise 2‑3 sentence summary in Chinese without extra formatting." },
           { role: "user", content: article },
