@@ -50,8 +50,9 @@ async function run() {
   running.value = true;
   status.value = "运行 C++ 基准测试中...";
   try {
-    const run_bench = mod.cwrap("run_bench", "number", ["number"]);
-    const ptr = run_bench(current.value);
+    // 直接用原始导出函数（避免 cwrap 可能的参数转换差异）
+    const fn = mod._run_bench;
+    const ptr = fn(current.value);
     const s = mod.UTF8ToString(ptr);
     results.value = JSON.parse(s);
     // 计算最佳算法（取 n=100000 的）

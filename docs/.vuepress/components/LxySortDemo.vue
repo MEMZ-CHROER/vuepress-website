@@ -270,9 +270,37 @@ const presets = [
   { label: "近有序→自然归并", value: "1 2 3 5 4 6 7 8 10 9 11 12" },
   { label: "大范围→基数", value: "9999 123 456 7890 1 55555 333 777 4444 66" },
   { label: "长数组→大数组", value: "7 3 9 1 4 8 6 2 5 10 13 11 15 12 14 18 16 20 17 19" },
+  { label: "🧪 大数组·乱序(计数)", value: "46 8 31 15 22 3 47 12 9 28 5 40 19 33 11 44 6 25 17 50 2 38 21 14 29 7 42 30 16 23 10 49 4 35 27 18 41 13 36 24 1 48 20 37 26 39 45 32 43 34" },
+  { label: "🧪 大数组·宽范围(基数)", value: "45872 913 61234 87 90341 4567 1024 78901 23456 671 8901 34567 10987 54321 234 98765 3210 45678 9012 87654 2345 67890 12345 543 89012 3456 7890 1234 5678 90123 4567 89012 34567 890 12345 67890 1234 5678 9012 34567 8901 23456 7890 123 45678 90123 4567 89012 345" },
+  { label: "🧪 大数组·近有序(自然归并)", value: "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 22 21 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 44 43 45 46 47 48 49 50" },
 ];
 
 function loadPreset(v) { input.value = v; }
+
+// 生成随机数组（触发不同算法分支）
+const genSizes = [50, 200, 500, 1000];
+function genRandom() {
+  const n = parseInt(randSize.value, 10) || 200;
+  const range = parseInt(randRange.value, 10) || 1000000000;
+  const arr = [];
+  for (let i = 0; i < n; i++) arr.push(Math.floor(Math.random() * range));
+  input.value = arr.join(" ");
+  run();
+}
+function genNearSorted() {
+  const n = parseInt(randSize.value, 10) || 200;
+  const arr = [];
+  for (let i = 0; i < n; i++) arr.push(i);
+  // 少量交换
+  for (let k = 0; k < Math.max(3, n / 20); k++) {
+    const x = Math.floor(Math.random() * n), y = Math.floor(Math.random() * n);
+    [arr[x], arr[y]] = [arr[y], arr[x]];
+  }
+  input.value = arr.join(" ");
+  run();
+}
+const randSize = ref("200");
+const randRange = ref("1000000000");
 
 run(); // 初始跑一次展示效果
 </script>
@@ -288,6 +316,15 @@ run(); // 初始跑一次展示效果
 
     <div class="demo-presets">
       <button v-for="p in presets" :key="p.label" class="preset" @click="loadPreset(p.value)">{{ p.label }}</button>
+    </div>
+
+    <div class="demo-generate">
+      <label>🎲 随机生成</label>
+      <input v-model="randSize" type="number" min="1" max="5000" title="数组长度" placeholder="200" />
+      <span class="gen-sep">个元素，范围</span>
+      <input v-model="randRange" type="number" min="1" max="1000000000" title="数值范围" placeholder="1000000000" />
+      <button class="run-btn" @click="genRandom">🎲 乱序</button>
+      <button class="run-btn ghost" @click="genNearSorted">📈 近有序</button>
     </div>
 
     <div class="demo-controls">
@@ -336,6 +373,11 @@ run(); // 初始跑一次展示效果
 }
 .preset:hover { border-color: #6366f1; color: #6366f1; }
 .demo-controls { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+.demo-generate { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.8rem; flex-wrap: wrap; font-size: 0.85rem; }
+.demo-generate label { color: var(--c-text-light); }
+.demo-generate input { width: 80px; padding: 0.35rem 0.5rem; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-bg); color: var(--c-text); font-family: monospace; }
+.gen-sep { color: var(--c-text-lighter); font-size: 0.75rem; }
+.run-btn.ghost { background: transparent; color: var(--c-brand, #6366f1); border: 1px solid var(--c-brand, #6366f1); }
 .stable-toggle { font-size: 0.85rem; display: flex; align-items: center; gap: 0.3rem; }
 .run-btn {
   background: #6366f1; color: #fff; border: none; border-radius: 8px;
