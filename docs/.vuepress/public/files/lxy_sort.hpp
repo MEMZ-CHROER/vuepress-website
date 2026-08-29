@@ -613,6 +613,25 @@ static inline void lxySortImpl(std::vector<T>& a, Comp comp, bool stable, const 
         using Diff = typename std::make_unsigned<T>::type;
         unsigned long long dataRange = (unsigned long long)((Diff)maxv - (Diff)minv);
         if (dataRange <= (unsigned long long)n) {
+            // bitmap sort: O(n+range) time, only O(range/8) memory (vs range*4 for
+            // counting). Works only when all values are distinct; else fall back.
+            if (dataRange <= (1ull << 20)) {                       // bitmap <= 128KB
+                size_t nb = ((size_t)dataRange + 7) / 8;
+                std::vector<unsigned char> bm(nb, 0);
+                bool dup = false;
+                for (int i = 0; i < n; ++i) {
+                    size_t b = (size_t)((Diff)a[i] - (Diff)minv);
+                    if (bm[b >> 3] & (1u << (b & 7))) { dup = true; break; }
+                    bm[b >> 3] |= (unsigned char)(1u << (b & 7));
+                }
+                if (!dup) {
+                    if (chosen) *chosen = "Bitmap";
+                    int p = 0;
+                    for (size_t i = 0; i < (size_t)dataRange; ++i)
+                        if (bm[i >> 3] & (1u << (i & 7))) a[p++] = (int)((long long)i + (long long)minv);
+                    return;
+                }
+            }
             if (chosen) *chosen = "Counting";
             lxyCountingSort(a, minv, maxv);
             return;

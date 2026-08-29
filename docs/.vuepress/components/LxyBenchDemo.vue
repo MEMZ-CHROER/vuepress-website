@@ -17,6 +17,11 @@ const current = ref(0);
 const results = ref(null);
 const running = ref(false);
 const bestAlgo = ref("");
+// 自定义数据
+const customInput = ref("5 2 8 1 9 3 7 6 4");
+const customResult = ref(null);
+const customError = ref("");
+const customRunning = ref(false);
 
 let mod = null;
 let scriptEl = null;
@@ -67,6 +72,33 @@ async function run() {
 }
 
 function pick(i) { current.value = i; run(); }
+
+// 运行自定义数据
+async function runCustom() {
+  if (!loaded.value || customRunning.value) return;
+  customRunning.value = true;
+  customResult.value = null;
+  customError.value = "";
+  try {
+    const parts = customInput.value.split(/[\s,，;；]+/).filter(Boolean);
+    if (!parts.length) { customError.value = "请输入至少一个数字"; return; }
+    const arr = parts.map(Number);
+    if (arr.some(isNaN)) { customError.value = "包含非数字，请检查"; return; }
+    // 写入 WASM 内存
+    const buf = mod._malloc(arr.length * 4);
+    new Int32Array(mod.HEAPU8.buffer, buf, arr.length).set(arr);
+    const ptr = mod._run_custom(buf, arr.length);
+    const s = mod.UTF8ToString(ptr);
+    const d = JSON.parse(s);
+    if (d.error) { customError.value = d.error; mod._free(buf); return; }
+    customResult.value = d;
+    mod._free(buf);
+  } catch (e) {
+    customError.value = "❌ " + e.message;
+  } finally {
+    customRunning.value = false;
+  }
+}
 </script>
 
 <template>
@@ -121,6 +153,22 @@ function pick(i) { current.value = i; run(); }
       </p>
     </div>
 
+    <div class="bench-custom">
+      <h4>✏️ 自定义数据</h4>
+      <p class="bench-custom-sub">输入你自己的数组（空格或逗号分隔），在你的设备上对比 lxySort 和 std::sort：</p>
+      <div class="bench-custom-row">
+        <input v-model="customInput" @keyup.enter="runCustom" placeholder="例如：5 2 8 1 9 3 7 6 4" />
+        <button class="run-btn" @click="runCustom" :disabled="customRunning">{{ customRunning ? "测试中..." : "▶ 测试" }}</button>
+      </div>
+      <div v-if="customError" class="bench-custom-err">⚠️ {{ customError }}</div>
+      <div v-if="customResult" class="bench-custom-result">
+        <span class="cr">lxySort: <b>{{ customResult.lxy.toFixed(4) }} ms</b></span>
+        <span class="cr">std::sort: <b>{{ customResult.std.toFixed(4) }} ms</b></span>
+        <span class="cr">加速: <b :class="customResult.lxy <= customResult.std ? 'cr-win' : 'cr-lose'">{{ (customResult.std / customResult.lxy).toFixed(2) }}x</b></span>
+        <span class="cr">分支: <b class="cr-algo">{{ customResult.algo }}</b></span>
+      </div>
+    </div>
+
     <p class="bench-source">
       📥 源码：<a href="/files/lxy_sort.hpp" target="_blank">lxy_sort.hpp</a> ·
       <a href="/files/bench.cpp" target="_blank">bench.cpp</a>（本组件是它的 WASM 版）
@@ -158,6 +206,16 @@ function pick(i) { current.value = i; run(); }
 .bench-table td.lose { color: #ef4444; }
 .bench-table td.algo { color: #6366f1; }
 .bench-note { font-size: 0.75rem; color: var(--c-text-lighter); margin: 0.5rem 0; }
+.bench-custom { margin-top: 1rem; border-top: 1px dashed var(--c-border); padding-top: 0.8rem; }
+.bench-custom h4 { margin: 0 0 0.3rem; font-size: 0.95rem; }
+.bench-custom-sub { font-size: 0.78rem; color: var(--c-text-lighter); margin: 0 0 0.5rem; }
+.bench-custom-row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.bench-custom-row input { flex: 1; min-width: 200px; padding: 0.45rem 0.6rem; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-bg); color: var(--c-text); font-family: monospace; }
+.bench-custom-err { color: #ef4444; font-size: 0.8rem; margin-top: 0.4rem; }
+.bench-custom-result { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.6rem; font-size: 0.85rem; }
+.cr b.cr-win { color: #22c55e; }
+.cr b.cr-lose { color: #ef4444; }
+.cr b.cr-algo { color: #6366f1; }
 .bench-source { font-size: 0.8rem; color: var(--c-text-light); margin: 0.5rem 0 0; }
 .bench-source a { color: var(--c-brand, #6366f1); }
 </style>
