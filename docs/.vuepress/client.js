@@ -8,6 +8,7 @@ import RelatedPosts from "./components/RelatedPosts.vue";
 import Upload from "./components/upload.vue";
 import SummaryButton from "./components/SummaryButton.vue";
 import LxySortDemo from "./components/LxySortDemo.vue";
+import LxyBenchDemo from "./components/LxyBenchDemo.vue";
 import FrontEditor from "./components/FrontEditor.vue";
 
 export default defineClientConfig({
@@ -22,6 +23,7 @@ export default defineClientConfig({
     app.component("RelatedPosts", RelatedPosts);
     app.component("Upload", Upload);
     app.component("LxySortDemo", LxySortDemo);
+    app.component("LxyBenchDemo", LxyBenchDemo);
     app.component("FrontEditor", FrontEditor);
 
     // ==== clean URL 目录兜底（PR #1720 项目侧方案）====

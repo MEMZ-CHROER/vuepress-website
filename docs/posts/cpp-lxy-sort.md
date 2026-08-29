@@ -69,6 +69,14 @@ g++ -O2 -std=c++17 -fopenmp bench.cpp -o bench   # Windows 用 g++，Linux 用 g
 ./bench 100000
 ```
 
+### 🖥️ 在浏览器里跑真实的 C++ 基准
+
+上面是静态表格，下面这个是通过 **WebAssembly** 把你浏览器里**真实的 C++ 代码**跑起来——选一个数据模式，lxySort 和 std::sort 会在你的设备上实时对比（各规模 5 次取最优）：
+
+<ClientOnly>
+  <LxyBenchDemo />
+</ClientOnly>
+
 ## 三、新版调度逻辑（lxySortImpl）
 
 新版不再用"隔离 min/max"那一套，而是**按数据特征逐级分类**。整个调度器 `lxySortImpl` 的决策树如下：
