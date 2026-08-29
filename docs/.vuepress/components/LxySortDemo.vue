@@ -210,6 +210,25 @@ function lxySortImpl(a, stable) {
 function lxySort(a, stable) { lxySortImpl(a, stable); }
 function lxyStableSort(a) { lxySortImpl(a, true); }
 
+// 浮点数专用调度：counting/radix 位运算不适用浮点，走比较路径（introsort/merge）
+function lxySortFloat(a, stable) {
+  const n = a.length;
+  if (n <= 1) { used = "O(1)"; return; }
+  if (n <= 16) { used = "Insertion"; insertionSort(a, 0, n - 1); return; }
+  // 排序/反转检测
+  let asc = true, desc = true;
+  for (let i = 1; i < n; i++) {
+    if (a[i] < a[i - 1]) asc = false;
+    if (a[i - 1] < a[i]) desc = false;
+    if (!asc && !desc) break;
+  }
+  if (asc) { used = "O(n) already-sorted"; return; }
+  if (desc) { used = "O(n) reverse"; reverse(a, 0, n - 1); return; }
+  // 比较路径
+  if (stable) { used = "MergeSort"; mergeSort(a); }
+  else { used = "Introsort"; introQuickSort(a); }
+}
+
 // ============ 组件状态 ============
 const input = ref("5 2 8 1 9 3 7 6 4");
 const stable = ref(false);
@@ -223,15 +242,19 @@ function run() {
   const parts = input.value.split(/[\s,，;；]+/).filter(Boolean);
   if (!parts.length) { error.value = "请输入至少一个数字"; return; }
   const arr = [];
+  let hasFloat = false;
   for (const p of parts) {
     const v = Number(p);
-    if (!Number.isInteger(v)) { error.value = `"${p}" 不是整数`; return; }
+    if (isNaN(v)) { error.value = `"${p}" 不是数字`; return; }
+    if (!Number.isInteger(v)) hasFloat = true;
     arr.push(v);
   }
   const copy = [...arr];
   used = "";
   const t0 = performance.now();
-  lxySort(copy, stable.value);
+  // 含浮点数时走比较排序路径（counting/radix 位运算不适用浮点）
+  if (hasFloat) { lxySortFloat(copy, stable.value); }
+  else { lxySort(copy, stable.value); }
   const t1 = performance.now();
   result.value = copy.join(" ");
   algo.value = used || "（空数组）";
