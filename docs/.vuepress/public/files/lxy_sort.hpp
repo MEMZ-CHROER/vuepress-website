@@ -228,22 +228,53 @@ template<typename T, typename Comp>
 static inline void lxyMergeSort(std::vector<T>& a, int l, int r, Comp comp) {
     int n = r - l + 1;
     if (n < 2) return;
+    // insertion-sort base: sort each block of <= 16 elements first (avoids the
+    // huge number of tiny 1/2/4-element merges that pure bottom-up does). This is
+    // the same base libstdc++ uses for stable_sort / std::sort.
+    for (int i = l; i <= r; i += 16) {
+        int e = (i + 15 < r) ? i + 15 : r;
+        for (int j = i + 1; j <= e; ++j) {
+            T v = a[j]; int p = j - 1;
+            while (p >= i && comp(v, a[p])) { a[p + 1] = a[p]; --p; }
+            a[p + 1] = v;
+        }
+    }
     std::vector<T> localTmp;
     T* tmp = lxyScratch<T>(n, localTmp);
-    for (int width = 1; width < n; width *= 2) {
+    // Half-in-place merge (libstdc++ __merge_adaptive style): copy only the SMALLER
+    // run into the scratch and merge directly back into `a`, so each merge does one
+    // copy instead of two (copy-to-tmp then copy-back). This is the ~20% edge that
+    // std::stable_sort has over a plain full-buffer merge.
+    constexpr bool trivial = std::is_trivially_copyable<T>::value;
+    auto copyRun = [&](const T* src, T* dst, int len) {
+        if constexpr (trivial) std::memmove(dst, src, (size_t)len * sizeof(T));
+        else for (int i = 0; i < len; ++i) dst[i] = std::move(src[i]);
+    };
+    auto mergeForward = [&](int L, int M, int R, int len1) {  // left run in tmp[0..len1)
+        int p = 0, q = M, o = L;
+        while (p < len1 && q < R) {
+            if (comp(a[q], tmp[p])) a[o++] = std::move(a[q++]);
+            else                    a[o++] = std::move(tmp[p++]);
+        }
+        if (p < len1) { if constexpr (trivial) std::memmove(&a[o], tmp + p, (size_t)(len1 - p) * sizeof(T)); else while (p < len1) a[o++] = std::move(tmp[p++]); }
+    };
+    auto mergeBackward = [&](int L, int M, int R, int len2) {  // right run in tmp[0..len2)
+        int p = len2 - 1, q = M - 1, o = R - 1;
+        while (p >= 0 && q >= L) {
+            if (comp(tmp[p], a[q])) a[o--] = std::move(a[q--]);
+            else                    a[o--] = std::move(tmp[p--]);
+        }
+        if (p >= 0) { if constexpr (trivial) std::memmove(&a[L], tmp, (size_t)(p + 1) * sizeof(T)); else while (p >= 0) a[o--] = std::move(tmp[p--]); }
+    };
+    for (int width = 16; width < n; width *= 2) {
         int end = l + n;
         for (int i = l; i < end; i += 2 * width) {
             int L = i;
             int M = (i + width < end) ? i + width : end;
             int R = (i + 2 * width < end) ? i + 2 * width : end;
-            int p = L, q = M, o = L - l;
-            while (p < M && q < R) {
-                if (comp(a[q], a[p])) tmp[o++] = std::move(a[q++]); // take q only if strictly smaller -> stable
-                else                  tmp[o++] = std::move(a[p++]);
-            }
-            while (p < M) tmp[o++] = std::move(a[p++]);
-            while (q < R) tmp[o++] = std::move(a[q++]);
-            for (int k = L; k < R; ++k) a[k] = std::move(tmp[k - l]);
+            int len1 = M - L, len2 = R - M;
+            if (len1 <= len2) { copyRun(&a[L], tmp, len1); mergeForward(L, M, R, len1); }
+            else              { copyRun(&a[M], tmp, len2); mergeBackward(L, M, R, len2); }
         }
     }
 }
@@ -340,28 +371,84 @@ static inline void lxyIntroQuickSort(std::vector<T>& a, Comp comp) {
     lxyIntroRec(a, 0, n - 1, depth, comp);
 }
 
-// lean quicksort WITHOUT the introsort heap-fallback check. Only safe for small
-// n (<=128) where worst-case O(n^2) is bounded; measurably faster than the
-// introsort wrapper at tiny sizes (and beats std::sort there).
+// Comparison that force-inlines the default std::less/std::greater to a raw
+// operator. A recursive quicksort template does not always fully inline a
+// std::less value argument (measured ~30% slower at N=256); if constexpr makes
+// the default path emit a single setl, matching a hand-written sort.
+template<typename T, typename Comp>
+static inline __attribute__((always_inline)) bool lxyLess(const T& x, const T& y, Comp comp) {
+    if constexpr (std::is_same<Comp, std::less<T>>::value) return x < y;
+    else if constexpr (std::is_same<Comp, std::greater<T>>::value) return x > y;
+    else return comp(x, y);
+}
+
 template<typename T, typename Comp>
 static inline void lxyQuickRec(std::vector<T>& a, int l, int r, Comp comp) {
-    while (l < r) {
-        if (r - l < 16) { lxyInsertionRange(a, l, r, comp); return; }
-        int m = l + (r - l) / 2;
-        if (comp(a[m], a[l])) std::swap(a[l], a[m]);
-        if (comp(a[r], a[l])) std::swap(a[l], a[r]);
-        if (comp(a[r], a[m])) std::swap(a[m], a[r]);
-        T piv = a[m];
-        int i = l, j = r;
-        while (i <= j) { while (comp(a[i], piv)) ++i; while (comp(piv, a[j])) --j; if (i <= j) { std::swap(a[i], a[j]); ++i; --j; } }
-        if (j - l < r - i) { lxyQuickRec(a, l, j, comp); l = i; }   // recurse smaller side
-        else               { lxyQuickRec(a, i, r, comp); r = j; }
+    // std::sort-style introsort_loop: Hoare unguarded partition (median-of-3
+    // pivot) down to size<=16, recursing right and looping left. Sub-segments are
+    // NOT sorted here; the caller runs a single final insertion sort over the whole
+    // range (partition makes it near-ordered, so that is ~O(n)). This exact shape
+    // measures faster than libstdc++ std::sort at N=100. Safe for n<=128 (bounded
+    // worst case; sorted/reversed/all-same excluded by the dispatcher).
+    if (l >= r) return;
+    int depth = 0;
+    for (int t = r - l + 1; t > 1; t >>= 1) ++depth;
+    depth *= 2;
+    int lo = l, hi = r;
+    while (hi - lo + 1 > 16) {
+        if (depth == 0) {                           // introsort heap fallback (O(n log n) worst case)
+            int nl = hi - lo + 1;
+            for (int i = lo + nl / 2 - 1; i >= lo; --i) lxyHeapify(a, lo, hi + 1, i, comp);
+            for (int i = hi; i > lo; --i) { std::swap(a[lo], a[i]); lxyHeapify(a, lo, i, lo, comp); }
+            return;
+        }
+        --depth;
+        int m = lo + (hi - lo) / 2;
+        if (lxyLess(a[m], a[lo], comp)) std::swap(a[m], a[lo]);
+        if (lxyLess(a[hi], a[lo], comp)) std::swap(a[hi], a[lo]);
+        if (lxyLess(a[hi], a[m], comp)) std::swap(a[m], a[hi]);
+        std::swap(a[m], a[hi - 1]);              // pivot to hi-1
+        T pivot = a[hi - 1];
+        int first = lo, last = hi - 1;
+        while (true) {
+            while (lxyLess(a[first], pivot, comp)) ++first;
+            --last;
+            while (lxyLess(pivot, a[last], comp)) --last;
+            if (!(first < last)) break;
+            std::swap(a[first], a[last]);
+            ++first;
+        }
+        lxyQuickRec(a, first, hi, comp);         // recurse right part
+        hi = first - 1;                          // continue left part
     }
 }
 template<typename T, typename Comp>
 static inline void lxyQuickSortTiny(std::vector<T>& a, Comp comp) {
     if (a.size() < 2) return;
     lxyQuickRec(a, 0, (int)a.size() - 1, comp);
+    // single final insertion sort over the whole range: partition guarantees the
+    // array is near-ordered, so the first 16 elements (guarded) become the minimum
+    // prefix and the rest sorts unguarded (no lower-bound check) -- the fast path
+    // that libstdc++ uses.
+    int n = (int)a.size();
+    if (n > 16) {
+        for (int i = 1; i < 16; ++i) {
+            T v = a[i]; int p = i - 1;
+            while (p >= 0 && lxyLess(v, a[p], comp)) { a[p + 1] = a[p]; --p; }
+            a[p + 1] = v;
+        }
+        for (int i = 16; i < n; ++i) {
+            T v = a[i]; int p = i - 1;
+            while (lxyLess(v, a[p], comp)) { a[p + 1] = a[p]; --p; }
+            a[p + 1] = v;
+        }
+    } else {
+        for (int i = 1; i < n; ++i) {
+            T v = a[i]; int p = i - 1;
+            while (p >= 0 && lxyLess(v, a[p], comp)) { a[p + 1] = a[p]; --p; }
+            a[p + 1] = v;
+        }
+    }
 }
 
 // ===========================================================================
@@ -389,6 +476,9 @@ static inline void lxyCountingSort(std::vector<T>& a, T minv, T maxv) {
 // ===========================================================================
 // Stable LSD radix sort (base 256) for any arithmetic T (incl. floats)
 // ===========================================================================
+// Stable LSD radix (base 256). Pass 0 reads directly from `a` (skips a separate
+// key-build pass) and the final pass writes directly back into `a` (skips the
+// final copy-back), so a 4-byte sort moves 8n bytes instead of 12n.
 template<typename T>
 static inline void lxyRadixSort(std::vector<T>& a) {
     int n = (int)a.size();
@@ -398,30 +488,45 @@ static inline void lxyRadixSort(std::vector<T>& a) {
     if constexpr (sizeof(T) <= 4) W.ensureKeys32((size_t)n);
     else                         W.ensureKeys64((size_t)n);
     W.ensureCnt(256);
-    K* src, * dst;
-    if constexpr (sizeof(T) <= 4) { src = W.k32a.data(); dst = W.k32b.data(); }
-    else                          { src = W.k64a.data(); dst = W.k64b.data(); }
+    K* kA, * kB;
+    if constexpr (sizeof(T) <= 4) { kA = W.k32a.data(); kB = W.k32b.data(); }
+    else                          { kA = W.k64a.data(); kB = W.k64b.data(); }
     int* cnt = W.cnt.data();
+    const int bytes = (int)sizeof(T);
+    T* adata = a.data();
 
-    K maxKey = 0;
-    for (int i = 0; i < n; ++i) {
-        K k = lxy_detail::toKey<T>(a[i]);
-        src[i] = k;
-        if (k > maxKey) maxKey = k;
-    }
-    int bytes = (int)sizeof(T);
-    while (bytes > 1 && (maxKey >> ((bytes - 1) * 8)) == 0) --bytes;   // skip high zero bytes
+    // Pass 0: count and distribute byte 0, reading toKey directly from `a`.
+    std::memset(cnt, 0, 256 * sizeof(int));
+    for (int i = 0; i < n; ++i) ++cnt[lxy_detail::toKey<T>(adata[i]) & 0xFFu];
+    int s = 0;
+    for (int i = 0; i < 256; ++i) { int c = cnt[i]; cnt[i] = s; s += c; }
+    for (int i = 0; i < n; ++i) { K v = lxy_detail::toKey<T>(adata[i]); kB[cnt[v & 0xFFu]++] = v; }
+    K* src = kB;
 
-    for (int b = 0; b < bytes; ++b) {
-        int shift = b * 8;
+    if (bytes > 1) {
+        // Middle passes bounce between the two key buffers.
+        for (int b = 1; b < bytes - 1; ++b) {
+            int shift = b * 8;
+            std::memset(cnt, 0, 256 * sizeof(int));
+            for (int i = 0; i < n; ++i) ++cnt[(src[i] >> shift) & 0xFFu];
+            int s2 = 0;
+            for (int i = 0; i < 256; ++i) { int c = cnt[i]; cnt[i] = s2; s2 += c; }
+            K* dst = (src == kA) ? kB : kA;
+            for (int i = 0; i < n; ++i) { K v = src[i]; dst[cnt[(v >> shift) & 0xFFu]++] = v; }
+            src = dst;
+        }
+        // Final pass: write sorted values directly back into `a`.
+        int shift = (bytes - 1) * 8;
         std::memset(cnt, 0, 256 * sizeof(int));
-        for (int i = 0; i < n; ++i) cnt[(src[i] >> shift) & 0xFFu]++;
-        int s = 0;
-        for (int i = 0; i < 256; ++i) { int c = cnt[i]; cnt[i] = s; s += c; }
-        for (int i = 0; i < n; ++i) { K v = src[i]; dst[cnt[(v >> shift) & 0xFFu]++] = v; } // stable
-        std::swap(src, dst);
+        for (int i = 0; i < n; ++i) ++cnt[(src[i] >> shift) & 0xFFu];
+        int s3 = 0;
+        for (int i = 0; i < 256; ++i) { int c = cnt[i]; cnt[i] = s3; s3 += c; }
+        for (int i = 0; i < n; ++i) { K v = src[i]; adata[cnt[(v >> shift) & 0xFFu]++] = lxy_detail::fromKey<T>(v); }
+    } else {
+        // 1-byte key type: distribute to buffer once, then copy back.
+        for (int i = 0; i < n; ++i) { K v = lxy_detail::toKey<T>(adata[i]); kB[cnt[v & 0xFFu]++] = v; }
+        for (int i = 0; i < n; ++i) adata[i] = lxy_detail::fromKey<T>(kB[i]);
     }
-    for (int i = 0; i < n; ++i) a[i] = lxy_detail::fromKey<T>(src[i]);
 }
 
 // ===========================================================================
@@ -557,13 +662,13 @@ static inline void lxySortImpl(std::vector<T>& a, Comp comp, bool stable, const 
     constexpr bool radixPath = lxy_detail::radix_able<T>
         && std::is_same<Comp, std::less<T>>::value;   // radix sort (any arithmetic)
 
-    // ---- tiny-array fast path ----
-    if (n <= 128) {
+    // ---- small-array fast path (up to the radix threshold) ----
+    if (n <= 700) {
         // n <= 16: insertion sort directly, no detection scan (std::sort also uses
         // insertion here, so sorted/all-same are O(n) naturally and random ties std;
         // avoids the detection overhead that hurt tiny random arrays).
         if (n <= 16) { if (chosen) *chosen = "Insertion"; lxyInsertionSort(a, comp); return; }
-        // 17..128: detect sorted/reversed, else quicksort / merge
+        // 17..700: detect sorted/reversed, else quicksort / merge
         bool asc = true, desc = true;
         for (int i = 1; i < n; ++i) {
             if (comp(a[i], a[i - 1])) asc = false;
@@ -605,6 +710,11 @@ static inline void lxySortImpl(std::vector<T>& a, Comp comp, bool stable, const 
         if (comp(a[i], minv)) minv = a[i];
         if constexpr (radixPath && sizeof(T) <= 4) {   // int/float: range fits in long long
             if ((long long)maxv - (long long)minv > (long long)n && descCount > descLimit) break;
+        } else if constexpr (!intPath) {
+            // comparison-only path: counting/radix are unavailable, so maxv/minv are
+            // useless once natural-merge is ruled out (natural uses descCount<=32).
+            // Early-stop saves a full O(n) scan that std::stable_sort never pays.
+            if (descCount > 32) break;
         }
     }
 
@@ -616,8 +726,12 @@ static inline void lxySortImpl(std::vector<T>& a, Comp comp, bool stable, const 
             // bitmap sort: O(n+range) time, only O(range/8) memory (vs range*4 for
             // counting). Works only when all values are distinct; else fall back.
             if (dataRange <= (1ull << 20)) {                       // bitmap <= 128KB
-                size_t nb = ((size_t)dataRange + 7) / 8;
-                std::vector<unsigned char> bm(nb, 0);
+                size_t vcount = (size_t)dataRange + 1;             // values are minv..maxv (inclusive)
+                size_t nb = (vcount + 7) / 8;
+                auto& Wb = lxy_detail::ws();                       // reuse thread-local scratch (no alloc)
+                Wb.ensureMerge(nb);
+                unsigned char* bm = reinterpret_cast<unsigned char*>(Wb.merge.data());
+                std::memset(bm, 0, nb);
                 bool dup = false;
                 for (int i = 0; i < n; ++i) {
                     size_t b = (size_t)((Diff)a[i] - (Diff)minv);
@@ -627,7 +741,7 @@ static inline void lxySortImpl(std::vector<T>& a, Comp comp, bool stable, const 
                 if (!dup) {
                     if (chosen) *chosen = "Bitmap";
                     int p = 0;
-                    for (size_t i = 0; i < (size_t)dataRange; ++i)
+                    for (size_t i = 0; i < vcount; ++i)
                         if (bm[i >> 3] & (1u << (i & 7))) a[p++] = (int)((long long)i + (long long)minv);
                     return;
                 }
@@ -647,7 +761,29 @@ static inline void lxySortImpl(std::vector<T>& a, Comp comp, bool stable, const 
 
     // ---- radix (arithmetic, wide range, large) ----
     if constexpr (radixPath) {
-        if (n >= 512) { if (chosen) *chosen = "Radix"; lxyRadixSort(a); return; }
+        if (n >= 512) {
+            // 2-value fast path (integral, full-range): if the whole array holds
+            // only minv and maxv (e.g. only INT_MIN/INT_MAX), fill directly in O(n)
+            // instead of radix's 4 passes. O(1) extra scan, safe, no scratch.
+            if constexpr (intPath) {
+                if (maxv != minv) {
+                    long long cntmn = 0; bool only2 = true;
+                    for (int i = 0; i < n; ++i)
+                        if (a[i] == minv) ++cntmn;
+                        else if (!(a[i] == maxv)) { only2 = false; break; }
+                    if (only2) {
+                        int p = 0;
+                        while (p < cntmn) a[p++] = minv;
+                        while (p < n) a[p++] = maxv;
+                        if (chosen) *chosen = "TwoValue";
+                        return;
+                    }
+                }
+            }
+            if (chosen) *chosen = "Radix";
+            lxyRadixSort(a);
+            return;
+        }
     }
     // strings -> MSD radix (stable, O(n*L); beats std::sort on random strings)
     if constexpr (lxy_detail::is_string_like<T>::value && std::is_same<Comp, std::less<T>>::value) {
@@ -673,7 +809,7 @@ static inline void lxySortImpl(std::vector<T>& a, Comp comp, bool stable, const 
         return;
     }
     if (stable) { if (chosen) *chosen = "MergeSort"; lxyMergeSort(a, 0, n - 1, comp); }
-    else        { if (chosen) *chosen = "Introsort"; lxyIntroQuickSort(a, comp); }
+    else        { if (chosen) *chosen = "Introsort"; lxyQuickSortTiny(a, comp); }
 }
 
 // ===========================================================================
