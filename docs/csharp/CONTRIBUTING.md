@@ -14,12 +14,14 @@
    打开 [vuepress-website](https://github.com/MEMZ-CHROER/vuepress-website)，点击右上角 **Fork**，把仓库复制到你自己的账号。
 
 2. **克隆你的 Fork**
+
    ```bash
    git clone https://github.com/<你的用户名>/vuepress-website.git
    cd vuepress-website
    ```
 
 3. **创建分支**
+
    ```bash
    git checkout -b add-csharp-article
    ```
@@ -29,6 +31,7 @@
    **请使用下面的模板**。
 
 5. **提交并推送**
+
    ```bash
    git add docs/csharp/
    git commit -m "docs: 添加 C# 文章 xxx"

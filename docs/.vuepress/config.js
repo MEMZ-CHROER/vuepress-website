@@ -32,10 +32,10 @@ export default defineUserConfig({
     author: "lxy",
     logo: asset("/icons/icon-512.png"),
 
-    navbar,  // 导航栏来自 navbar.json（供社区协作编辑）
+    navbar, // 导航栏来自 navbar.json（供社区协作编辑）
 
     // C++ 讲义区侧边栏（按目录自动分组，便于导航）
-    sidebar,  // 侧边栏来自 sidebar.json（供社区协作编辑）
+    sidebar, // 侧边栏来自 sidebar.json（供社区协作编辑）
 
     // Markdown 增强（内置，替代原 markdown-ext / stylize / chart / katex 插件）
     markdown: {
@@ -95,16 +95,10 @@ export default defineUserConfig({
           )
             return true;
           // maths 数学区（排除 README 入口页）
-          if (
-            filePathRelative.startsWith("maths/") &&
-            !filePathRelative.endsWith("/README.md")
-          )
+          if (filePathRelative.startsWith("maths/") && !filePathRelative.endsWith("/README.md"))
             return true;
           // planting 种花区（排除 README 入口页）
-          if (
-            filePathRelative.startsWith("planting/") &&
-            !filePathRelative.endsWith("/README.md")
-          )
+          if (filePathRelative.startsWith("planting/") && !filePathRelative.endsWith("/README.md"))
             return true;
           return false;
         },

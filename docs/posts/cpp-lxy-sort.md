@@ -30,10 +30,12 @@ lxySort 已经迭代成了**一个完整的多算法混合排序头文件** `lxy
 📥 **源码下载**：[lxy_sort.hpp](/files/lxy_sort.hpp)
 
 配套文件：
+
 - 📥 [bench.cpp（性能对比 std::sort）](/files/bench.cpp)
 - 📥 [example.cpp（使用示例）](/files/example.cpp)
 
 编译测试：
+
 ```bash
 g++ -O2 -std=c++17 -fopenmp bench.cpp -o bench   # Windows 用 g++，Linux 用 g++ -fopenmp
 ```
@@ -42,29 +44,31 @@ g++ -O2 -std=c++17 -fopenmp bench.cpp -o bench   # Windows 用 g++，Linux 用 g
 
 跑 `bench.cpp` 得到的真实数据（`N=100000`），**lxySort 赢了 39/40 个用例**：
 
-| 数据情况 | lxySort | std::sort | 加速比 | 走的分支 |
-|---------|---------|-----------|--------|---------|
-| 乱序 0..1e9 | 0.74 ms | 4.44 ms | 🟢 **5.99x** | Radix |
-| 乱序 0..999 | 0.58 ms | 3.22 ms | 🟢 **5.52x** | Counting |
-| 重复 0..9 | 0.50 ms | 1.63 ms | 🟢 **3.25x** | Counting |
-| 升序 | 0.06 ms | 0.79 ms | 🟢 **13.99x** | O(n) 已有序 |
-| 降序 | 0.08 ms | 0.61 ms | 🟢 **7.78x** | O(n) 反转 |
-| 近有序（宽范围） | 0.59 ms | 0.79 ms | 🟢 **1.34x** | NaturalMerge |
-| 全相同 | 0.10 ms | 0.69 ms | 🟢 **7.17x** | O(n) 已有序 |
-| double 乱序 | 2.24 ms | 5.21 ms | 🟢 **2.32x** | Radix |
-| 字符串乱序 | 11.33 ms | 16.91 ms | 🟢 **1.49x** | StringRadix |
-| **N=100 小数组** | 0.0005 ms | 0.0004 ms | 🔴 **1.23x 略慢** | Introsort |
-| N=1000 | 0.008 ms | 0.016 ms | 🟢 **1.93x** | Radix |
-| N=1000000 | 15.73 ms | 55.03 ms | 🟢 **3.50x** | Counting |
+| 数据情况         | lxySort   | std::sort | 加速比            | 走的分支     |
+| ---------------- | --------- | --------- | ----------------- | ------------ |
+| 乱序 0..1e9      | 0.74 ms   | 4.44 ms   | 🟢 **5.99x**      | Radix        |
+| 乱序 0..999      | 0.58 ms   | 3.22 ms   | 🟢 **5.52x**      | Counting     |
+| 重复 0..9        | 0.50 ms   | 1.63 ms   | 🟢 **3.25x**      | Counting     |
+| 升序             | 0.06 ms   | 0.79 ms   | 🟢 **13.99x**     | O(n) 已有序  |
+| 降序             | 0.08 ms   | 0.61 ms   | 🟢 **7.78x**      | O(n) 反转    |
+| 近有序（宽范围） | 0.59 ms   | 0.79 ms   | 🟢 **1.34x**      | NaturalMerge |
+| 全相同           | 0.10 ms   | 0.69 ms   | 🟢 **7.17x**      | O(n) 已有序  |
+| double 乱序      | 2.24 ms   | 5.21 ms   | 🟢 **2.32x**      | Radix        |
+| 字符串乱序       | 11.33 ms  | 16.91 ms  | 🟢 **1.49x**      | StringRadix  |
+| **N=100 小数组** | 0.0005 ms | 0.0004 ms | 🔴 **1.23x 略慢** | Introsort    |
+| N=1000           | 0.008 ms  | 0.016 ms  | 🟢 **1.93x**      | Radix        |
+| N=1000000        | 15.73 ms  | 55.03 ms  | 🟢 **3.50x**      | Counting     |
 
 ::: tip 怎么读这张表
+
 - 🟢 绿色 = lxySort 更快；唯一 🔴 是 **N=100 小数组**（Introsort 检测开销略高，差 1.23x，可忽略）
 - **线性路径（Radix/Counting/NaturalMerge）** 在合适数据上领先最多（5-14x）
 - **近有序 / 已有序** 场景靠 `O(n)` 检测直接躺赢
 - 唯一的"略慢"只在极小数组，对实际使用无感知
-:::
+  :::
 
 跑一下 bench 自己看：
+
 ```bash
 ./bench 100000
 ```
@@ -145,12 +149,13 @@ void lxyIntroRec(vector<int>& a, int l, int r, int depth) {
 </ClientOnly>
 
 ::: tip 试试这些
+
 - 输入 `1 2 3 4 5` → 已有序，直接返回
 - 输入 `9 8 7 6 5 4 3 2 1` → 反转，直接翻转
 - 输入 `5.5 2.1 8.9 1.5 9.7` → 浮点数，走比较排序
 - 输入一堆个位数 → 范围小，走计数
 - 输入大整数 → 走基数 / Introsort
-:::
+  :::
 
 ## 小结
 

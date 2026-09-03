@@ -64,7 +64,7 @@ int main() {
 }
 ```
 
-`local` 是栈上的局部变量，函数一返回它就被销毁了。返回它的地址，就是拿着一把指向"废墟"的钥匙。编译器甚至会给出警告：*function returns address of local variable*。
+`local` 是栈上的局部变量，函数一返回它就被销毁了。返回它的地址，就是拿着一把指向"废墟"的钥匙。编译器甚至会给出警告：_function returns address of local variable_。
 
 正确的做法是让数据活得更久：
 

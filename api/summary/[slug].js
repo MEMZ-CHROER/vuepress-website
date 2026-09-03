@@ -13,7 +13,21 @@ async function readArticle(slug) {
   // slug 可能以 .md 结尾或不带，统一处理
   const normalized = slug.replace(/\.md$/, "");
   // 文章可能位于多个目录（posts、cpp、csharp、Learning、maths 等），这里先尝试相对根目录的路径
-  const possibleDirs = ["posts", "cpp", "csharp", "Learning", "maths", "planting", "tanks", "friends", "tools", "FAQ", "InformationAI", "GeoGraphy", "imgs"];
+  const possibleDirs = [
+    "posts",
+    "cpp",
+    "csharp",
+    "Learning",
+    "maths",
+    "planting",
+    "tanks",
+    "friends",
+    "tools",
+    "FAQ",
+    "InformationAI",
+    "GeoGraphy",
+    "imgs",
+  ];
   for (const dir of possibleDirs) {
     const filePath = path.join(process.cwd(), "docs", dir, `${normalized}.md`);
     try {
@@ -57,7 +71,11 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "GLM-4-Flash-250414",
         messages: [
-          { role: "system", content: "You are an assistant that summarizes Chinese technical blog posts. Produce a concise 2‑3 sentence summary in Chinese without extra formatting." },
+          {
+            role: "system",
+            content:
+              "You are an assistant that summarizes Chinese technical blog posts. Produce a concise 2‑3 sentence summary in Chinese without extra formatting.",
+          },
           { role: "user", content: article },
         ],
         temperature: 0.5,

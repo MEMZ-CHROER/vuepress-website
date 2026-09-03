@@ -8,14 +8,20 @@ const categoryMap = useCategoryMap();
 const tagMap = useTagMap();
 
 const statItems = computed(() => {
-  const articleCount = (articles.value && articles.value.items) ? articles.value.items.length : 0;
+  const articleCount = articles.value && articles.value.items ? articles.value.items.length : 0;
   const categoryCount = categoryMap.value ? Object.keys(categoryMap.value).length : 0;
   const tagCount = tagMap.value ? Object.keys(tagMap.value).length : 0;
   return [
     { icon: "📝", label: "文章", value: articleCount, desc: "篇内容", color: "#6366f1" },
     { icon: "📂", label: "分类", value: categoryCount, desc: "个分类", color: "#8b5cf6" },
     { icon: "🏷️", label: "标签", value: tagCount, desc: "个标签", color: "#ec4899" },
-    { icon: "🆕", label: "近期", value: recentCount(articles.value), desc: "近 90 天新增", color: "#14b8a6" },
+    {
+      icon: "🆕",
+      label: "近期",
+      value: recentCount(articles.value),
+      desc: "近 90 天新增",
+      color: "#14b8a6",
+    },
     { icon: "🎨", label: "坦克", value: 30, desc: "辆原创手绘", color: "#f97316" },
     { icon: "🔗", label: "友链", value: 5, desc: "个小伙伴", color: "#06b6d4" },
   ];
@@ -39,7 +45,12 @@ function recentCount(articlesData) {
   <div class="stats-panel">
     <h3 class="stats-title">📊 站点统计</h3>
     <div class="stats-grid">
-      <div v-for="s in statItems" :key="s.label" class="stat-card" :style="{ '--stat-color': s.color }">
+      <div
+        v-for="s in statItems"
+        :key="s.label"
+        class="stat-card"
+        :style="{ '--stat-color': s.color }"
+      >
         <div class="stat-icon">{{ s.icon }}</div>
         <div class="stat-value">{{ s.value }}</div>
         <div class="stat-label">{{ s.label }}</div>

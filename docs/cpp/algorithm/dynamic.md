@@ -16,6 +16,7 @@ tag:
 在本节中，我们从一个经典例题入手，先给出它的暴力回溯解法，观察其中包含的重叠子问题，再逐步导出更高效的动态规划解法。
 
 ## "爬楼梯"
+
 给定一个共有 $n$ 阶的楼梯，你每步可以上 $1$ 阶或者 $2$ 阶，请问有多少种方案可以爬到楼顶？
 
 如下图所示，对于一个 $3$ 阶楼梯，共有 $3$ 种方案可以爬到楼顶。
@@ -398,9 +399,9 @@ int climbingStairsConstraintDP(int n) {
 
 - 注意
 
-    动态规划和回溯过程可以描述为一个决策序列，而状态由所有决策变量构成。它应当包含描述解题进度的所有变量，其包含了足够的信息，能够用来推导出下一个状态。
-    
-    每个状态都对应一个子问题，我们会定义一个 $dp$ 表来存储所有子问题的解，状态的每个独立变量都是 $dp$ 表的一个维度。从本质上看，$dp$ 表是状态和子问题的解之间的映射。
+  动态规划和回溯过程可以描述为一个决策序列，而状态由所有决策变量构成。它应当包含描述解题进度的所有变量，其包含了足够的信息，能够用来推导出下一个状态。
+
+  每个状态都对应一个子问题，我们会定义一个 $dp$ 表来存储所有子问题的解，状态的每个独立变量都是 $dp$ 表的一个维度。从本质上看，$dp$ 表是状态和子问题的解之间的映射。
 
 **第二步：找出最优子结构，进而推导出状态转移方程**
 
@@ -416,9 +417,9 @@ $$
 
 - 注意
 
-    根据定义好的 $dp$ 表，思考原问题和子问题的关系，找出通过子问题的最优解来构造原问题的最优解的方法，即最优子结构。
+  根据定义好的 $dp$ 表，思考原问题和子问题的关系，找出通过子问题的最优解来构造原问题的最优解的方法，即最优子结构。
 
-    一旦我们找到了最优子结构，就可以使用它来构建出状态转移方程。
+  一旦我们找到了最优子结构，就可以使用它来构建出状态转移方程。
 
 **第三步：确定边界条件和状态转移顺序**
 
@@ -430,9 +431,9 @@ $$
 
 - 注意
 
-    边界条件在动态规划中用于初始化 $dp$ 表，在搜索中用于剪枝。
-    
-    状态转移顺序的核心是要保证在计算当前问题的解时，所有它依赖的更小子问题的解都已经被正确地计算出来。
+  边界条件在动态规划中用于初始化 $dp$ 表，在搜索中用于剪枝。
+
+  状态转移顺序的核心是要保证在计算当前问题的解时，所有它依赖的更小子问题的解都已经被正确地计算出来。
 
 根据以上分析，我们已经可以直接写出动态规划代码。然而子问题分解是一种从顶至底的思想，因此按照“暴力搜索 $\rightarrow$ 记忆化搜索 $\rightarrow$ 动态规划”的顺序实现更加符合思维习惯。
 
@@ -540,40 +541,40 @@ int minPathSumDP(vector<vector<int>> &grid) {
 数组 `dp` 大小为 $n \times m$ ，**因此空间复杂度为 $O(nm)$** 。
 
 - "<1>"
-    ![最小路径和的动态规划过程](./static/min_path_sum_dp_step1.png)
+  ![最小路径和的动态规划过程](./static/min_path_sum_dp_step1.png)
 
 - "<2>"
-    ![min_path_sum_dp_step2](./static/min_path_sum_dp_step2.png)
+  ![min_path_sum_dp_step2](./static/min_path_sum_dp_step2.png)
 
 - "<3>"
-    ![min_path_sum_dp_step3](./static/min_path_sum_dp_step3.png)
+  ![min_path_sum_dp_step3](./static/min_path_sum_dp_step3.png)
 
 - "<4>"
-    ![min_path_sum_dp_step4](./static/min_path_sum_dp_step4.png)
+  ![min_path_sum_dp_step4](./static/min_path_sum_dp_step4.png)
 
 - "<5>"
-    ![min_path_sum_dp_step5](./static/min_path_sum_dp_step5.png)
+  ![min_path_sum_dp_step5](./static/min_path_sum_dp_step5.png)
 
 - "<6>"
-    ![min_path_sum_dp_step6](./static/min_path_sum_dp_step6.png)
+  ![min_path_sum_dp_step6](./static/min_path_sum_dp_step6.png)
 
 - "<7>"
-    ![min_path_sum_dp_step7](./static/min_path_sum_dp_step7.png)
+  ![min_path_sum_dp_step7](./static/min_path_sum_dp_step7.png)
 
 - "<8>"
-    ![min_path_sum_dp_step8](./static/min_path_sum_dp_step8.png)
+  ![min_path_sum_dp_step8](./static/min_path_sum_dp_step8.png)
 
 - "<9>"
-    ![min_path_sum_dp_step9](./static/min_path_sum_dp_step9.png)
+  ![min_path_sum_dp_step9](./static/min_path_sum_dp_step9.png)
 
 - "<10>"
-    ![min_path_sum_dp_step10](./static/min_path_sum_dp_step10.png)
+  ![min_path_sum_dp_step10](./static/min_path_sum_dp_step10.png)
 
 - "<11>"
-    ![min_path_sum_dp_step11](./static/min_path_sum_dp_step11.png)
+  ![min_path_sum_dp_step11](./static/min_path_sum_dp_step11.png)
 
 - "<12>"
-    ![min_path_sum_dp_step12](./static/min_path_sum_dp_step12.png)
+  ![min_path_sum_dp_step12](./static/min_path_sum_dp_step12.png)
 
 ### 空间优化
 
@@ -749,46 +750,46 @@ int knapsackDP(vector<int> &wgt, vector<int> &val, int cap) {
 如下图所示，时间复杂度和空间复杂度都由数组 `dp` 大小决定，即 $O(n \times cap)$ 。
 
 - "<1>"
-    ![0-1 背包问题的动态规划过程](./static/knapsack_dp_step1.png)
+  ![0-1 背包问题的动态规划过程](./static/knapsack_dp_step1.png)
 
 - "<2>"
-    ![knapsack_dp_step2](./static/knapsack_dp_step2.png)
+  ![knapsack_dp_step2](./static/knapsack_dp_step2.png)
 
 - "<3>"
-    ![knapsack_dp_step3](./static/knapsack_dp_step3.png)
+  ![knapsack_dp_step3](./static/knapsack_dp_step3.png)
 
 - "<4>"
-    ![knapsack_dp_step4](./static/knapsack_dp_step4.png)
+  ![knapsack_dp_step4](./static/knapsack_dp_step4.png)
 
 - "<5>"
-    ![knapsack_dp_step5](./static/knapsack_dp_step5.png)
+  ![knapsack_dp_step5](./static/knapsack_dp_step5.png)
 
 - "<6>"
-    ![knapsack_dp_step6](./static/knapsack_dp_step6.png)
+  ![knapsack_dp_step6](./static/knapsack_dp_step6.png)
 
 - "<7>"
-    ![knapsack_dp_step7](./static/knapsack_dp_step7.png)
+  ![knapsack_dp_step7](./static/knapsack_dp_step7.png)
 
 - "<8>"
-    ![knapsack_dp_step8](./static/knapsack_dp_step8.png)
+  ![knapsack_dp_step8](./static/knapsack_dp_step8.png)
 
 - "<9>"
-    ![knapsack_dp_step9](./static/knapsack_dp_step9.png)
+  ![knapsack_dp_step9](./static/knapsack_dp_step9.png)
 
 - "<10>"
-    ![knapsack_dp_step10](./static/knapsack_dp_step10.png)
+  ![knapsack_dp_step10](./static/knapsack_dp_step10.png)
 
 - "<11>"
-    ![knapsack_dp_step11](./static/knapsack_dp_step11.png)
+  ![knapsack_dp_step11](./static/knapsack_dp_step11.png)
 
 - "<12>"
-    ![knapsack_dp_step12](./static/knapsack_dp_step12.png)
+  ![knapsack_dp_step12](./static/knapsack_dp_step12.png)
 
 - "<13>"
-    ![knapsack_dp_step13](./static/knapsack_dp_step13.png)
+  ![knapsack_dp_step13](./static/knapsack_dp_step13.png)
 
 - "<14>"
-    ![knapsack_dp_step14](./static/knapsack_dp_step14.png)
+  ![knapsack_dp_step14](./static/knapsack_dp_step14.png)
 
 ### 空间优化
 
@@ -802,22 +803,22 @@ int knapsackDP(vector<int> &wgt, vector<int> &val, int cap) {
 下图展示了在单个数组下从第 $i = 1$ 行转换至第 $i = 2$ 行的过程。请思考正序遍历和倒序遍历的区别。
 
 - "<1>"
-    ![0-1 背包的空间优化后的动态规划过程](./static/knapsack_dp_comp_step1.png)
+  ![0-1 背包的空间优化后的动态规划过程](./static/knapsack_dp_comp_step1.png)
 
 - "<2>"
-    ![knapsack_dp_comp_step2](./static/knapsack_dp_comp_step2.png)
+  ![knapsack_dp_comp_step2](./static/knapsack_dp_comp_step2.png)
 
 - "<3>"
-    ![knapsack_dp_comp_step3](./static/knapsack_dp_comp_step3.png)
+  ![knapsack_dp_comp_step3](./static/knapsack_dp_comp_step3.png)
 
 - "<4>"
-    ![knapsack_dp_comp_step4](./static/knapsack_dp_comp_step4.png)
+  ![knapsack_dp_comp_step4](./static/knapsack_dp_comp_step4.png)
 
 - "<5>"
-    ![knapsack_dp_comp_step5](./static/knapsack_dp_comp_step5.png)
+  ![knapsack_dp_comp_step5](./static/knapsack_dp_comp_step5.png)
 
 - "<6>"
-    ![knapsack_dp_comp_step6](./static/knapsack_dp_comp_step6.png)
+  ![knapsack_dp_comp_step6](./static/knapsack_dp_comp_step6.png)
 
 在代码实现中，我们仅需将数组 `dp` 的第一维 $i$ 直接删除，并且把内循环更改为倒序遍历即可：
 
@@ -902,22 +903,22 @@ int unboundedKnapsackDP(vector<int> &wgt, vector<int> &val, int cap) {
 这个遍历顺序与 0-1 背包正好相反。请借助下图来理解两者的区别。
 
 - "<1>"
-    ![完全背包问题在空间优化后的动态规划过程](./static/unbounded_knapsack_dp_comp_step1.png)
+  ![完全背包问题在空间优化后的动态规划过程](./static/unbounded_knapsack_dp_comp_step1.png)
 
 - "<2>"
-    ![unbounded_knapsack_dp_comp_step2](./static/unbounded_knapsack_dp_comp_step2.png)
+  ![unbounded_knapsack_dp_comp_step2](./static/unbounded_knapsack_dp_comp_step2.png)
 
 - "<3>"
-    ![unbounded_knapsack_dp_comp_step3](./static/unbounded_knapsack_dp_comp_step3.png)
+  ![unbounded_knapsack_dp_comp_step3](./static/unbounded_knapsack_dp_comp_step3.png)
 
 - "<4>"
-    ![unbounded_knapsack_dp_comp_step4](./static/unbounded_knapsack_dp_comp_step4.png)
+  ![unbounded_knapsack_dp_comp_step4](./static/unbounded_knapsack_dp_comp_step4.png)
 
 - "<5>"
-    ![unbounded_knapsack_dp_comp_step5](./static/unbounded_knapsack_dp_comp_step5.png)
+  ![unbounded_knapsack_dp_comp_step5](./static/unbounded_knapsack_dp_comp_step5.png)
 
 - "<6>"
-    ![unbounded_knapsack_dp_comp_step6](./static/unbounded_knapsack_dp_comp_step6.png)
+  ![unbounded_knapsack_dp_comp_step6](./static/unbounded_knapsack_dp_comp_step6.png)
 
 代码实现比较简单，仅需将数组 `dp` 的第一维删除：
 
@@ -1018,49 +1019,49 @@ int coinChangeDP(vector<int> &coins, int amt) {
 下图展示了零钱兑换的动态规划过程，和完全背包问题非常相似。
 
 - "<1>"
-    ![零钱兑换问题的动态规划过程](./static/coin_change_dp_step1.png)
+  ![零钱兑换问题的动态规划过程](./static/coin_change_dp_step1.png)
 
 - "<2>"
-    ![coin_change_dp_step2](./static/coin_change_dp_step2.png)
+  ![coin_change_dp_step2](./static/coin_change_dp_step2.png)
 
 - "<3>"
-    ![coin_change_dp_step3](./static/coin_change_dp_step3.png)
+  ![coin_change_dp_step3](./static/coin_change_dp_step3.png)
 
 - "<4>"
-    ![coin_change_dp_step4](./static/coin_change_dp_step4.png)
+  ![coin_change_dp_step4](./static/coin_change_dp_step4.png)
 
 - "<5>"
-    ![coin_change_dp_step5](./static/coin_change_dp_step5.png)
+  ![coin_change_dp_step5](./static/coin_change_dp_step5.png)
 
 - "<6>"
-    ![coin_change_dp_step6](./static/coin_change_dp_step6.png)
+  ![coin_change_dp_step6](./static/coin_change_dp_step6.png)
 
 - "<7>"
-    ![coin_change_dp_step7](./static/coin_change_dp_step7.png)
+  ![coin_change_dp_step7](./static/coin_change_dp_step7.png)
 
 - "<8>"
-    ![coin_change_dp_step8](./static/coin_change_dp_step8.png)
+  ![coin_change_dp_step8](./static/coin_change_dp_step8.png)
 
 - "<9>"
-    ![coin_change_dp_step9](./static/coin_change_dp_step9.png)
+  ![coin_change_dp_step9](./static/coin_change_dp_step9.png)
 
 - "<10>"
-    ![coin_change_dp_step10](./static/coin_change_dp_step10.png)
+  ![coin_change_dp_step10](./static/coin_change_dp_step10.png)
 
 - "<11>"
-    ![coin_change_dp_step11](./static/coin_change_dp_step11.png)
+  ![coin_change_dp_step11](./static/coin_change_dp_step11.png)
 
 - "<12>"
-    ![coin_change_dp_step12](./static/coin_change_dp_step12.png)
+  ![coin_change_dp_step12](./static/coin_change_dp_step12.png)
 
 - "<13>"
-    ![coin_change_dp_step13](./static/coin_change_dp_step13.png)
+  ![coin_change_dp_step13](./static/coin_change_dp_step13.png)
 
 - "<14>"
-    ![coin_change_dp_step14](./static/coin_change_dp_step14.png)
+  ![coin_change_dp_step14](./static/coin_change_dp_step14.png)
 
 - "<15>"
-    ![coin_change_dp_step15](./static/coin_change_dp_step15.png)
+  ![coin_change_dp_step15](./static/coin_change_dp_step15.png)
 
 ### 空间优化
 
@@ -1168,7 +1169,7 @@ int coinChangeIIDPComp(vector<int> &coins, int amt) {
 编辑距离，也称 Levenshtein 距离，指两个字符串之间互相转换的最少修改次数，通常用于在信息检索和自然语言处理中度量两个序列的相似度。
 
 ## 输入两个字符串 $s$ 和 $t$ ，返回将 $s$ 转换为 $t$ 所需的最少编辑步数。
-    
+
     你可以在一个字符串中进行三种编辑操作：插入一个字符、删除一个字符、将字符替换为任意一个字符。
 
 如下图所示，将 `kitten` 转换为 `sitting` 需要编辑 3 步，包括 2 次替换操作与 1 次添加操作；将 `hello` 转换为 `algo` 需要 3 步，包括 2 次替换操作和 1 次删除操作。
@@ -1261,49 +1262,49 @@ int editDistanceDP(string s, string t) {
 如下图所示，编辑距离问题的状态转移过程与背包问题非常类似，都可以看作填写一个二维网格的过程。
 
 - "<1>"
-    ![编辑距离的动态规划过程](./static/edit_distance_dp_step1.png)
+  ![编辑距离的动态规划过程](./static/edit_distance_dp_step1.png)
 
 - "<2>"
-    ![edit_distance_dp_step2](./static/edit_distance_dp_step2.png)
+  ![edit_distance_dp_step2](./static/edit_distance_dp_step2.png)
 
 - "<3>"
-    ![edit_distance_dp_step3](./static/edit_distance_dp_step3.png)
+  ![edit_distance_dp_step3](./static/edit_distance_dp_step3.png)
 
 - "<4>"
-    ![edit_distance_dp_step4](./static/edit_distance_dp_step4.png)
+  ![edit_distance_dp_step4](./static/edit_distance_dp_step4.png)
 
 - "<5>"
-    ![edit_distance_dp_step5](./static/edit_distance_dp_step5.png)
+  ![edit_distance_dp_step5](./static/edit_distance_dp_step5.png)
 
 - "<6>"
-    ![edit_distance_dp_step6](./static/edit_distance_dp_step6.png)
+  ![edit_distance_dp_step6](./static/edit_distance_dp_step6.png)
 
 - "<7>"
-    ![edit_distance_dp_step7](./static/edit_distance_dp_step7.png)
+  ![edit_distance_dp_step7](./static/edit_distance_dp_step7.png)
 
 - "<8>"
-    ![edit_distance_dp_step8](./static/edit_distance_dp_step8.png)
+  ![edit_distance_dp_step8](./static/edit_distance_dp_step8.png)
 
 - "<9>"
-    ![edit_distance_dp_step9](./static/edit_distance_dp_step9.png)
+  ![edit_distance_dp_step9](./static/edit_distance_dp_step9.png)
 
 - "<10>"
-    ![edit_distance_dp_step10](./static/edit_distance_dp_step10.png)
+  ![edit_distance_dp_step10](./static/edit_distance_dp_step10.png)
 
 - "<11>"
-    ![edit_distance_dp_step11](./static/edit_distance_dp_step11.png)
+  ![edit_distance_dp_step11](./static/edit_distance_dp_step11.png)
 
 - "<12>"
-    ![edit_distance_dp_step12](./static/edit_distance_dp_step12.png)
+  ![edit_distance_dp_step12](./static/edit_distance_dp_step12.png)
 
 - "<13>"
-    ![edit_distance_dp_step13](./static/edit_distance_dp_step13.png)
+  ![edit_distance_dp_step13](./static/edit_distance_dp_step13.png)
 
 - "<14>"
-    ![edit_distance_dp_step14](./static/edit_distance_dp_step14.png)
+  ![edit_distance_dp_step14](./static/edit_distance_dp_step14.png)
 
 - "<15>"
-    ![edit_distance_dp_step15](./static/edit_distance_dp_step15.png)
+  ![edit_distance_dp_step15](./static/edit_distance_dp_step15.png)
 
 ### 空间优化
 

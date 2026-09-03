@@ -1545,6 +1545,7 @@ else {
 ```
 
 - 示例
+
 ```cpp
 #include <iostream>
 using namespace std;
@@ -1593,7 +1594,7 @@ node* createLinkedList(int n) {
         newNode->data = i * 10;  // 初始化节点的 data 值为 i*10
         newNode->pre = prev;     // 当前节点的前驱指向前一个节点
         newNode->next = nullptr; // 当前节点的后继指向空（最后一个节点）
-        
+
         // 将新节点链接到链表中
         if (prev != nullptr)
             prev->next = newNode; // 前一个节点的后继指向当前节点
@@ -1606,7 +1607,7 @@ node* createLinkedList(int n) {
 
 int main() {
     node *head = createLinkedList(5);
-    
+
     cout << "原始链表：";
     printLinkedList(head);
 
@@ -1853,7 +1854,6 @@ void reverseList(Node*& head) {
     head = temp->prev; // 更新头指针为原链表的尾结点
 }
 ```
-
 
 ### 6. 循环链表的应用举例
 

@@ -19,12 +19,12 @@ tag:
     <img src="./static/graph-01.png" alt="graph" width="80%">
 </div>
 
-$$ 
-\begin{aligned} 
+$$
+\begin{aligned}
 V & = \{ 1, 2, 3, 4, 5 \} \\
 E & = \{ (1,2), (1,3), (1,5), (2,3), (2,4), (2,5), (4,5) \} \\
 G & = \{ V, E \} \\
-\end{aligned} 
+\end{aligned}
 $$
 
 在图数据结构中，**顶点**可以看作节点，**边**则是连接这些节点的引用（指针）。图是一种从链表和树数据结构扩展而来的更复杂的结构。
@@ -48,7 +48,6 @@ $$
     <img src="./static/graph-02.png" alt="graph" width="80%">
 </div>
 
-
 ### 2. 按顶点的连通性分类
 
 - **连通图（Connected Graph）**：从某个顶点出发可以到达其他所有顶点。
@@ -59,7 +58,6 @@ $$
 <div class="my-img text-center">
     <img src="./static/graph-03.png" alt="graph" width="80%">
 </div>
-
 
 ### 3. 按边的权重分类
 
@@ -88,7 +86,6 @@ $$
     <img src="./static/graph-05.png" alt="graph" width="80%">
 </div>
 
-
 **邻接矩阵的特性：**
 
 - 顶点不能与自身相连，因此主对角线元素没有意义。
@@ -96,7 +93,6 @@ $$
 - 可以通过将矩阵元素替换为权重表示有权图。
 
 邻接矩阵适合快速访问边（时间复杂度 $O(1)$），但空间复杂度为 $O(n^2)$，内存占用较多。
-
 
 ### 2. 邻接表（Adjacency List）
 
@@ -115,11 +111,11 @@ $$
 
 图广泛应用于建模各种现实系统，以下是常见的图应用及对应的计算问题：
 
-| 现实系统    | 顶点      | 边              | 图计算问题         |
-| ----------- | --------- | --------------- | ------------------ |
-| 社交网络    | 用户      | 好友关系        | 潜在好友推荐       |
-| 地铁线路    | 站点      | 站点间的连通性  | 最短路线推荐       |
-| 太阳系      | 星体      | 星体间的万有引力 | 行星轨道计算       |
+| 现实系统 | 顶点 | 边               | 图计算问题   |
+| -------- | ---- | ---------------- | ------------ |
+| 社交网络 | 用户 | 好友关系         | 潜在好友推荐 |
+| 地铁线路 | 站点 | 站点间的连通性   | 最短路线推荐 |
+| 太阳系   | 星体 | 星体间的万有引力 | 行星轨道计算 |
 
 ## 图的基础操作
 
@@ -134,35 +130,35 @@ $$
 - **删除顶点**：在邻接矩阵中删除一行一列。当删除首行首列时达到最差情况，需要将 $(n-1)^2$ 个元素“向左上移动”，从而使用 $O(n^2)$ 时间。
 - **初始化**：传入 $n$ 个顶点，初始化长度为 $n$ 的顶点列表 `vertices` ，使用 $O(n)$ 时间；初始化 $n \times n$ 大小的邻接矩阵 `adjMat` ，使用 $O(n^2)$ 时间。
 
-1. "初始化邻接矩阵"  
+1. "初始化邻接矩阵"
 
-	<div class="my-img text-center">
-    	<img src="./static/graph-10.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-10.png" alt="graph" width="80%">
+ </div>
 
 2. "添加边"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-11.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-11.png" alt="graph" width="80%">
+ </div>
 
 3. "删除边"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-12.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-12.png" alt="graph" width="80%">
+ </div>
 
 4. "添加顶点"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-13.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-13.png" alt="graph" width="80%">
+ </div>
 
 5. "删除顶点"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-14.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-14.png" alt="graph" width="80%">
+ </div>
 
 ### 基于邻接表的实现
 
@@ -176,33 +172,33 @@ $$
 
 1. "初始化邻接表"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-15.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-15.png" alt="graph" width="80%">
+ </div>
 
 2. "添加边"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-16.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-16.png" alt="graph" width="80%">
+ </div>
 
 3. "删除边"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-17.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-17.png" alt="graph" width="80%">
+ </div>
 
 4. "添加顶点"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-18.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-18.png" alt="graph" width="80%">
+ </div>
 
 5. "删除顶点"
 
-	<div class="my-img text-center">
-		<img src="./static/graph-19.png" alt="graph" width="80%">
-	</div>
+ <div class="my-img text-center">
+ 	<img src="./static/graph-19.png" alt="graph" width="80%">
+ </div>
 
 ### 效率对比
 
@@ -245,7 +241,7 @@ BFS 通常借助队列来实现，代码如下所示。队列具有“先入先�
 
 为了防止重复遍历顶点，我们需要借助一个哈希集合 `visited` 来记录哪些节点已被访问。
 
->哈希集合可以看作一个只存储 `key` 而不存储 `value` 的哈希表，它可以在 $O(1)$ 时间复杂度下进行 `key` 的增删查改操作。根据 `key` 的唯一性，哈希集合通常用于数据去重等场景。
+> 哈希集合可以看作一个只存储 `key` 而不存储 `value` 的哈希表，它可以在 $O(1)$ 时间复杂度下进行 `key` 的增删查改操作。根据 `key` 的唯一性，哈希集合通常用于数据去重等场景。
 
 ```cpp
 #include <iostream>
@@ -309,6 +305,7 @@ int main() {
 ```
 
 #### 代码解析：
+
 1. **结构体 `Vertex`**：用于存储每个顶点的邻接顶点列表（使用 `vector<int>`）。
 2. **邻接表**：使用 `vector<Vertex>` 存储图的所有顶点，其中每个 `Vertex` 的 `neighbors` 保存与该顶点直接相连的其他顶点。
 3. **手动添加边**：直接操作 `graph` 数组来添加边。
@@ -317,7 +314,7 @@ int main() {
 在广度优先遍历 (BFS) 中，`unordered_set` 的作用是记录已经访问过的顶点，以避免重复访问同一个顶点。因为在图中，可能存在环或多个顶点指向同一个顶点。如果不进行标记，BFS 可能会陷入无限循环，或者多次访问同一个顶点，导致错误的遍历顺序。
 
 - 举例说明：
-假设有以下无向图：
+  假设有以下无向图：
 
 ```
   0
@@ -337,6 +334,7 @@ int main() {
 因此，为了防止这种情况，需要一个数据结构来记录哪些顶点已经被访问过。`unordered_set` 由于其查找、插入的时间复杂度是 $O(1)$，是非常合适的选择。每次访问一个顶点后，将该顶点加入 `unordered_set`，之后如果遇到已经存在于 `unordered_set` 中的顶点，就不再进行访问和处理。
 
 - 示例解释：
+
 ```cpp
 unordered_set<int> visited;
 ```
@@ -407,7 +405,7 @@ unordered_set<int> visited;
 
 > question "广度优先遍历的序列是否唯一？"
 
->    不唯一。广度优先遍历只要求按“由近及远”的顺序遍历，**而多个相同距离的顶点的遍历顺序允许被任意打乱**。以上图为例，顶点 $1$、$3$ 的访问顺序可以交换，顶点 $2$、$4$、$6$ 的访问顺序也可以任意交换。
+> 不唯一。广度优先遍历只要求按“由近及远”的顺序遍历，**而多个相同距离的顶点的遍历顺序允许被任意打乱**。以上图为例，顶点 $1$、$3$ 的访问顺序可以交换，顶点 $2$、$4$、$6$ 的访问顺序也可以任意交换。
 
 #### 复杂度分析
 
@@ -482,12 +480,14 @@ int main() {
 ```
 
 #### 代码解析：
+
 1. **DFS 函数**：递归地遍历图，从 `currentVertex` 顶点开始，首先标记该顶点为已访问，之后对其所有未访问的邻接顶点递归调用 `DFS`。
 2. **visited 集合**：与 BFS 类似，`unordered_set` 用于记录已经访问的顶点，避免重复访问。
 3. **邻接表**：使用 `vector<Vertex>` 存储图的所有顶点及其邻接顶点列表。
 4. **主函数 `main`**：构建图并调用 `DFS` 函数，从顶点 `0` 开始进行深度优先遍历。
 
 #### 递归实现：
+
 在这个递归实现中，深度优先遍历会尽可能深入到图的某条路径的尽头，然后回溯到上一个节点，继续尝试其他路径，直到所有顶点都被访问过。这种“先深入，再回溯”的思想是 DFS 的核心。
 
 深度优先遍历的算法流程如下图所示。
@@ -547,7 +547,7 @@ int main() {
 
 > question "深度优先遍历的序列是否唯一？"
 
->    与广度优先遍历类似，深度优先遍历序列的顺序也不是唯一的。给定某顶点，先往哪个方向探索都可以，即邻接顶点的顺序可以任意打乱，都是深度优先遍历。
+> 与广度优先遍历类似，深度优先遍历序列的顺序也不是唯一的。给定某顶点，先往哪个方向探索都可以，即邻接顶点的顺序可以任意打乱，都是深度优先遍历。
 
 以树的遍历为例，“根 $\rightarrow$ 左 $\rightarrow$ 右”“左 $\rightarrow$ 根 $\rightarrow$ 右”“左 $\rightarrow$ 右 $\rightarrow$ 根”分别对应前序、中序、后序遍历，它们展示了三种遍历优先级，然而这三者都属于深度优先遍历。
 
@@ -585,7 +585,7 @@ int main() {
 拓扑排序在实际应用中非常重要，特别是在需要处理具有优先级关系或依赖关系的任务时。例如：
 
 - **课程安排**：如果某门课程需要先修其他课程，那么这些课程和它们之间的先修关系可以用有向无环图表示。拓扑排序可以帮助我们找到一种合理的选课顺序，使得每门课程的先修要求都得到满足。
-  
+
 - **编译器设计**：在编译一个程序时，必须先编译其所依赖的模块。通过拓扑排序，可以确定一个合理的编译顺序，确保所有模块按依赖关系正确编译。
 
 ### 3. 实现方法
@@ -619,7 +619,7 @@ int main() {
     <img src="./static/graph-09.png" alt="graph" width="100%">
 </div>
 
-###  4. C++ 代码实现
+### 4. C++ 代码实现
 
 以下是使用 BFS 实现的 C++ 代码：
 

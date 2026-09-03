@@ -4,7 +4,10 @@ import { useRoute } from "vuepress/client";
 
 const route = useRoute();
 // 取路径，例如 /posts/intro.html -> posts/intro
-const slug = route.path.replace(/^\//, "").replace(/\.html$/, "").replace(/\/$/, "");
+const slug = route.path
+  .replace(/^\//, "")
+  .replace(/\.html$/, "")
+  .replace(/\/$/, "");
 
 const loading = ref(false);
 const summary = ref("");

@@ -3,9 +3,7 @@ name = "lxy-blog-admin"
 main = "worker.js"
 workers_dev = true
 
-routes = [
-  "blog-api.liuxiyu.cn/*"
-]
+routes = ["blog-api.liuxiyu.cn/*"]
 
 [[d1_databases]]
 binding = "DB"

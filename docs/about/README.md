@@ -129,47 +129,47 @@ tag:
 
 ### ⚙️ dependencies（运行期）
 
-| 包名 | 版本 | 用途 |
-| ---- | ---- | ---- |
-| [vuepress-theme-hope](https://theme-hope.vuejs.press/) | `2.0.0-rc.107` | 本站主题（功能全家桶） |
-| [@vercel/blob](https://www.npmjs.com/package/@vercel/blob) | `^2.7.0` | 附件上传下载（Vercel Blob 存储） |
-| [element-plus](https://www.npmjs.com/package/element-plus) | `^2.7.4` | Vue 组件库 |
-| [cross-env](https://www.npmjs.com/package/cross-env) | `^10.0.0` | 跨平台环境变量 |
+| 包名                                                       | 版本           | 用途                             |
+| ---------------------------------------------------------- | -------------- | -------------------------------- |
+| [vuepress-theme-hope](https://theme-hope.vuejs.press/)     | `2.0.0-rc.107` | 本站主题（功能全家桶）           |
+| [@vercel/blob](https://www.npmjs.com/package/@vercel/blob) | `^2.7.0`       | 附件上传下载（Vercel Blob 存储） |
+| [element-plus](https://www.npmjs.com/package/element-plus) | `^2.7.4`       | Vue 组件库                       |
+| [cross-env](https://www.npmjs.com/package/cross-env)       | `^10.0.0`      | 跨平台环境变量                   |
 
 ### 🛠️ devDependencies（构建期）
 
-| 包名 | 版本 | 用途 |
-| ---- | ---- | ---- |
-| [vuepress](https://v2.vuepress.vuejs.org/zh/) | `2.0.0-rc.30` | 核心框架 |
-| [@vuepress/bundler-vite](https://v2.vuepress.vuejs.org/zh/reference/bundler/vite.html) | `^2.0.0-rc.30` | Vite 打包器 |
-| [@vuepress/plugin-back-to-top](https://ecosystem.vuejs.press/plugins/features/back-to-top.html) | `2.0.0-rc.130` | 返回顶部 |
-| [@vuepress/plugin-feed](https://ecosystem.vuejs.press/plugins/blog/feed/config.html) | `2.0.0-rc.130` | RSS/Atom 订阅 |
-| [@vuepress/plugin-pwa](https://ecosystem.vuejs.press/plugins/pwa/pwa.html) | `2.0.0-rc.130` | 离线 PWA |
-| [@vuepress/plugin-slimsearch](https://ecosystem.vuejs.press/plugins/search/slimsearch.html) | `2.0.0-rc.130` | 本地全文搜索 |
-| [vue](https://www.npmjs.com/package/vue) | `^3.5.41` | Vue 3 框架 |
-| [vite](https://www.npmjs.com/package/vite) | `^8.2.2` | 构建工具 |
-| [katex](https://www.npmjs.com/package/katex) | `^0.18.0` | 数学公式渲染 |
-| [mermaid](https://www.npmjs.com/package/mermaid) | `^11.14.0` | 图表绘制 |
-| [sass](https://www.npmjs.com/package/sass) | `^1.101.0` | 样式预处理器 |
-| [highlight.js](https://www.npmjs.com/package/highlight.js) | `^11.11.1` | 代码高亮 |
-| [esbuild](https://www.npmjs.com/package/esbuild) | `^0.28.0` | 快速打包器 |
-| [patch-package](https://www.npmjs.com/package/patch-package) | `^8.0.1` | 依赖补丁（修复 SSR bug） |
-| [oxfmt](https://www.npmjs.com/package/oxfmt) | `0.63.0` | 代码格式检查 |
-| [vidstack](https://www.npmjs.com/package/vidstack) | `^1.12.13` | 视频播放 |
-| [md5](https://www.npmjs.com/package/md5) | `^2.3.0` | MD5 哈希（上传鉴权） |
-| [moment](https://www.npmjs.com/package/moment) | `^2.30.1` | 时间处理 |
-| [node-fetch](https://www.npmjs.com/package/node-fetch) | `^3.3.2` | HTTP 请求 |
-| [browserslist](https://www.npmjs.com/package/browserslist) | `^4.24.3` | 浏览器兼容目标 |
-| [caniuse-lite](https://www.npmjs.com/package/caniuse-lite) | `^1.0.30001718` | 浏览器数据 |
-| [cpu](https://www.npmjs.com/package/cpu) | `^1.0.1` | 硬件信息 |
-| [fs](https://www.npmjs.com/package/fs) | `^0.0.1-security` | 文件系统 |
-| [hash](https://www.npmjs.com/package/hash) | `^0.2.1` | 哈希工具 |
-| [unpipe](https://www.npmjs.com/package/unpipe) | `^1.0.0` | 流工具 |
-| [update-browserslist-db](https://www.npmjs.com/package/update-browserslist-db) | `^1.1.3` | 浏览器库更新 |
-| [vp-update](https://www.npmjs.com/package/vp-update) | `^2.0.0-rc.15` | 版本检查 |
-| [wmic](https://www.npmjs.com/package/wmic) | `^1.1.1` | 系统信息（Windows） |
-| [wrappy](https://www.npmjs.com/package/wrappy) | `^1.0.2` | 工具函数 |
-| [yarn](https://www.npmjs.com/package/yarn) | `1.22.22` | 包管理器 |
+| 包名                                                                                            | 版本              | 用途                     |
+| ----------------------------------------------------------------------------------------------- | ----------------- | ------------------------ |
+| [vuepress](https://v2.vuepress.vuejs.org/zh/)                                                   | `2.0.0-rc.30`     | 核心框架                 |
+| [@vuepress/bundler-vite](https://v2.vuepress.vuejs.org/zh/reference/bundler/vite.html)          | `^2.0.0-rc.30`    | Vite 打包器              |
+| [@vuepress/plugin-back-to-top](https://ecosystem.vuejs.press/plugins/features/back-to-top.html) | `2.0.0-rc.130`    | 返回顶部                 |
+| [@vuepress/plugin-feed](https://ecosystem.vuejs.press/plugins/blog/feed/config.html)            | `2.0.0-rc.130`    | RSS/Atom 订阅            |
+| [@vuepress/plugin-pwa](https://ecosystem.vuejs.press/plugins/pwa/pwa.html)                      | `2.0.0-rc.130`    | 离线 PWA                 |
+| [@vuepress/plugin-slimsearch](https://ecosystem.vuejs.press/plugins/search/slimsearch.html)     | `2.0.0-rc.130`    | 本地全文搜索             |
+| [vue](https://www.npmjs.com/package/vue)                                                        | `^3.5.41`         | Vue 3 框架               |
+| [vite](https://www.npmjs.com/package/vite)                                                      | `^8.2.2`          | 构建工具                 |
+| [katex](https://www.npmjs.com/package/katex)                                                    | `^0.18.0`         | 数学公式渲染             |
+| [mermaid](https://www.npmjs.com/package/mermaid)                                                | `^11.14.0`        | 图表绘制                 |
+| [sass](https://www.npmjs.com/package/sass)                                                      | `^1.101.0`        | 样式预处理器             |
+| [highlight.js](https://www.npmjs.com/package/highlight.js)                                      | `^11.11.1`        | 代码高亮                 |
+| [esbuild](https://www.npmjs.com/package/esbuild)                                                | `^0.28.0`         | 快速打包器               |
+| [patch-package](https://www.npmjs.com/package/patch-package)                                    | `^8.0.1`          | 依赖补丁（修复 SSR bug） |
+| [oxfmt](https://www.npmjs.com/package/oxfmt)                                                    | `0.63.0`          | 代码格式检查             |
+| [vidstack](https://www.npmjs.com/package/vidstack)                                              | `^1.12.13`        | 视频播放                 |
+| [md5](https://www.npmjs.com/package/md5)                                                        | `^2.3.0`          | MD5 哈希（上传鉴权）     |
+| [moment](https://www.npmjs.com/package/moment)                                                  | `^2.30.1`         | 时间处理                 |
+| [node-fetch](https://www.npmjs.com/package/node-fetch)                                          | `^3.3.2`          | HTTP 请求                |
+| [browserslist](https://www.npmjs.com/package/browserslist)                                      | `^4.24.3`         | 浏览器兼容目标           |
+| [caniuse-lite](https://www.npmjs.com/package/caniuse-lite)                                      | `^1.0.30001718`   | 浏览器数据               |
+| [cpu](https://www.npmjs.com/package/cpu)                                                        | `^1.0.1`          | 硬件信息                 |
+| [fs](https://www.npmjs.com/package/fs)                                                          | `^0.0.1-security` | 文件系统                 |
+| [hash](https://www.npmjs.com/package/hash)                                                      | `^0.2.1`          | 哈希工具                 |
+| [unpipe](https://www.npmjs.com/package/unpipe)                                                  | `^1.0.0`          | 流工具                   |
+| [update-browserslist-db](https://www.npmjs.com/package/update-browserslist-db)                  | `^1.1.3`          | 浏览器库更新             |
+| [vp-update](https://www.npmjs.com/package/vp-update)                                            | `^2.0.0-rc.15`    | 版本检查                 |
+| [wmic](https://www.npmjs.com/package/wmic)                                                      | `^1.1.1`          | 系统信息（Windows）      |
+| [wrappy](https://www.npmjs.com/package/wrappy)                                                  | `^1.0.2`          | 工具函数                 |
+| [yarn](https://www.npmjs.com/package/yarn)                                                      | `1.22.22`         | 包管理器                 |
 
 > 📌 依赖版本可能会随更新变化，以上为当前 `package.json` 快照。
 

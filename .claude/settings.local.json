@@ -6,8 +6,6 @@
       "WebFetch(domain:registry.npmjs.org)",
       "WebFetch(domain:vuepress-theme-hope.github.io)"
     ],
-    "additionalDirectories": [
-      "G:\\lecture"
-    ]
+    "additionalDirectories": ["G:\\lecture"]
   }
 }

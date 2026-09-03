@@ -28,7 +28,10 @@ let scriptEl = null;
 
 function loadWasm() {
   return new Promise((resolve, reject) => {
-    if (window.LxyBenchFactory) { resolve(window.LxyBenchFactory); return; }
+    if (window.LxyBenchFactory) {
+      resolve(window.LxyBenchFactory);
+      return;
+    }
     scriptEl = document.createElement("script");
     scriptEl.src = "/wasm/lxybench.js";
     scriptEl.onload = () => resolve(window.LxyBenchFactory);
@@ -48,7 +51,9 @@ onMounted(async () => {
     status.value = "❌ " + e.message;
   }
 });
-onUnmounted(() => { if (scriptEl) scriptEl.remove(); });
+onUnmounted(() => {
+  if (scriptEl) scriptEl.remove();
+});
 
 async function run() {
   if (!loaded.value || running.value) return;
@@ -71,7 +76,10 @@ async function run() {
   }
 }
 
-function pick(i) { current.value = i; run(); }
+function pick(i) {
+  current.value = i;
+  run();
+}
 
 // 运行自定义数据
 async function runCustom() {
@@ -81,16 +89,26 @@ async function runCustom() {
   customError.value = "";
   try {
     const parts = customInput.value.split(/[\s,，;；]+/).filter(Boolean);
-    if (!parts.length) { customError.value = "请输入至少一个数字"; return; }
+    if (!parts.length) {
+      customError.value = "请输入至少一个数字";
+      return;
+    }
     const arr = parts.map(Number);
-    if (arr.some(isNaN)) { customError.value = "包含非数字，请检查"; return; }
+    if (arr.some(isNaN)) {
+      customError.value = "包含非数字，请检查";
+      return;
+    }
     // 写入 WASM 内存
     const buf = mod._malloc(arr.length * 4);
     new Int32Array(mod.HEAPU8.buffer, buf, arr.length).set(arr);
     const ptr = mod._run_custom(buf, arr.length);
     const s = mod.UTF8ToString(ptr);
     const d = JSON.parse(s);
-    if (d.error) { customError.value = d.error; mod._free(buf); return; }
+    if (d.error) {
+      customError.value = d.error;
+      mod._free(buf);
+      return;
+    }
     customResult.value = d;
     mod._free(buf);
   } catch (e) {
@@ -110,9 +128,14 @@ async function runCustom() {
     </p>
 
     <div class="bench-patterns">
-      <button v-for="p in patterns" :key="p.id" class="pattern"
-        :class="{ active: current === p.id }" @click="pick(p.id)"
-        :title="p.desc">
+      <button
+        v-for="p in patterns"
+        :key="p.id"
+        class="pattern"
+        :class="{ active: current === p.id }"
+        @click="pick(p.id)"
+        :title="p.desc"
+      >
         {{ p.name }}
       </button>
     </div>
@@ -120,7 +143,10 @@ async function runCustom() {
     <div class="bench-status" :class="{ running }">
       <span v-if="!loaded">{{ status }}</span>
       <span v-else-if="running">⏳ {{ status }}…</span>
-      <span v-else-if="results">✅ {{ status }}（最佳算法：<b>{{ bestAlgo }}</b>）</span>
+      <span v-else-if="results"
+        >✅ {{ status }}（最佳算法：<b>{{ bestAlgo }}</b
+        >）</span
+      >
     </div>
 
     <div v-if="results" class="bench-table-wrap">
@@ -139,33 +165,53 @@ async function runCustom() {
             <td>{{ n >= 1000 ? (n / 1000).toFixed(0) + "k" : n }}</td>
             <td>{{ results["n" + n].lxy.toFixed(4) }} ms</td>
             <td>{{ results["n" + n].std.toFixed(4) }} ms</td>
-            <td :class="results['n'+n].lxy <= results['n'+n].std ? 'win' : 'lose'">
-              {{ (results["n"+n].std / results["n"+n].lxy).toFixed(2) }}x
-              <span v-if="results['n'+n].lxy <= results['n'+n].std">🟢</span>
+            <td :class="results['n' + n].lxy <= results['n' + n].std ? 'win' : 'lose'">
+              {{ (results["n" + n].std / results["n" + n].lxy).toFixed(2) }}x
+              <span v-if="results['n' + n].lxy <= results['n' + n].std">🟢</span>
               <span v-else>🔴</span>
             </td>
-            <td class="algo">{{ results["n"+n].algo }}</td>
+            <td class="algo">{{ results["n" + n].algo }}</td>
           </tr>
         </tbody>
       </table>
       <p class="bench-note">
-        数值越小越快。🟢 表示 lxySort 更快；🔴 表示 std::sort 更快。不同机器性能不同，这里是在你的浏览器里实时跑的。
+        数值越小越快。🟢 表示 lxySort 更快；🔴 表示 std::sort
+        更快。不同机器性能不同，这里是在你的浏览器里实时跑的。
       </p>
     </div>
 
     <div class="bench-custom">
       <h4>✏️ 自定义数据</h4>
-      <p class="bench-custom-sub">输入你自己的数组（空格或逗号分隔），在你的设备上对比 lxySort 和 std::sort：</p>
+      <p class="bench-custom-sub">
+        输入你自己的数组（空格或逗号分隔），在你的设备上对比 lxySort 和 std::sort：
+      </p>
       <div class="bench-custom-row">
-        <input v-model="customInput" @keyup.enter="runCustom" placeholder="例如：5 2 8 1 9 3 7 6 4" />
-        <button class="run-btn" @click="runCustom" :disabled="customRunning">{{ customRunning ? "测试中..." : "▶ 测试" }}</button>
+        <input
+          v-model="customInput"
+          @keyup.enter="runCustom"
+          placeholder="例如：5 2 8 1 9 3 7 6 4"
+        />
+        <button class="run-btn" @click="runCustom" :disabled="customRunning">
+          {{ customRunning ? "测试中..." : "▶ 测试" }}
+        </button>
       </div>
       <div v-if="customError" class="bench-custom-err">⚠️ {{ customError }}</div>
       <div v-if="customResult" class="bench-custom-result">
-        <span class="cr">lxySort: <b>{{ customResult.lxy.toFixed(4) }} ms</b></span>
-        <span class="cr">std::sort: <b>{{ customResult.std.toFixed(4) }} ms</b></span>
-        <span class="cr">加速: <b :class="customResult.lxy <= customResult.std ? 'cr-win' : 'cr-lose'">{{ (customResult.std / customResult.lxy).toFixed(2) }}x</b></span>
-        <span class="cr">分支: <b class="cr-algo">{{ customResult.algo }}</b></span>
+        <span class="cr"
+          >lxySort: <b>{{ customResult.lxy.toFixed(4) }} ms</b></span
+        >
+        <span class="cr"
+          >std::sort: <b>{{ customResult.std.toFixed(4) }} ms</b></span
+        >
+        <span class="cr"
+          >加速:
+          <b :class="customResult.lxy <= customResult.std ? 'cr-win' : 'cr-lose'"
+            >{{ (customResult.std / customResult.lxy).toFixed(2) }}x</b
+          ></span
+        >
+        <span class="cr"
+          >分支: <b class="cr-algo">{{ customResult.algo }}</b></span
+        >
       </div>
     </div>
 
@@ -184,38 +230,145 @@ async function runCustom() {
   margin: 1rem 0;
   background: var(--c-bg-lighter);
 }
-.bench-title { margin: 0 0 0.3rem; font-size: 1.05rem; }
-.bench-sub { font-size: 0.85rem; color: var(--c-text-light); margin: 0 0 0.8rem; line-height: 1.6; }
-.bench-sub code { background: var(--c-bg-light); padding: 1px 5px; border-radius: 3px; }
-.bench-patterns { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.6rem; }
+.bench-title {
+  margin: 0 0 0.3rem;
+  font-size: 1.05rem;
+}
+.bench-sub {
+  font-size: 0.85rem;
+  color: var(--c-text-light);
+  margin: 0 0 0.8rem;
+  line-height: 1.6;
+}
+.bench-sub code {
+  background: var(--c-bg-light);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.bench-patterns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
 .pattern {
-  border: 1px solid var(--c-border); border-radius: 6px;
-  background: var(--c-bg); color: var(--c-text);
-  padding: 0.3rem 0.7rem; font-size: 0.78rem; cursor: pointer;
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  background: var(--c-bg);
+  color: var(--c-text);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  cursor: pointer;
   transition: all 0.2s;
 }
-.pattern:hover { border-color: #6366f1; color: #6366f1; }
-.pattern.active { background: #6366f1; color: #fff; border-color: #6366f1; }
-.bench-status { font-size: 0.85rem; margin-bottom: 0.8rem; min-height: 1.3em; }
-.bench-status.running { color: #6366f1; }
-.bench-table-wrap { overflow-x: auto; }
-.bench-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-.bench-table th, .bench-table td { padding: 0.4rem 0.6rem; border: 1px solid var(--c-border); text-align: center; white-space: nowrap; }
-.bench-table th { background: var(--c-bg); font-weight: 600; }
-.bench-table td.win { color: #22c55e; font-weight: 700; }
-.bench-table td.lose { color: #ef4444; }
-.bench-table td.algo { color: #6366f1; }
-.bench-note { font-size: 0.75rem; color: var(--c-text-lighter); margin: 0.5rem 0; }
-.bench-custom { margin-top: 1rem; border-top: 1px dashed var(--c-border); padding-top: 0.8rem; }
-.bench-custom h4 { margin: 0 0 0.3rem; font-size: 0.95rem; }
-.bench-custom-sub { font-size: 0.78rem; color: var(--c-text-lighter); margin: 0 0 0.5rem; }
-.bench-custom-row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-.bench-custom-row input { flex: 1; min-width: 200px; padding: 0.45rem 0.6rem; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-bg); color: var(--c-text); font-family: monospace; }
-.bench-custom-err { color: #ef4444; font-size: 0.8rem; margin-top: 0.4rem; }
-.bench-custom-result { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.6rem; font-size: 0.85rem; }
-.cr b.cr-win { color: #22c55e; }
-.cr b.cr-lose { color: #ef4444; }
-.cr b.cr-algo { color: #6366f1; }
-.bench-source { font-size: 0.8rem; color: var(--c-text-light); margin: 0.5rem 0 0; }
-.bench-source a { color: var(--c-brand, #6366f1); }
+.pattern:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+.pattern.active {
+  background: #6366f1;
+  color: #fff;
+  border-color: #6366f1;
+}
+.bench-status {
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+  min-height: 1.3em;
+}
+.bench-status.running {
+  color: #6366f1;
+}
+.bench-table-wrap {
+  overflow-x: auto;
+}
+.bench-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.bench-table th,
+.bench-table td {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--c-border);
+  text-align: center;
+  white-space: nowrap;
+}
+.bench-table th {
+  background: var(--c-bg);
+  font-weight: 600;
+}
+.bench-table td.win {
+  color: #22c55e;
+  font-weight: 700;
+}
+.bench-table td.lose {
+  color: #ef4444;
+}
+.bench-table td.algo {
+  color: #6366f1;
+}
+.bench-note {
+  font-size: 0.75rem;
+  color: var(--c-text-lighter);
+  margin: 0.5rem 0;
+}
+.bench-custom {
+  margin-top: 1rem;
+  border-top: 1px dashed var(--c-border);
+  padding-top: 0.8rem;
+}
+.bench-custom h4 {
+  margin: 0 0 0.3rem;
+  font-size: 0.95rem;
+}
+.bench-custom-sub {
+  font-size: 0.78rem;
+  color: var(--c-text-lighter);
+  margin: 0 0 0.5rem;
+}
+.bench-custom-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.bench-custom-row input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: monospace;
+}
+.bench-custom-err {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+}
+.bench-custom-result {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+}
+.cr b.cr-win {
+  color: #22c55e;
+}
+.cr b.cr-lose {
+  color: #ef4444;
+}
+.cr b.cr-algo {
+  color: #6366f1;
+}
+.bench-source {
+  font-size: 0.8rem;
+  color: var(--c-text-light);
+  margin: 0.5rem 0 0;
+}
+.bench-source a {
+  color: var(--c-brand, #6366f1);
+}
 </style>

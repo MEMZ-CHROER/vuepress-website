@@ -32,6 +32,7 @@ void init(int a[]) {
 ```
 
 - 示例
+
 ```cpp
 #include <iostream>
 #include <string>
@@ -68,6 +69,7 @@ int main() {
 位数的确定：接收时往往是用字符串的，所以它的位数就等于字符串的长度。
 
 - 示例
+
 ```cpp
 #include <iostream>
 #include <string>
@@ -184,7 +186,7 @@ void subtract(int a[], int b[], int c[]) {
 // 乘法函数，将两个长整数数组相乘
 void multiply(int a[], int b[], int c[]) {
     int len1 = a[0], len2 = b[0]; // 获取两个数组的长度
-    
+
     for (int i = 1; i <= len1; ++i) {
         int carry = 0; // 初始化进位
         for (int j = 1; j <= len2; ++j) {
@@ -223,7 +225,7 @@ int main() {
         cout << result[i]; // 输出减法结果
     }
     cout << endl;
-    
+
      // 注意受之前影响 result 是有值的，而我们关于乘法的运算需要涉及 result，所以需初始化
     memset(result, 0, sizeof(result)); // 初始化结果数组为 0
 
@@ -395,7 +397,7 @@ string add(string num1, string num2) {
     if (carry > 0) {
         result.insert(result.begin(), carry + '0');
     }
-    
+
     return result;
 }
 
@@ -423,7 +425,7 @@ string subtract(string num1, string num2) {
 
     // 去除结果中的前导零
     result.erase(0, min(result.find_first_not_of('0'), result.size() - 1));
-    
+
     return result;
 }
 
@@ -445,13 +447,13 @@ string multiply(string num1, string num2) {
 
     // 去除结果中的前导零
     result.erase(0, min(result.find_first_not_of('0'), result.size() - 1));
-    
+
     return result;
 }
 
 int main() {
     string num1, num2;
-    
+
     // 用户输入两个大整数
     cout << "请输入第一个数字：";
     cin >> num1;
@@ -473,6 +475,7 @@ int main() {
     return 0;
 }
 ```
+
 :::
 
 ### 4. 商和余数的求法
@@ -488,6 +491,7 @@ int main() {
 **作用**：`sizeof` 函数用于计算数据类型或者变量的字节大小。
 
 **函数原型**：
+
 ```cpp
 size_t sizeof(type);
 ```
@@ -497,6 +501,7 @@ size_t sizeof(type);
 **返回值**：返回一个 `size_t` 类型的值，表示 `type` 的字节大小。
 
 **示例**：
+
 ```cpp
 size_t size = sizeof(int);
 ```
@@ -512,6 +517,7 @@ size_t size = sizeof(int);
 **作用**：`gets` 函数用于从标准输入流中读取字符串，并将其存储到指定的缓冲区中。
 
 **函数原型**：
+
 ```cpp
 char* gets(char* str);
 ```
@@ -521,6 +527,7 @@ char* gets(char* str);
 **返回值**：返回读取的字符串的地址，即 `str`。
 
 **示例**：
+
 ```cpp
 char buffer[50];
 gets(buffer);
@@ -541,6 +548,7 @@ gets(buffer);
 **作用**：`fgets` 函数用于从指定的输入流中读取字符串，并将其存储到指定的缓冲区中。
 
 **函数原型**：
+
 ```cpp
 char* fgets(char* str, int num, FILE* stream);
 ```
@@ -552,6 +560,7 @@ char* fgets(char* str, int num, FILE* stream);
 **返回值**：若成功，则返回 `str`；若到达文件末尾或发生错误，则返回 `NULL`。
 
 **示例**：
+
 ```cpp
 #include <cstdio>
 
@@ -574,6 +583,7 @@ int main() {
 **作用**：`strlen` 函数用于计算字符串的长度，不包括结尾的空字符 `\0`。
 
 **函数原型**：
+
 ```cpp
 size_t strlen(const char* str);
 ```
@@ -583,6 +593,7 @@ size_t strlen(const char* str);
 **返回值**：返回一个 `size_t` 类型的值，表示 `str` 的字符数，不包括结尾的空字符 `\0`。
 
 **示例**：
+
 ```cpp
 char str[] = "Hello, world!";
 size_t length = strlen(str);
@@ -599,6 +610,7 @@ size_t length = strlen(str);
 **作用**：`memset` 函数用于将指定内存区域的前若干个字节设置为特定的值。
 
 **函数原型**：
+
 ```cpp
 void* memset(void* ptr, int value, size_t num);
 ```
@@ -610,6 +622,7 @@ void* memset(void* ptr, int value, size_t num);
 **返回值**：返回 `ptr`，即指向内存区域的指针。
 
 **示例**：
+
 ```cpp
 char buffer[50];
 memset(buffer, 'A', sizeof(buffer));
@@ -617,7 +630,7 @@ memset(buffer, 'A', sizeof(buffer));
 
 在上面的示例中，`buffer` 中的前 50 个字节将被设置为字符 `'A'`。
 
---- 
+---
 
 ### strcpy函数
 
@@ -626,6 +639,7 @@ memset(buffer, 'A', sizeof(buffer));
 **作用**：strcpy函数用于将一个字符串复制到另一个字符串中，包括字符串的结尾空字符`\0`。
 
 **函数原型**：
+
 ```cpp
 char* strcpy(char* destination, const char* source);
 ```
@@ -756,8 +770,6 @@ int main() {
 }
 ```
 
-
-
 3. 例题：高精度乘法。输入两个正整数,求它们的积。
 
 **【算法分析】**
@@ -791,28 +803,28 @@ using namespace std;
 int main() {
     char al[100], bl[100];
     int a[100], b[100], c[200], lena, lenb, lenc, i, j, x;
-    
+
     // 初始化数组
     memset(a, 0, sizeof(a));
     memset(b, 0, sizeof(b));
     memset(c, 0, sizeof(c));
-    
+
     // 读取输入字符串
     cout << "Enter the first number: ";
     cin.getline(al, sizeof(al));
     cout << "Enter the second number: ";
     cin.getline(bl, sizeof(bl));
-    
+
     // 计算输入字符串的长度
     lena = strlen(al);
     lenb = strlen(bl);
-    
+
     // 将字符转换为整数存入数组中
     for (i = 0; i < lena; i++)
         a[lena - i] = al[i] - '0';
     for (i = 0; i < lenb; i++)
         b[lenb - i] = bl[i] - '0';
-    
+
     // 执行乘法
     for (i = 1; i <= lena; i++) {
         x = 0;
@@ -823,17 +835,17 @@ int main() {
         }
         c[i + lenb] = x;
     }
-    
+
     // 计算乘积的长度
     lenc = lena + lenb;
     while (c[lenc] == 0 && lenc > 1) lenc--;
-    
+
     // 输出乘积
     cout << "Product: ";
     for (i = lenc; i >= 1; i--)
         cout << c[i];
     cout << endl;
-    
+
     return 0;
 }
 ```
@@ -899,6 +911,7 @@ int main() {
 实质上，在进行两个高精度数的运算时，存储高精度数的数组元素可以不仅仅只保留一位数字，而可以采取保留多位数的方式，比如使用整型或长整型数据等。这样，在进行运算时（特别是乘法运算），可以减少很多操作次数。采用4位保存的除法运算，其他运算也类似。
 
 示例：
+
 ```cpp
 123456789 ÷ 45 = 1,234,567,789 ÷ 45
 = 274,3484
@@ -1065,7 +1078,7 @@ STEP1：87 + 78 = 165
 
 STEP2：165 + 561 = 726
 
-STEP3：726 + 627 = 1353 
+STEP3：726 + 627 = 1353
 
 STEP4：1353 + 3531 = 4884
 

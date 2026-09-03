@@ -25,9 +25,9 @@ const mdCandidates = computed(() => {
 });
 
 // 状态
-const showBtn = ref(false);       // 是否显示编辑按钮（登录后）
-const showLogin = ref(false);     // 登录弹窗
-const showEditor = ref(false);    // 编辑弹窗
+const showBtn = ref(false); // 是否显示编辑按钮（登录后）
+const showLogin = ref(false); // 登录弹窗
+const showEditor = ref(false); // 编辑弹窗
 const loginUser = ref("");
 const loginPass = ref("");
 const loginError = ref("");
@@ -41,16 +41,24 @@ const loadingContent = ref(false);
 
 const hasPerm = (p) =>
   session.value &&
-  (session.value.permissions === "all" ||
-    (session.value.permissions || "").indexOf(p) > -1);
+  (session.value.permissions === "all" || (session.value.permissions || "").indexOf(p) > -1);
 
 // ---- 登录 ----
-function openLogin() { showLogin.value = true; showEditor.value = false; }
-function closeLogin() { showLogin.value = false; loginError.value = ""; }
+function openLogin() {
+  showLogin.value = true;
+  showEditor.value = false;
+}
+function closeLogin() {
+  showLogin.value = false;
+  loginError.value = "";
+}
 
 async function doLogin() {
   loginError.value = "";
-  if (!loginUser.value || !loginPass.value) { loginError.value = "请输入用户名和密码"; return; }
+  if (!loginUser.value || !loginPass.value) {
+    loginError.value = "请输入用户名和密码";
+    return;
+  }
   busy.value = true;
   try {
     const r = await fetch(API_BASE + "/api/auth/login", {
@@ -63,7 +71,8 @@ async function doLogin() {
       session.value = d;
       localStorage.setItem("lxy_front_session", JSON.stringify(d));
       showLogin.value = false;
-      loginUser.value = ""; loginPass.value = "";
+      loginUser.value = "";
+      loginPass.value = "";
     } else {
       loginError.value = d.error || "登录失败";
     }
@@ -81,13 +90,22 @@ function logout() {
 
 // ---- 编辑 ----
 function openEditor() {
-  if (!session.value) { openLogin(); return; }
-  if (!mdPath.value) { alert("此页面没有对应的可编辑源文件"); return; }
+  if (!session.value) {
+    openLogin();
+    return;
+  }
+  if (!mdPath.value) {
+    alert("此页面没有对应的可编辑源文件");
+    return;
+  }
   showEditor.value = true;
   loadContent();
 }
 
-function closeEditor() { showEditor.value = false; editorStatus.value = ""; }
+function closeEditor() {
+  showEditor.value = false;
+  editorStatus.value = "";
+}
 
 // 读当前页 md 内容（自动尝试候选路径）
 async function loadContent() {
@@ -98,7 +116,11 @@ async function loadContent() {
   for (const p of mdCandidates.value) {
     try {
       const r = await fetch(API_BASE + "/raw/repos/" + REPO + "/contents/" + p + "?ref=" + BRANCH);
-      if (r.ok) { text = await r.text(); usedPath = p; break; }
+      if (r.ok) {
+        text = await r.text();
+        usedPath = p;
+        break;
+      }
     } catch (e) {}
   }
   if (text === null || usedPath === null) {
@@ -138,21 +160,32 @@ function buildFrontmatter(meta, body) {
   return fm;
 }
 
-function b64enc(s) { return btoa(unescape(encodeURIComponent(s))); }
+function b64enc(s) {
+  return btoa(unescape(encodeURIComponent(s)));
+}
 
 // 保存到 GitHub（复用 admin 的 worker 代理逻辑）
 async function saveContent() {
   if (!session.value) return;
   const savePath = window.__fe_path || mdPath.value;
-  if (!savePath) { editorStatus.value = "❌ 未知保存路径"; return; }
+  if (!savePath) {
+    editorStatus.value = "❌ 未知保存路径";
+    return;
+  }
   editorStatus.value = "保存中...";
   // 重新读取原文件的 sha（GitHub 更新需要）
   try {
-    const metaRes = await fetch(API_BASE + "/api/repos/" + REPO + "/contents/" + savePath + "?ref=" + BRANCH, {
-      headers: { Accept: "application/vnd.github.v3+json" },
-    });
+    const metaRes = await fetch(
+      API_BASE + "/api/repos/" + REPO + "/contents/" + savePath + "?ref=" + BRANCH,
+      {
+        headers: { Accept: "application/vnd.github.v3+json" },
+      },
+    );
     const meta = await metaRes.json();
-    const full = buildFrontmatter({ ...parseFrontmatter(editorContent.value).meta, title: editorTitle.value }, editorContent.value);
+    const full = buildFrontmatter(
+      { ...parseFrontmatter(editorContent.value).meta, title: editorTitle.value },
+      editorContent.value,
+    );
     const body = {
       message: "docs: 前台编辑 " + savePath,
       content: b64enc(full),
@@ -206,7 +239,12 @@ onMounted(() => {
 <template>
   <div class="front-editor">
     <!-- 右下角悬浮按钮 -->
-    <button v-if="showBtn" class="fe-fab" @click="session ? openEditor() : openLogin()" :title="session ? '编辑此页' : '登录后编辑'">
+    <button
+      v-if="showBtn"
+      class="fe-fab"
+      @click="session ? openEditor() : openLogin()"
+      :title="session ? '编辑此页' : '登录后编辑'"
+    >
       {{ session ? "✏️" : "🔐" }}
     </button>
 
@@ -218,7 +256,9 @@ onMounted(() => {
         <input v-model="loginPass" type="password" placeholder="密码" @keyup.enter="doLogin" />
         <p v-if="loginError" class="fe-err">{{ loginError }}</p>
         <div class="fe-btns">
-          <button class="fe-btn" @click="doLogin" :disabled="busy">{{ busy ? "登录中..." : "登录" }}</button>
+          <button class="fe-btn" @click="doLogin" :disabled="busy">
+            {{ busy ? "登录中..." : "登录" }}
+          </button>
           <button class="fe-btn fe-btn-ghost" @click="closeLogin">取消</button>
         </div>
         <p v-if="session" class="fe-dim">已登录: {{ session.username }}</p>
@@ -232,7 +272,12 @@ onMounted(() => {
         <label class="fe-label">标题</label>
         <input v-model="editorTitle" class="fe-title" placeholder="文章标题" />
         <div class="fe-panes">
-          <textarea v-model="editorContent" @input="updatePreview" placeholder="Markdown 内容..." spellcheck="false"></textarea>
+          <textarea
+            v-model="editorContent"
+            @input="updatePreview"
+            placeholder="Markdown 内容..."
+            spellcheck="false"
+          ></textarea>
           <div class="fe-preview" v-html="editorPreview"></div>
         </div>
         <div class="fe-status">{{ loadingContent ? "加载中..." : editorStatus }}</div>
@@ -247,58 +292,160 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.front-editor { --fe-accent: #6366f1; }
-.fe-fab {
-  position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 200;
-  width: 48px; height: 48px; border-radius: 50%; border: none;
-  background: var(--fe-accent); color: #fff; font-size: 1.3rem;
-  cursor: pointer; box-shadow: 0 4px 16px rgba(99,102,241,.4);
-  transition: transform .2s;
+.front-editor {
+  --fe-accent: #6366f1;
 }
-.fe-fab:hover { transform: scale(1.1); }
+.fe-fab {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--fe-accent);
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+  transition: transform 0.2s;
+}
+.fe-fab:hover {
+  transform: scale(1.1);
+}
 .fe-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 300;
-  display: flex; align-items: center; justify-content: center; padding: 16px;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
 }
 .fe-modal {
-  background: var(--c-bg-lighter, #1a1a28); color: var(--c-text, #c8c8d0);
-  border: 1px solid var(--c-border, #333); border-radius: 12px;
-  padding: 20px; max-width: 900px; width: 100%;
+  background: var(--c-bg-lighter, #1a1a28);
+  color: var(--c-text, #c8c8d0);
+  border: 1px solid var(--c-border, #333);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 900px;
+  width: 100%;
 }
-.fe-login { max-width: 360px; }
-.fe-modal h3 { margin: 0 0 12px; color: var(--fe-accent); }
+.fe-login {
+  max-width: 360px;
+}
+.fe-modal h3 {
+  margin: 0 0 12px;
+  color: var(--fe-accent);
+}
 .fe-modal input {
-  width: 100%; box-sizing: border-box; padding: 8px 10px; margin: 6px 0;
-  border: 1px solid var(--c-border, #333); border-radius: 8px;
-  background: var(--c-bg, #111); color: var(--c-text, #fff);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  margin: 6px 0;
+  border: 1px solid var(--c-border, #333);
+  border-radius: 8px;
+  background: var(--c-bg, #111);
+  color: var(--c-text, #fff);
 }
-.fe-title { font-size: 15px; }
-.fe-panes { display: flex; gap: 10px; margin-top: 8px; height: 55vh; }
-.fe-panes textarea, .fe-preview {
-  width: 50%; height: 100%; box-sizing: border-box; padding: 10px;
-  border: 1px solid var(--c-border, #333); border-radius: 8px;
-  background: var(--c-bg, #111); color: var(--c-text, #c8c8d0);
+.fe-title {
+  font-size: 15px;
+}
+.fe-panes {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  height: 55vh;
+}
+.fe-panes textarea,
+.fe-preview {
+  width: 50%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid var(--c-border, #333);
+  border-radius: 8px;
+  background: var(--c-bg, #111);
+  color: var(--c-text, #c8c8d0);
   font: 13px/1.6 monospace;
 }
-.fe-panes textarea { resize: none; overflow-y: auto; }
-.fe-preview { overflow-y: auto; }
-.fe-preview h1, .fe-preview h2, .fe-preview h3 { color: var(--fe-accent); }
-.fe-preview a { color: #1e90ff; }
-.fe-preview code { background: var(--c-bg-light, #1a1a28); padding: 2px 5px; border-radius: 3px; }
-.fe-status { font-size: 12px; opacity: .7; min-height: 18px; padding: 6px 0; }
-.fe-btns { display: flex; gap: 8px; margin-top: 6px; }
-.fe-btn {
-  padding: 8px 18px; border: 1px solid var(--fe-accent); border-radius: 8px;
-  background: var(--fe-accent); color: #fff; cursor: pointer; font-weight: 600;
+.fe-panes textarea {
+  resize: none;
+  overflow-y: auto;
 }
-.fe-btn:hover { opacity: .88; }
-.fe-btn-ghost { background: transparent; color: var(--c-text, #c8c8d0); }
-.fe-btn-red { background: #e74c3c; border-color: #e74c3c; }
-.fe-err { color: #e74c3c; font-size: 13px; }
-.fe-label { display: block; font-size: 12px; opacity: .7; margin: 8px 0 2px; }
-.fe-dim { font-size: 12px; opacity: .6; margin-top: 8px; }
+.fe-preview {
+  overflow-y: auto;
+}
+.fe-preview h1,
+.fe-preview h2,
+.fe-preview h3 {
+  color: var(--fe-accent);
+}
+.fe-preview a {
+  color: #1e90ff;
+}
+.fe-preview code {
+  background: var(--c-bg-light, #1a1a28);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+.fe-status {
+  font-size: 12px;
+  opacity: 0.7;
+  min-height: 18px;
+  padding: 6px 0;
+}
+.fe-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+.fe-btn {
+  padding: 8px 18px;
+  border: 1px solid var(--fe-accent);
+  border-radius: 8px;
+  background: var(--fe-accent);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+.fe-btn:hover {
+  opacity: 0.88;
+}
+.fe-btn-ghost {
+  background: transparent;
+  color: var(--c-text, #c8c8d0);
+}
+.fe-btn-red {
+  background: #e74c3c;
+  border-color: #e74c3c;
+}
+.fe-err {
+  color: #e74c3c;
+  font-size: 13px;
+}
+.fe-label {
+  display: block;
+  font-size: 12px;
+  opacity: 0.7;
+  margin: 8px 0 2px;
+}
+.fe-dim {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 8px;
+}
 @media (max-width: 700px) {
-  .fe-panes { flex-direction: column; height: auto; }
-  .fe-panes textarea, .fe-preview { width: 100%; height: 32vh; }
+  .fe-panes {
+    flex-direction: column;
+    height: auto;
+  }
+  .fe-panes textarea,
+  .fe-preview {
+    width: 100%;
+    height: 32vh;
+  }
 }
 </style>
