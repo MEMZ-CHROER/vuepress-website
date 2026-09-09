@@ -1,6 +1,6 @@
 {
   "name": "lxy_blog",
-  "version": "VuePress 2.0 rc.30",
+  "version": "VuePress 2.0 rc.31",
   "description": "Lxy's vuepress blog",
   "license": "MIT",
   "type": "module",
