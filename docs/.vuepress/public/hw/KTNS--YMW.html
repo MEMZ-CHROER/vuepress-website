@@ -1,609 +1,609 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI技术融入课堂：空调耗电量模拟器</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            border-radius: 16px;
-            color: white;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-        
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .subtitle {
-            font-size: 1.3rem;
-            max-width: 800px;
-            margin: 0 auto;
-            opacity: 0.9;
-        }
-        
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        padding: 30px 20px;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border-radius: 16px;
+        color: white;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      h1 {
+        font-size: 2.8rem;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .subtitle {
+        font-size: 1.3rem;
+        max-width: 800px;
+        margin: 0 auto;
+        opacity: 0.9;
+      }
+
+      .content-wrapper {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .input-section {
+        flex: 1;
+        min-width: 300px;
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .charts-section {
+        flex: 2;
+        min-width: 600px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .chart-container {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        height: 45%;
+      }
+
+      h2 {
+        margin-bottom: 25px;
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+
+      h3 {
+        margin: 20px 0 15px;
+        color: #2980b9;
+      }
+
+      .formula {
+        background: #e8f4fc;
+        padding: 15px;
+        border-radius: 12px;
+        margin: 20px 0;
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #2c3e50;
+        border-left: 5px solid #3498db;
+      }
+
+      .control-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #2c3e50;
+      }
+
+      .slider-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 10px;
+      }
+
+      input[type="range"] {
+        flex: 1;
+        height: 8px;
+        border-radius: 4px;
+        background: #ddd;
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #3498db;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .value-display {
+        background: #3498db;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        min-width: 70px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .efficiency-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .efficiency-btn {
+        flex: 1;
+        padding: 12px;
+        background: #eee;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .efficiency-btn:hover {
+        background: #ddd;
+      }
+
+      .efficiency-btn.active {
+        background: #3498db;
+        color: white;
+      }
+
+      .summary-card {
+        background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 16px;
+        margin-top: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .summary-item:last-child {
+        border-bottom: none;
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding-top: 15px;
+        color: #f1c40f;
+      }
+
+      .ai-badge {
+        background: linear-gradient(135deg, #ff5e62 0%, #ff9966 100%);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        padding: 20px;
+      }
+
+      @media (max-width: 900px) {
         .content-wrapper {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
+          flex-direction: column;
         }
-        
-        .input-section {
-            flex: 1;
-            min-width: 300px;
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        }
-        
+
         .charts-section {
-            flex: 2;
-            min-width: 600px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
+          min-width: 100%;
         }
-        
-        .chart-container {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            height: 45%;
-        }
-        
-        h2 {
-            margin-bottom: 25px;
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-        
-        h3 {
-            margin: 20px 0 15px;
-            color: #2980b9;
-        }
-        
-        .formula {
-            background: #e8f4fc;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 20px 0;
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #2c3e50;
-            border-left: 5px solid #3498db;
-        }
-        
-        .control-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #2c3e50;
-        }
-        
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        
-        input[type="range"] {
-            flex: 1;
-            height: 8px;
-            border-radius: 4px;
-            background: #ddd;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #3498db;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .value-display {
-            background: #3498db;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            min-width: 70px;
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .efficiency-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .efficiency-btn {
-            flex: 1;
-            padding: 12px;
-            background: #eee;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .efficiency-btn:hover {
-            background: #ddd;
-        }
-        
-        .efficiency-btn.active  {
-            background: #3498db;
-            color: white;
-        }
-        
-        .summary-card {
-            background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 16px;
-            margin-top: 20px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .summary-item:last-child {
-            border-bottom: none;
-            font-size: 1.3rem;
-            font-weight: bold;
-            padding-top: 15px;
-            color: #f1c40f;
-        }
-        
-        .ai-badge {
-            background: linear-gradient(135deg, #ff5e62 0%, #ff9966 100%);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            display: inline-block;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            padding: 20px;
-        }
-        
-        @media (max-width: 900px) {
-            .content-wrapper {
-                flex-direction: column;
-            }
-            
-            .charts-section {
-                min-width: 100%;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <header>
-            <h1>AI技术融入课堂方案</h1>
-            <p class="subtitle">通过动态计算与可视化工具，直观展示空调耗电量的影响因素与结果对比</p>
-        </header>
-        
-        <div class="content-wrapper">
-            <section class="input-section">
-                <h2>参数配置</h2>
-                
-                <div class="formula">
-                    耗电量 = (功率比例 × 基准功率) × 时间
-                </div>
-                
-                <div class="control-group">
-                    <h3>空调匹数（基准功率）</h3>
-                    <div class="slider-container">
-                        <input type="range" id="power-input" min="1" max="5" step="0.5" value="2">
-                        <div class="value-display" id="power-value">2匹 (1.47kW)</div>
-                    </div>
-                </div>
-                
-                <div class="control-group">
-                    <h3>每日使用时长</h3>
-                    <div class="slider-container">
-                        <input type="range" id="time-input" min="0" max="24" step="0.5" value="8">
-                        <div class="value-display" id="time-value">8小时</div>
-                    </div>
-                </div>
-                
-                <div class="control-group">
-                    <h3>能效等级比例</h3>
-                    <div class="efficiency-buttons">
-                        <button class="efficiency-btn active" data-value="0.7">70%</button>
-                        <button class="efficiency-btn" data-value="0.8">80%</button>
-                        <button class="efficiency-btn" data-value="0.9">90%</button>
-                    </div>
-                    <p style="margin-top: 10px; color: #7f8c8d;">
-                        * 能效等级比例越高，空调效率越高，耗电越少 
-                    </p>
-                </div>
-                
-                <div class="control-group">
-                    <h3>当地电价（元/度）</h3>
-                    <div class="slider-container">
-                        <input type="range" id="price-input" min="0.3" max="2.0" step="0.05" value="0.65">
-                        <div class="value-display" id="price-value">¥0.65</div>
-                    </div>
-                </div>
-                
-                <div class="summary-card">
-                    <h3 style="color: white;">计算结果</h3>
-                    <div class="summary-item">
-                        <span>耗电量：</span>
-                        <span id="power-consumption">18.82 kWh</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>每日电费：</span>
-                        <span id="daily-cost">¥12.23</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>每月电费（30天）：</span>
-                        <span id="monthly-cost">¥366.90</span>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="charts-section">
-                <div class="chart-container">
-                    <h2>耗电量对比柱状图 <span class="ai-badge">AI实时生成</span></h2>
-                    <canvas id="powerChart"></canvas>
-                </div>
-                
-                <div class="chart-container">
-                    <h2>费用变化曲线 <span class="ai-badge">AI实时生成</span></h2>
-                    <canvas id="costChart"></canvas>
-                </div>
-            </section>
-        </div>
-        
-        <footer>
-            <p>AI技术融入课堂方案 | ✅ 动态计算工具 | © 2023 教育科技创新实验室</p>
-        </footer>
+      <header>
+        <h1>AI技术融入课堂方案</h1>
+        <p class="subtitle">通过动态计算与可视化工具，直观展示空调耗电量的影响因素与结果对比</p>
+      </header>
+
+      <div class="content-wrapper">
+        <section class="input-section">
+          <h2>参数配置</h2>
+
+          <div class="formula">耗电量 = (功率比例 × 基准功率) × 时间</div>
+
+          <div class="control-group">
+            <h3>空调匹数（基准功率）</h3>
+            <div class="slider-container">
+              <input type="range" id="power-input" min="1" max="5" step="0.5" value="2" />
+              <div class="value-display" id="power-value">2匹 (1.47kW)</div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>每日使用时长</h3>
+            <div class="slider-container">
+              <input type="range" id="time-input" min="0" max="24" step="0.5" value="8" />
+              <div class="value-display" id="time-value">8小时</div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>能效等级比例</h3>
+            <div class="efficiency-buttons">
+              <button class="efficiency-btn active" data-value="0.7">70%</button>
+              <button class="efficiency-btn" data-value="0.8">80%</button>
+              <button class="efficiency-btn" data-value="0.9">90%</button>
+            </div>
+            <p style="margin-top: 10px; color: #7f8c8d">
+              * 能效等级比例越高，空调效率越高，耗电越少
+            </p>
+          </div>
+
+          <div class="control-group">
+            <h3>当地电价（元/度）</h3>
+            <div class="slider-container">
+              <input type="range" id="price-input" min="0.3" max="2.0" step="0.05" value="0.65" />
+              <div class="value-display" id="price-value">¥0.65</div>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <h3 style="color: white">计算结果</h3>
+            <div class="summary-item">
+              <span>耗电量：</span>
+              <span id="power-consumption">18.82 kWh</span>
+            </div>
+            <div class="summary-item">
+              <span>每日电费：</span>
+              <span id="daily-cost">¥12.23</span>
+            </div>
+            <div class="summary-item">
+              <span>每月电费（30天）：</span>
+              <span id="monthly-cost">¥366.90</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="charts-section">
+          <div class="chart-container">
+            <h2>耗电量对比柱状图 <span class="ai-badge">AI实时生成</span></h2>
+            <canvas id="powerChart"></canvas>
+          </div>
+
+          <div class="chart-container">
+            <h2>费用变化曲线 <span class="ai-badge">AI实时生成</span></h2>
+            <canvas id="costChart"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <p>AI技术融入课堂方案 | ✅ 动态计算工具 | © 2023 教育科技创新实验室</p>
+      </footer>
     </div>
- 
+
     <script>
-        // 匹数到功率的映射（单位：瓦）
-        const powerMap = {
-            1: 735,
-            1.5: 1102.5,
-            2: 1470,
-            2.5: 1837.5,
-            3: 2205,
-            3.5: 2572.5,
-            4: 2940,
-            4.5: 3307.5,
-            5: 3675
-        };
-        
-        // 获取DOM元素
-        const powerInput = document.getElementById('power-input'); 
-        const powerValue = document.getElementById('power-value'); 
-        const timeInput = document.getElementById('time-input'); 
-        const timeValue = document.getElementById('time-value'); 
-        const priceInput = document.getElementById('price-input'); 
-        const priceValue = document.getElementById('price-value'); 
-        const efficiencyButtons = document.querySelectorAll('.efficiency-btn'); 
-        
-        // 计算结果元素 
-        const powerConsumptionElem = document.getElementById('power-consumption'); 
-        const dailyCostElem = document.getElementById('daily-cost'); 
-        const monthlyCostElem = document.getElementById('monthly-cost'); 
-        
-        // 当前选中的能效比例 
-        let currentEfficiency = 0.7;
-        
-        // 图表实例 
-        let powerChart = null;
-        let costChart = null;
-        
-        // 更新所有计算和图表的函数
-        function updateAll() {
-            updateCalculations();
-            updatePowerChart();
-            updateCostChart();
+      // 匹数到功率的映射（单位：瓦）
+      const powerMap = {
+        1: 735,
+        1.5: 1102.5,
+        2: 1470,
+        2.5: 1837.5,
+        3: 2205,
+        3.5: 2572.5,
+        4: 2940,
+        4.5: 3307.5,
+        5: 3675,
+      };
+
+      // 获取DOM元素
+      const powerInput = document.getElementById("power-input");
+      const powerValue = document.getElementById("power-value");
+      const timeInput = document.getElementById("time-input");
+      const timeValue = document.getElementById("time-value");
+      const priceInput = document.getElementById("price-input");
+      const priceValue = document.getElementById("price-value");
+      const efficiencyButtons = document.querySelectorAll(".efficiency-btn");
+
+      // 计算结果元素
+      const powerConsumptionElem = document.getElementById("power-consumption");
+      const dailyCostElem = document.getElementById("daily-cost");
+      const monthlyCostElem = document.getElementById("monthly-cost");
+
+      // 当前选中的能效比例
+      let currentEfficiency = 0.7;
+
+      // 图表实例
+      let powerChart = null;
+      let costChart = null;
+
+      // 更新所有计算和图表的函数
+      function updateAll() {
+        updateCalculations();
+        updatePowerChart();
+        updateCostChart();
+      }
+
+      // 初始化能效按钮事件
+      efficiencyButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          efficiencyButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          currentEfficiency = parseFloat(button.dataset.value);
+          updateAll();
+        });
+      });
+
+      // 更新滑块的显示值
+      powerInput.addEventListener("input", function () {
+        const power = parseFloat(this.value);
+        powerValue.textContent = `${power}匹 (${(powerMap[power] / 1000).toFixed(2)}kW)`;
+        updateAll();
+      });
+
+      timeInput.addEventListener("input", function () {
+        const hours = parseFloat(this.value);
+        timeValue.textContent = `${hours}小时`;
+        updateAll();
+      });
+
+      priceInput.addEventListener("input", function () {
+        const price = parseFloat(this.value);
+        priceValue.textContent = `¥${price.toFixed(2)}`;
+        updateAll();
+      });
+
+      // 计算耗电量和费用
+      function updateCalculations() {
+        const power = parseFloat(powerInput.value);
+        const hours = parseFloat(timeInput.value);
+        const price = parseFloat(priceInput.value);
+
+        // 基准功率（千瓦）
+        const basePower = powerMap[power] / 1000;
+        // 实际耗电功率（千瓦）
+        const actualPower = basePower * currentEfficiency;
+        // 耗电量（千瓦时）
+        const powerConsumption = actualPower * hours;
+        // 每日电费
+        const dailyCost = powerConsumption * price;
+        // 每月电费（30天）
+        const monthlyCost = dailyCost * 30;
+
+        // 更新显示
+        powerConsumptionElem.textContent = `${powerConsumption.toFixed(2)}  kWh`;
+        dailyCostElem.textContent = `¥${dailyCost.toFixed(2)}`;
+        monthlyCostElem.textContent = `¥${monthlyCost.toFixed(2)}`;
+      }
+
+      // 更新耗电量对比柱状图
+      function updatePowerChart() {
+        const ctx = document.getElementById("powerChart").getContext("2d");
+        const power = parseFloat(powerInput.value);
+        const hours = parseFloat(timeInput.value);
+
+        // 基准功率（千瓦）
+        const basePower = powerMap[power] / 1000;
+
+        // 计算三种能效等级的耗电量
+        const efficiencies = [0.7, 0.8, 0.9];
+        const powerConsumptions = efficiencies.map((eff) => basePower * eff * hours);
+
+        // 如果图表已存在则销毁
+        if (powerChart) {
+          powerChart.destroy();
         }
-        
-        // 初始化能效按钮事件 
-        efficiencyButtons.forEach(button  => {
-            button.addEventListener('click',  () => {
-                efficiencyButtons.forEach(btn  => btn.classList.remove('active')); 
-                button.classList.add('active'); 
-                currentEfficiency = parseFloat(button.dataset.value); 
-                updateAll();
-            });
-        });
-        
-        // 更新滑块的显示值
-        powerInput.addEventListener('input',  function() {
-            const power = parseFloat(this.value); 
-            powerValue.textContent  = `${power}匹 (${(powerMap[power]/1000).toFixed(2)}kW)`;
-            updateAll();
-        });
-        
-        timeInput.addEventListener('input',  function() {
-            const hours = parseFloat(this.value); 
-            timeValue.textContent  = `${hours}小时`;
-            updateAll();
-        });
-        
-        priceInput.addEventListener('input',  function() {
-            const price = parseFloat(this.value); 
-            priceValue.textContent  = `¥${price.toFixed(2)}`; 
-            updateAll();
-        });
-        
-        // 计算耗电量和费用 
-        function updateCalculations() {
-            const power = parseFloat(powerInput.value); 
-            const hours = parseFloat(timeInput.value); 
-            const price = parseFloat(priceInput.value); 
-            
-            // 基准功率（千瓦）
-            const basePower = powerMap[power] / 1000;
-            // 实际耗电功率（千瓦）
-            const actualPower = basePower * currentEfficiency;
-            // 耗电量（千瓦时）
-            const powerConsumption = actualPower * hours;
-            // 每日电费
-            const dailyCost = powerConsumption * price;
-            // 每月电费（30天）
-            const monthlyCost = dailyCost * 30;
-            
-            // 更新显示 
-            powerConsumptionElem.textContent  = `${powerConsumption.toFixed(2)}  kWh`;
-            dailyCostElem.textContent  = `¥${dailyCost.toFixed(2)}`; 
-            monthlyCostElem.textContent  = `¥${monthlyCost.toFixed(2)}`; 
-        }
-        
-        // 更新耗电量对比柱状图 
-        function updatePowerChart() {
-            const ctx = document.getElementById('powerChart').getContext('2d'); 
-            const power = parseFloat(powerInput.value); 
-            const hours = parseFloat(timeInput.value); 
-            
-            // 基准功率（千瓦）
-            const basePower = powerMap[power] / 1000;
-            
-            // 计算三种能效等级的耗电量 
-            const efficiencies = [0.7, 0.8, 0.9];
-            const powerConsumptions = efficiencies.map(eff  => basePower * eff * hours);
-            
-            // 如果图表已存在则销毁
-            if (powerChart) {
-                powerChart.destroy(); 
-            }
-            
-            // 创建新图表 
-            powerChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['70% (低)', '80% (中)', '90% (高)'],
-                    datasets: [{
-                        label: '耗电量 (kWh)',
-                        data: powerConsumptions,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.7)',
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(75, 192, 192, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 1 
-                    }]
+
+        // 创建新图表
+        powerChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: ["70% (低)", "80% (中)", "90% (高)"],
+            datasets: [
+              {
+                label: "耗电量 (kWh)",
+                data: powerConsumptions,
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.7)",
+                  "rgba(54, 162, 235, 0.7)",
+                  "rgba(75, 192, 192, 0.7)",
+                ],
+                borderColor: [
+                  "rgba(255, 99, 132, 1)",
+                  "rgba(54, 162, 235, 1)",
+                  "rgba(75, 192, 192, 1)",
+                ],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              title: {
+                display: true,
+                text: "不同能效等级下空调耗电量对比",
+                font: {
+                  size: 16,
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false 
-                        },
-                        title: {
-                            display: true,
-                            text: '不同能效等级下空调耗电量对比',
-                            font: {
-                                size: 16
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: '耗电量 (kWh)'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-        // 更新费用变化曲线
-        function updateCostChart() {
-            const ctx = document.getElementById('costChart').getContext('2d'); 
-            const power = parseFloat(powerInput.value); 
-            const hours = parseFloat(timeInput.value); 
-            const price = parseFloat(priceInput.value); 
-            
-            // 基准功率（千瓦）
-            const basePower = powerMap[power] / 1000;
-            // 实际耗电功率（千瓦）
-            const actualPower = basePower * currentEfficiency;
-            
-            // 生成0-24小时的数据（以半小时为间隔）
-            const hourLabels = [];
-            const costs = [];
-            
-            // 获取当前选中的使用时长，用于在图表上标记
-            const currentHours = hours;
-            
-            // 生成0到24小时的数据
-            for (let h = 0; h <= 24; h += 0.5) {
-                hourLabels.push(h.toFixed(1)); 
-                costs.push(actualPower * h * price);
-            }
-            
-            // 如果图表已存在则销毁
-            if (costChart) {
-                costChart.destroy(); 
-            }
-            
-            // 创建新图表 
-            costChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: hourLabels,
-                    datasets: [
-                        {
-                            label: '电费变化曲线',
-                            data: costs,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderWidth: 3,
-                            pointRadius: 2,
-                            tension: 0.3,
-                            fill: true 
-                        },
-                        // 添加一个特殊点标记当前使用时长
-                        {
-                            label: '当前使用时长',
-                            data: hourLabels.map((h, index) => {
-                                const hour = parseFloat(h);
-                                return Math.abs(hour - currentHours) < 0.1 ? costs[index] : null;
-                            }),
-                            pointRadius: 8,
-                            pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2,
-                            showLine: false
-                        }
-                    ]
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "耗电量 (kWh)",
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: `不同使用时长下的电费变化（${power}匹空调，能效${currentEfficiency*100}%，电价¥${price.toFixed(2)}）`,
-                            font: {
-                                size: 14 
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    if (context.datasetIndex === 0) {
-                                        return `时长 ${context.label}小时: ¥${context.parsed.y.toFixed(2)}`; 
-                                    }
-                                    return `当前设置: ${currentHours}小时, ¥${(actualPower * currentHours * price).toFixed(2)}`;
-                                }
-                            }
-                        },
-                        legend: {
-                            labels: {
-                                filter: function(item, chart) {
-                                    // 只显示第一个图例
-                                    return item.datasetIndex === 0 || item.datasetIndex === 1;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: '使用时长 (小时)'
-                            },
-                            ticks: {
-                                maxTicksLimit: 13 // 显示13个刻度（0,2,4,...,24）
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: '电费 (元)'
-                            }
-                        }
-                    },
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    }
-                }
-            });
-        }
-        
-        // 页面加载完成后初始化
-        window.addEventListener('DOMContentLoaded',  () => {
-            // 初始化显示值
-            powerValue.textContent  = `${powerInput.value} 匹 (${(powerMap[powerInput.value]/1000).toFixed(2)}kW)`;
-            timeValue.textContent  = `${timeInput.value} 小时`;
-            priceValue.textContent  = `¥${priceInput.value}`; 
-            
-            // 初始化计算 
-            updateCalculations();
-            
-            // 初始化图表 
-            updatePowerChart();
-            updateCostChart();
+              },
+            },
+          },
         });
+      }
+
+      // 更新费用变化曲线
+      function updateCostChart() {
+        const ctx = document.getElementById("costChart").getContext("2d");
+        const power = parseFloat(powerInput.value);
+        const hours = parseFloat(timeInput.value);
+        const price = parseFloat(priceInput.value);
+
+        // 基准功率（千瓦）
+        const basePower = powerMap[power] / 1000;
+        // 实际耗电功率（千瓦）
+        const actualPower = basePower * currentEfficiency;
+
+        // 生成0-24小时的数据（以半小时为间隔）
+        const hourLabels = [];
+        const costs = [];
+
+        // 获取当前选中的使用时长，用于在图表上标记
+        const currentHours = hours;
+
+        // 生成0到24小时的数据
+        for (let h = 0; h <= 24; h += 0.5) {
+          hourLabels.push(h.toFixed(1));
+          costs.push(actualPower * h * price);
+        }
+
+        // 如果图表已存在则销毁
+        if (costChart) {
+          costChart.destroy();
+        }
+
+        // 创建新图表
+        costChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: hourLabels,
+            datasets: [
+              {
+                label: "电费变化曲线",
+                data: costs,
+                borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderWidth: 3,
+                pointRadius: 2,
+                tension: 0.3,
+                fill: true,
+              },
+              // 添加一个特殊点标记当前使用时长
+              {
+                label: "当前使用时长",
+                data: hourLabels.map((h, index) => {
+                  const hour = parseFloat(h);
+                  return Math.abs(hour - currentHours) < 0.1 ? costs[index] : null;
+                }),
+                pointRadius: 8,
+                pointBackgroundColor: "rgba(255, 99, 132, 1)",
+                pointBorderColor: "#fff",
+                pointBorderWidth: 2,
+                showLine: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: `不同使用时长下的电费变化（${power}匹空调，能效${currentEfficiency * 100}%，电价¥${price.toFixed(2)}）`,
+                font: {
+                  size: 14,
+                },
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    if (context.datasetIndex === 0) {
+                      return `时长 ${context.label}小时: ¥${context.parsed.y.toFixed(2)}`;
+                    }
+                    return `当前设置: ${currentHours}小时, ¥${(actualPower * currentHours * price).toFixed(2)}`;
+                  },
+                },
+              },
+              legend: {
+                labels: {
+                  filter: function (item, chart) {
+                    // 只显示第一个图例
+                    return item.datasetIndex === 0 || item.datasetIndex === 1;
+                  },
+                },
+              },
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "使用时长 (小时)",
+                },
+                ticks: {
+                  maxTicksLimit: 13, // 显示13个刻度（0,2,4,...,24）
+                },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "电费 (元)",
+                },
+              },
+            },
+            interaction: {
+              intersect: false,
+              mode: "index",
+            },
+          },
+        });
+      }
+
+      // 页面加载完成后初始化
+      window.addEventListener("DOMContentLoaded", () => {
+        // 初始化显示值
+        powerValue.textContent = `${powerInput.value} 匹 (${(powerMap[powerInput.value] / 1000).toFixed(2)}kW)`;
+        timeValue.textContent = `${timeInput.value} 小时`;
+        priceValue.textContent = `¥${priceInput.value}`;
+
+        // 初始化计算
+        updateCalculations();
+
+        // 初始化图表
+        updatePowerChart();
+        updateCostChart();
+      });
     </script>
-</body>
+  </body>
 </html>
