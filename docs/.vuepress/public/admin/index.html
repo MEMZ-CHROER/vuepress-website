@@ -775,15 +775,38 @@
       window.onVerify = function (token) {
         _weauthToken = token;
         var btn = document.getElementById("loginBtn");
-        if (btn) btn.disabled = false;
+        if (btn) { btn.disabled = false; btn.textContent = "登录"; }
       };
+      // Token 过期后自动清除，引导重验
+      window.onVerifyExpired = function () {
+        _weauthToken = null;
+        var btn = document.getElementById("loginBtn");
+        if (btn) btn.disabled = true;
+      };
+      // 控件渲染异常时给提示
+      window.onVerifyError = function (err) {
+        console.warn("[WeAuth] error:", err);
+        var tip = document.getElementById("verifyTip");
+        if (tip) tip.textContent = "人机验证服务暂时不可用，请稍后再试";
+      };
+
+      // 登录失败（密码/用户名错误）时重置 token，强制重新验证
+      function resetWeauth() {
+        _weauthToken = null;
+        var btn = document.getElementById("loginBtn");
+        if (btn) { btn.disabled = true; btn.textContent = "登录"; }
+        var tip = document.getElementById("verifyTip");
+        if (tip) tip.textContent = "";
+      }
 
       function renderLogin() {
         document.getElementById("app").innerHTML =
           '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="dim">登录</p>' +
           '<input type="text" id="loginUser" placeholder="用户名" />' +
           '<input type="password" id="loginPass" placeholder="密码" />' +
-          '<div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false" data-callback="onVerify"></div>' +
+          '<div id="verifyTip" style="font-size:12px;color:#e67e22;margin:4px 0;min-height:16px"></div>' +
+          '<div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false"' +
+               ' data-callback="onVerify" data-error-callback="onVerifyError" data-expired-callback="onVerifyExpired"></div>' +
           '<button class="btn" id="loginBtn" onclick="login()" disabled>登录</button></div>';
       }
 
@@ -795,6 +818,9 @@
           alert("请先完成人机验证");
           return;
         }
+        var btn = document.getElementById("loginBtn");
+        btn.disabled = true;
+        btn.textContent = "⏳ 登录中…";
         fetch(API_BASE + "/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -809,15 +835,18 @@
               localStorage.setItem("csel_session", JSON.stringify(d));
               render();
             } else {
+              resetWeauth();
+              var msg = d.error || "登录失败";
               document.getElementById("app").innerHTML =
                 '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="red">❌ ' +
-                (d.error || "登录失败") +
-                '</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false" data-callback="onVerify"></div><button class="btn" id="loginBtn" onclick="login()" disabled>登录</button></div>';
+                msg +
+                '</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><div id="verifyTip" style="font-size:12px;color:#e67e22;margin:4px 0;min-height:16px"></div><div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false" data-callback="onVerify" data-error-callback="onVerifyError" data-expired-callback="onVerifyExpired"></div><button class="btn" id="loginBtn" onclick="login()" disabled>登录</button></div>';
             }
           })
           .catch(function () {
+            resetWeauth();
             document.getElementById("app").innerHTML =
-              '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="red">❌ 网络错误</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false" data-callback="onVerify"></div><button class="btn" id="loginBtn" onclick="login()" disabled>登录</button></div>';
+              '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="red">❌ 网络错误</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><div id="verifyTip" style="font-size:12px;color:#e67e22;margin:4px 0;min-height:16px"></div><div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false" data-callback="onVerify" data-error-callback="onVerifyError" data-expired-callback="onVerifyExpired"></div><button class="btn" id="loginBtn" onclick="login()" disabled>登录</button></div>';
           });
       };
 

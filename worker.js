@@ -192,7 +192,12 @@ export default {
         } catch (_) {
           verifyData = { success: false, error: "network error" };
         }
-        if (!verifyData.success) return json({ error: "verification failed, please retry" }, 400);
+        if (!verifyData.success) {
+          const codes = Array.isArray(verifyData["error-codes"])
+            ? verifyData["error-codes"].join(", ")
+            : "";
+          return json({ error: `验证失败${codes ? ": " + codes : ""}` }, 400);
+        }
         const username = sanitize(body.username, MAX_USERNAME_LEN);
         const password =
           typeof body.password === "string" ? body.password.substring(0, MAX_PASSWORD_LEN) : "";
