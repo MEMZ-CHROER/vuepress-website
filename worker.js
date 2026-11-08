@@ -180,12 +180,18 @@ export default {
         // WeAuth 验证
         const weauthToken = typeof body.weauth_token === "string" ? body.weauth_token : "";
         if (!weauthToken) return json({ error: "please complete verification" }, 400);
-        const verifyRes = await fetch("https://api.weauth.cn/api/pow/siteverify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ secret: WEAUTH_SECRET, token: weauthToken }),
-        });
-        const verifyData = await verifyRes.json();
+        let verifyData;
+        try {
+          const verifyRes = await fetch("https://www.weauth.cn/api/pow/siteverify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ secret: WEAUTH_SECRET, token: weauthToken }),
+          });
+          const ct = verifyRes.headers.get("content-type") || "";
+          verifyData = ct.includes("json") ? await verifyRes.json() : { success: false, error: verifyRes.statusText };
+        } catch (_) {
+          verifyData = { success: false, error: "network error" };
+        }
         if (!verifyData.success) return json({ error: "verification failed, please retry" }, 400);
         const username = sanitize(body.username, MAX_USERNAME_LEN);
         const password =
