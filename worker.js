@@ -47,7 +47,7 @@ async function isAdmin(token, db) {
 // custom 角色可以有 permissions 节点（如 pages），但写操作一律受 write_paths 白名单约束
 async function canWrite(token, db, targetPath) {
   const user = await getSession(token, db);
-  if (!user) return false;
+  if (!user) return "no_token";
   // admin 或 all 全权放行（不受白名单限制）
   if (user.permissions === "all" || user.role === "admin") return true;
   // 非 custom 角色：走原有 requirePerm 逻辑（由调用方决定用哪个节点）
@@ -376,7 +376,9 @@ export default {
 
       // custom 权限模型优先：按 write_paths 白名单校验（仅限文件写操作，读不拦截）
       const cw = await canWrite(token, env.DB, targetPath);
-      if (cw === true) {
+      if (cw === "no_token") {
+        // 未认证 → 由下方权限矩阵统一处理认证错误
+      } else if (cw === true) {
         // custom 放行，直接继续
       } else if (cw === false) {
         return json({ error: "not allowed to write this path" }, 403);
