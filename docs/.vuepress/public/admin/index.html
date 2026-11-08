@@ -1130,6 +1130,8 @@
               return JSON.parse(txt);
             })
             .catch(function () {
+              // _passwords.json 不存在时返回空对象，_pwSha 保持 null（后续 PUT 时会新建文件）
+              window._pwSha = null;
               return {};
             }),
         ])
@@ -1179,7 +1181,9 @@
         if (!inp) return;
         var pagePath = inp.getAttribute("data-page-path");
         var val = inp.value.trim();
-        document.getElementById("pwStatus").textContent = "保存中...";
+        var statusEl = document.getElementById("pwStatus");
+        if (!statusEl) return;
+        statusEl.textContent = "保存中...";
         gh("/repos/" + REPO + "/contents/_passwords.json?ref=" + BRANCH).then(function (meta) {
           var raw = meta.content.replace(/\n/g, "");
           var txt = atob(raw);
@@ -1190,7 +1194,7 @@
           if (val) pwData[pagePath] = val;
           else delete pwData[pagePath];
           var newContent = JSON.stringify(pwData, null, 2);
-          gh("/repos/" + REPO + "/contents/_passwords.json", {
+          return gh("/repos/" + REPO + "/contents/_passwords.json", {
             method: "PUT",
             body: JSON.stringify({
               message: "update password for " + pagePath,
@@ -1198,38 +1202,42 @@
               sha: meta.sha,
               branch: BRANCH,
             }),
-          }).then(function (d) {
-            if (d.content) {
-              document.getElementById("pwStatus").textContent = "✅ 已保存（Pages 重建后生效）";
-            } else document.getElementById("pwStatus").textContent = "❌ 保存失败";
           });
+        }).then(function (d) {
+          statusEl.textContent = d.content ? "✅ 已保存（Pages 重建后生效）" : "❌ 保存失败";
+        }).catch(function (e) {
+          statusEl.textContent = "❌ 保存失败: " + (e.message || e);
         });
       };
 
       window.saveAllPw = function () {
-        document.getElementById("pwStatus").textContent = "保存中...";
-        gh("/repos/" + REPO + "/contents/_passwords.json?ref=" + BRANCH).then(function (meta) {
-          // Read all password inputs using data attributes
+        var statusEl = document.getElementById("pwStatus");
+        if (!statusEl) return;
+        statusEl.textContent = "保存中...";
+        // 优先用已缓存的 SHA；没有则重新获取
+        var getMeta = window._pwSha ? Promise.resolve({ sha: window._pwSha })
+          : gh("/repos/" + REPO + "/contents/_passwords.json?ref=" + BRANCH);
+        getMeta.then(function (meta) {
           var inputs = document.querySelectorAll("input[data-page-path]");
           var newData = {};
           inputs.forEach(function (inp) {
-            var pagePath = inp.getAttribute("data-page-path");
-            if (inp.value.trim()) newData[pagePath] = inp.value.trim();
+            var pp = inp.getAttribute("data-page-path");
+            if (inp.value.trim()) newData[pp] = inp.value.trim();
           });
           var newContent = JSON.stringify(newData, null, 2);
-          gh("/repos/" + REPO + "/contents/_passwords.json", {
+          return gh("/repos/" + REPO + "/contents/_passwords.json", {
             method: "PUT",
             body: JSON.stringify({
               message: "update all passwords",
               content: b64enc(newContent),
-              sha: meta.sha,
+              sha: meta.sha || undefined, // 新建文件时不传 sha
               branch: BRANCH,
             }),
-          }).then(function (d) {
-            if (d.content) {
-              document.getElementById("pwStatus").textContent = "✅ 已保存，触发 Pages 重建...";
-            } else document.getElementById("pwStatus").textContent = "❌ 保存失败";
           });
+        }).then(function (d) {
+          statusEl.textContent = d.content ? "✅ 已保存，触发 Pages 重建..." : "❌ 保存失败";
+        }).catch(function (e) {
+          statusEl.textContent = "❌ 保存失败: " + (e.message || e);
         });
       };
 
