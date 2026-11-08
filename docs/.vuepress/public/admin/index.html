@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>CSEL 后台管理</title>
+    <script src="https://www.weauth.cn/weauth.js" async defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css" />
     <style>
       * {
@@ -769,14 +770,35 @@
         return _session && _session.role === "admin";
       }
 
+      // WeAuth 验证结果
+      var _weauthToken = null;
+      window.onVerify = function (token) {
+        _weauthToken = token;
+        var btn = document.getElementById("loginBtn");
+        if (btn) btn.disabled = false;
+      };
+
+      function renderLogin() {
+        document.getElementById("app").innerHTML =
+          '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="dim">登录</p>' +
+          '<input type="text" id="loginUser" placeholder="用户名" />' +
+          '<input type="password" id="loginPass" placeholder="密码" />' +
+          '<div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false" data-callback="onVerify"></div>' +
+          '<button class="btn" id="loginBtn" onclick="login()" disabled>登录</button></div>';
+      }
+
       window.login = function () {
         var user = document.getElementById("loginUser").value.trim();
         var pass = document.getElementById("loginPass").value;
         if (!user || !pass) return;
+        if (!_weauthToken) {
+          alert("请先完成人机验证");
+          return;
+        }
         fetch(API_BASE + "/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: user, password: pass }),
+          body: JSON.stringify({ username: user, password: pass, weauth_token: _weauthToken }),
         })
           .then(function (r) {
             return r.json();
@@ -790,19 +812,14 @@
               document.getElementById("app").innerHTML =
                 '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="red">❌ ' +
                 (d.error || "登录失败") +
-                '</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><button class="btn" onclick="login()">登录</button></div>';
+                '</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false" data-callback="onVerify"></div><button class="btn" id="loginBtn" onclick="login()" disabled>登录</button></div>';
             }
           })
           .catch(function () {
             document.getElementById("app").innerHTML =
-              '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="red">❌ 网络错误</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><button class="btn" onclick="login()">登录</button></div>';
+              '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="red">❌ 网络错误</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><div class="weauth-widget" data-sitekey="507017d73d8e" data-action="login" data-theme="light" data-theme-color="blue" data-auto-start="false" data-callback="onVerify"></div><button class="btn" id="loginBtn" onclick="login()" disabled>登录</button></div>';
           });
       };
-
-      function renderLogin() {
-        document.getElementById("app").innerHTML =
-          '<div class="login-wrap"><h1>[CSEL] 后台管理</h1><p class="dim">登录</p><input type="text" id="loginUser" placeholder="用户名" /><input type="password" id="loginPass" placeholder="密码" /><button class="btn" onclick="login()">登录</button></div>';
-      }
 
       // ── Page List ──
       function loadPage() {

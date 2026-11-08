@@ -7,6 +7,7 @@ const RATE_LIMIT_WINDOW = 60000; // 1 minute
 const MAX_LOGIN_ATTEMPTS = 5;
 const MAX_USERNAME_LEN = 32;
 const MAX_PASSWORD_LEN = 128;
+const WEAUTH_SECRET = "cbe2e298733b4812ae91ae2b94ac8d16";
 
 // In-memory rate limiter (per Worker instance, resets on cold start)
 const loginAttempts = new Map();
@@ -176,6 +177,16 @@ export default {
           return json({ error: "too many attempts, try later" }, 429);
         }
         const body = await request.json();
+        // WeAuth 验证
+        const weauthToken = typeof body.weauth_token === "string" ? body.weauth_token : "";
+        if (!weauthToken) return json({ error: "please complete verification" }, 400);
+        const verifyRes = await fetch("https://api.weauth.cn/api/pow/siteverify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ secret: WEAUTH_SECRET, token: weauthToken }),
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyData.success) return json({ error: "verification failed, please retry" }, 400);
         const username = sanitize(body.username, MAX_USERNAME_LEN);
         const password =
           typeof body.password === "string" ? body.password.substring(0, MAX_PASSWORD_LEN) : "";
