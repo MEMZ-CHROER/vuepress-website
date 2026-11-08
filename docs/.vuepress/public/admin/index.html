@@ -585,6 +585,8 @@
 
       // ── 密码 ──
       var _session = null;
+      var _pwSha = null;
+      var _pwData = {};
 
       // ── GitHub API ──
       function gh(url, opts) {
@@ -1184,61 +1186,58 @@
         var statusEl = document.getElementById("pwStatus");
         if (!statusEl) return;
         statusEl.textContent = "保存中...";
-        gh("/repos/" + REPO + "/contents/_passwords.json?ref=" + BRANCH).then(function (meta) {
-          var raw = meta.content.replace(/\n/g, "");
-          var txt = atob(raw);
-          try {
-            txt = decodeURIComponent(escape(txt));
-          } catch (e) {}
-          var pwData = JSON.parse(txt);
-          if (val) pwData[pagePath] = val;
-          else delete pwData[pagePath];
-          var newContent = JSON.stringify(pwData, null, 2);
-          return gh("/repos/" + REPO + "/contents/_passwords.json", {
-            method: "PUT",
-            body: JSON.stringify({
-              message: "update password for " + pagePath,
-              content: b64enc(newContent),
-              sha: meta.sha,
-              branch: BRANCH,
-            }),
+        // 用已缓存的 sha；首次无则新建（不传 sha）
+        var body = {
+          message: "update password for " + pagePath,
+          content: b64enc(JSON.stringify({ ...(window._pwData || {}), [pagePath]: val || undefined }), null, 2),
+          branch: BRANCH,
+        };
+        if (window._pwSha) body.sha = window._pwSha;
+        else delete body.sha;
+        gh("/repos/" + REPO + "/contents/_passwords.json", { method: "PUT", body: JSON.stringify(body) })
+          .then(function (d) {
+            if (d.content) {
+              window._pwSha = d.content.sha;
+              statusEl.textContent = "✅ 已保存（Pages 重建后生效）";
+            } else {
+              statusEl.textContent = "❌ 保存失败: " + (d.message || JSON.stringify(d));
+            }
+          })
+          .catch(function (e) {
+            statusEl.textContent = "❌ 保存失败: " + (e.message || e);
           });
-        }).then(function (d) {
-          statusEl.textContent = d.content ? "✅ 已保存（Pages 重建后生效）" : "❌ 保存失败";
-        }).catch(function (e) {
-          statusEl.textContent = "❌ 保存失败: " + (e.message || e);
-        });
       };
 
       window.saveAllPw = function () {
         var statusEl = document.getElementById("pwStatus");
         if (!statusEl) return;
         statusEl.textContent = "保存中...";
-        // 优先用已缓存的 SHA；没有则重新获取
-        var getMeta = window._pwSha ? Promise.resolve({ sha: window._pwSha })
-          : gh("/repos/" + REPO + "/contents/_passwords.json?ref=" + BRANCH);
-        getMeta.then(function (meta) {
-          var inputs = document.querySelectorAll("input[data-page-path]");
-          var newData = {};
-          inputs.forEach(function (inp) {
-            var pp = inp.getAttribute("data-page-path");
-            if (inp.value.trim()) newData[pp] = inp.value.trim();
-          });
-          var newContent = JSON.stringify(newData, null, 2);
-          return gh("/repos/" + REPO + "/contents/_passwords.json", {
-            method: "PUT",
-            body: JSON.stringify({
-              message: "update all passwords",
-              content: b64enc(newContent),
-              sha: meta.sha || undefined, // 新建文件时不传 sha
-              branch: BRANCH,
-            }),
-          });
-        }).then(function (d) {
-          statusEl.textContent = d.content ? "✅ 已保存，触发 Pages 重建..." : "❌ 保存失败";
-        }).catch(function (e) {
-          statusEl.textContent = "❌ 保存失败: " + (e.message || e);
+        var inputs = document.querySelectorAll("input[data-page-path]");
+        var newData = {};
+        inputs.forEach(function (inp) {
+          var pp = inp.getAttribute("data-page-path");
+          if (inp.value.trim()) newData[pp] = inp.value.trim();
         });
+        window._pwData = newData;
+        var body = {
+          message: "update all passwords",
+          content: b64enc(JSON.stringify(newData, null, 2)),
+          branch: BRANCH,
+        };
+        if (window._pwSha) body.sha = window._pwSha;
+        else delete body.sha;
+        gh("/repos/" + REPO + "/contents/_passwords.json", { method: "PUT", body: JSON.stringify(body) })
+          .then(function (d) {
+            if (d.content) {
+              window._pwSha = d.content.sha;
+              statusEl.textContent = "✅ 已保存，触发 Pages 重建...";
+            } else {
+              statusEl.textContent = "❌ 保存失败: " + (d.message || JSON.stringify(d));
+            }
+          })
+          .catch(function (e) {
+            statusEl.textContent = "❌ 保存失败: " + (e.message || e);
+          });
       };
 
       // ── User Management ──
