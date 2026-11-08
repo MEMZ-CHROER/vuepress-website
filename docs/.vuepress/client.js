@@ -10,6 +10,7 @@ import SummaryButton from "./components/SummaryButton.vue";
 import LxySortDemo from "./components/LxySortDemo.vue";
 import LxyBenchDemo from "./components/LxyBenchDemo.vue";
 import FrontEditor from "./components/FrontEditor.vue";
+import PagePassword from "./components/PagePassword.vue";
 
 export default defineClientConfig({
   layouts: {
@@ -25,6 +26,7 @@ export default defineClientConfig({
     app.component("LxySortDemo", LxySortDemo);
     app.component("LxyBenchDemo", LxyBenchDemo);
     app.component("FrontEditor", FrontEditor);
+    app.component("PagePassword", PagePassword);
 
     // ==== clean URL 目录兜底（PR #1720 项目侧方案）====
     // 访问无后缀路径（如 /about）时：

@@ -17,6 +17,9 @@ const frontmatter = usePageFrontmatter();
     </template>
   </Layout>
 
+  <!-- 页面密码保护覆盖层（全页固定定位，不锁布局） -->
+  <PagePassword />
+
   <!-- 全局彩蛋 -->
   <EasterEgg />
 
