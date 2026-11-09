@@ -41,35 +41,37 @@ onMounted(() => {
       <span class="hero-icon">💜</span>
       <h1 class="hero-title">Credits</h1>
       <p class="hero-subtitle">
-        <span class="typewriter-text">每一个帮助过这个项目的名字，都值得被记住。</span>
+        <span class="typewriter-text">Noth1ng 1s 1mp0ss1ble such as C0d1ng F0rever.</span>
       </p>
     </div>
 
-    <div class="section-divider"></div>
+    <!--<div class="section-divider"></div>-->
 
     <div class="founders-section">
       <div class="section-label"><span>👑</span> Founders / Creator</div>
       <div class="founders-grid">
         <div class="founder-card">
-          <div class="founder-avatar">🧑‍💻</div>
+          <div class="founder-avatar"><img src="/credits/MEMZ-CHROER.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"></img></div>
           <div class="founder-name">Lxy</div>
           <div class="founder-role">Founder &amp; Lead Developer</div>
           <div class="founder-desc">写代码、画坦克、种枇杷。<br>这个项目的一切始于一个想法。</div>
           <div class="founder-tags">
-            <span class="founder-tag">全栈开发</span>
-            <span class="founder-tag">手绘坦克</span>
-            <span class="founder-tag">C++ 讲师</span>
+            <span class="founder-tag"><a href="/about/" type="_self">VuePress</a></span>
+            <span class="founder-tag"><a href="https://github.com/MEMZ-CHROER/vuepress-website/graphs/contributors" type="_self">Owner(MEMZ-CHROER)</a></span>
+            <span class="founder-tag">MainTainer</span>
           </div>
         </div>
         <div class="founder-card">
-          <div class="founder-avatar">🎨</div>
-          <div class="founder-name">CoreAmigo</div>
+          <div class="founder-avatar"><img src="/credits/Hejuxiao.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"></img></div>
+          <div class="founder-name">Hejuxiao</div>
           <div class="founder-role">Co-Founder &amp; Designer</div>
-          <div class="founder-desc">负责美术与创意方向。<br>核巨啸的坦克们背后的灵魂画手。</div>
+          <div class="founder-desc">负责美术与创意方向<br>坦克们背后的灵魂画手。</div>
           <div class="founder-tags">
-            <span class="founder-tag">视觉设计</span>
-            <span class="founder-tag">坦克图鉴</span>
-            <span class="founder-tag">艺术指导</span>
+            <a href="/tanks/" type="_self">
+            <span class="founder-tag">  视觉设计  </span>
+            <span class="founder-tag">  坦克图鉴  </span>
+            <span class="founder-tag">  艺术指导  </span>
+            </a>
           </div>
         </div>
       </div>
@@ -79,33 +81,41 @@ onMounted(() => {
 
     <div class="thanks-section">
       <div class="section-label"><span>🙏</span> Special Thanks</div>
+      <div class="thank-item">
+          <div class="thank-icon"><img src="/credits/CSEL.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></img></div>
+          <div class="thank-info">
+            <div class="thank-name">(CSEL-org && CSEL) 全体成员</div>
+            <div class="thank-contribution">感谢有你们,陪伴着我和我的博客一起成长<br>从Vuepress 1.0时代到现在,少不了你们的支持！</div>
+          </div>
+        </div>
+      <br>
       <div class="thanks-grid">
         <div class="thank-item">
-          <div class="thank-icon">⭐</div>
+          <div class="thank-icon"><img src="/credits/Apex.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></img></div>
           <div class="thank-info">
-            <div class="thank-name">Someone's Name</div>
-            <div class="thank-contribution">在 XX 方面给予了重要帮助</div>
+            <div class="thank-name">Apex</div>
+            <div class="thank-contribution">一直陪伴着博客成长,给予一些思路</div>
           </div>
         </div>
         <div class="thank-item">
-          <div class="thank-icon">💡</div>
+          <div class="thank-icon"><img src="/credits/zsy.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></img></div>
           <div class="thank-info">
-            <div class="thank-name">Another Person</div>
+            <div class="thank-name"><a href="https://github.com/Andy-VibeLink" type="_self">Andy-VibeLink</a></div>
             <div class="thank-contribution">提供了关键的想法和建议</div>
           </div>
         </div>
         <div class="thank-item">
-          <div class="thank-icon">🛠️</div>
+          <div class="thank-icon"><img src="/credits/CSEL-Ent1ch.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></img></div>
           <div class="thank-info">
-            <div class="thank-name">Helper Name</div>
+            <div class="thank-name">CSEL-Ent1ch</div>
             <div class="thank-contribution">修复了多个重要 Bug</div>
           </div>
         </div>
         <div class="thank-item">
           <div class="thank-icon">🌟</div>
           <div class="thank-info">
-            <div class="thank-name">Name Here</div>
-            <div class="thank-contribution">长期以来的支持与陪伴</div>
+            <div class="thank-name">And You.</div>
+            <div class="thank-contribution">感谢你长期以来的支持与陪伴</div>
           </div>
         </div>
       </div>
@@ -134,7 +144,7 @@ onMounted(() => {
     <div class="section-divider"></div>
 
     <div class="credits-footer">
-      <p>Made with 💜 by Lxy &amp; CoreAmigo · © 2026</p>
+      <p>Made by Lxy &amp; Hejuxiao &amp; CSEL全体成员 · © 2025</p>
       <a href="https://github.com/MEMZ-CHROER/vuepress-website"
          class="gitHub-btn" target="_blank" rel="noopener">
         ⭐ Star on GitHub
