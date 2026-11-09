@@ -1,5 +1,6 @@
 import { defineClientConfig, resolveRoute } from "vuepress/client";
 import MyLayout from "./layouts/Layout.vue";
+import CreditsLayout from "./layouts/Credits.vue";
 import QuoteOfTheDay from "./components/QuoteOfTheDay.vue";
 import Comment from "./components/Comment.vue";
 import EasterEgg from "./components/EasterEgg.vue";
@@ -15,6 +16,7 @@ import PagePassword from "./components/PagePassword.vue";
 export default defineClientConfig({
   layouts: {
     Layout: MyLayout,
+    Credits: CreditsLayout,
   },
   enhance: ({ app, router }) => {
     app.component("QuoteOfTheDay", QuoteOfTheDay);
