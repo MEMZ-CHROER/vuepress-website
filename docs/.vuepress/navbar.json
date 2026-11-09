@@ -58,6 +58,10 @@
     "link": "/about/"
   },
   {
+    "text": "💜 致谢",
+    "link": "/credits/"
+  },
+  {
     "text": "🐙 GitHub",
     "link": "https://www.github.com/MEMZ-CHROER/vuepress-test"
   }
