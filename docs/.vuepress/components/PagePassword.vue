@@ -32,6 +32,8 @@ async function check() {
   }
 }
 
+onMounted(check);
+
 async function submit() {
   wrong.value = false;
   errorMsg.value = "";
