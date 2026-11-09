@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useData } from 'vuepress-client'
 
 const particleContainer = ref<HTMLElement | null>(null)
-const { site } = useData()
 
 onMounted(() => {
   const container = particleContainer.value
