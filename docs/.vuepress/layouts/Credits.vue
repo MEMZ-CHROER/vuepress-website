@@ -30,6 +30,12 @@ onMounted(() => {
 <template>
   <div class="credits-bg" ref="particleContainer"></div>
 
+  <!-- 返回按钮 -->
+  <a href="/" class="credits-back">
+    <span class="back-arrow">←</span>
+    <span>Back to Home</span>
+  </a>
+
   <div class="credits-page">
     <div class="hero-section" id="hero">
       <span class="hero-icon">💜</span>
@@ -188,5 +194,22 @@ onMounted(() => {
 .credits-footer a:hover { text-decoration:underline }
 .gitHub-btn { display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff !important;border-radius:100px;font-weight:700;font-size:14px;text-decoration:none !important;transition:all 0.3s ease;margin-top:16px }
 .gitHub-btn:hover { transform:scale(1.05);box-shadow:0 8px 24px rgba(99,102,241,.4);text-decoration:none !important }
-@media (max-width:640px) { .founders-grid,.thanks-grid { grid-template-columns:1fr } .hero-title { font-size:36px } }
+.credits-back {
+  position: fixed; top: 24px; left: 24px; z-index: 100;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 100px;
+  background: rgba(30,30,60,.7); border: 1px solid rgba(99,102,241,.3);
+  color: #a5b4fc; font-size: 13px; font-weight: 600;
+  text-decoration: none; backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+.credits-back:hover {
+  background: rgba(99,102,241,.2); border-color: #6366f1; color: #c7d2fe;
+  transform: translateX(-3px); box-shadow: 0 0 16px rgba(99,102,241,.3);
+}
+.credits-back .back-arrow {
+  font-size: 16px; transition: transform 0.25s ease;
+}
+.credits-back:hover .back-arrow { transform: translateX(-3px); }
+@media (max-width:640px) { .founders-grid,.thanks-grid { grid-template-columns:1fr } .hero-title { font-size:36px } .credits-back { top:16px;left:16px;padding:6px 12px;font-size:12px } }
 </style>
