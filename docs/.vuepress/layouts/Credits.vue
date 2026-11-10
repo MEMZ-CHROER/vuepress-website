@@ -195,10 +195,10 @@ onMounted(() => {
 .thanks-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px }
 .thank-item { display:flex;align-items:center;gap:14px;padding:16px 20px;background:rgba(30,30,60,.5);border:1px solid rgba(99,102,241,.15);border-radius:12px;transition:all 0.3s ease }
 .thank-item:hover { background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.4);transform:translateX(6px) }
-.thank-icon { font-size:24px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(99,102,241,.15);border-radius:10px;flex-shrink:0 }
+.thank-icon { width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(99,102,241,.15);border-radius:10px;flex-shrink:0 }
 .thank-info { flex:1;min-width:0 }
 .thank-name { font-size:15px;font-weight:700;color:#e2e8f0;margin-bottom:2px }
-.thank-contribution { font-size:12px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis }
+.thank-contribution { font-size:12px;color:#64748b;line-height:1.5 }
 .tech-section { animation:fade-in-up 0.8s ease-out 0.6s both }
 .tech-grid { display:flex;flex-wrap:wrap;gap:10px }
 .tech-badge { display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(30,30,60,.6);border:1px solid rgba(99,102,241,.2);border-radius:8px;font-size:13px;font-weight:600;color:#cbd5e1;transition:all 0.25s ease;cursor:default }
