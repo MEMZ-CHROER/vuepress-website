@@ -1,23 +1,42 @@
 <script setup>
-import { ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const count = ref(0);
 const showSurprise = ref(false);
 const msg = ref("");
+const gold = ref(false);
+
+function syncGold() {
+  try {
+    gold.value =
+      document.documentElement.classList.contains("pzl-gold") ||
+      localStorage.getItem("lxy_gold") === "1";
+  } catch {
+    gold.value = false;
+  }
+}
 
 function clickTank() {
   count.value++;
   if (count.value >= 5) {
     showSurprise.value = true;
-    const messages = [
-      "🎉 你发现了一只野生坦克！",
-      "💥 坦克开炮了！BOOM！",
-      "🛡️ 装甲加厚 +100",
-      "⚡ 速度提升，引擎轰鸣！",
-      "🎨 获得限定涂装：幻彩星辰",
-      "🏆 成就解锁：坦克收藏家",
-      "🔫 主炮已就绪，目标锁定！",
-    ];
+    const messages = gold.value
+      ? [
+          "👑 金库的钥匙在你手里。",
+          "✨ 37 × 18 = 666。",
+          "🏆 成就解锁：PROJECT 666 通关者",
+          "🪙 黄金模式已生效。",
+          "🧠 你连频谱都读了。",
+        ]
+      : [
+          "🎉 你发现了一只野生坦克！",
+          "💥 坦克开炮了！BOOM！",
+          "🛡️ 装甲加厚 +100",
+          "⚡ 速度提升，引擎轰鸣！",
+          "🎨 获得限定涂装：幻彩星辰",
+          "🏆 成就解锁：坦克收藏家",
+          "🔫 主炮已就绪，目标锁定！",
+        ];
     msg.value = messages[Math.floor(Math.random() * messages.length)];
     setTimeout(() => {
       showSurprise.value = false;
@@ -25,11 +44,22 @@ function clickTank() {
     }, 2000);
   }
 }
+
+onMounted(() => {
+  syncGold();
+  window.addEventListener("pzl-gold-change", syncGold);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("pzl-gold-change", syncGold);
+});
 </script>
 
 <template>
   <div class="easter-egg">
-    <span class="egg-trigger" @click="clickTank" title="戳我试试">🪲</span>
+    <span class="egg-trigger" @click="clickTank" :title="gold ? '金库已开启' : '戳我试试'">{{
+      gold ? "👑" : "🪲"
+    }}</span>
     <Transition name="pop">
       <div v-if="showSurprise" class="egg-msg">{{ msg }}</div>
     </Transition>

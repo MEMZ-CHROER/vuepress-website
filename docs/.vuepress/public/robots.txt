@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /vault/
+Disallow: /puzzle/
+
+# ------------------------------------------------------------
+# 06 :: Uk9CT1Q=
+# the map is written in base64
+# ------------------------------------------------------------
+
+Sitemap: https://www.liuxiyu.cn/sitemap.xml

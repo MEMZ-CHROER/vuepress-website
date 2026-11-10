@@ -25,6 +25,10 @@ const frontmatter = usePageFrontmatter();
 
   <!-- 前台编辑（登录后右下角可编辑此页） -->
   <FrontEditor />
+
+  <!-- PROJECT 666：全站谜题钩子 + URL 参数门 -->
+  <PuzzleHooks />
+  <PuzzleDoors />
 </template>
 
 <style scoped>

@@ -41,8 +41,15 @@ onMounted(() => {
       <span class="hero-icon">💜</span>
       <h1 class="hero-title">Credits</h1>
       <p class="hero-subtitle">
-        <span class="typewriter-text">Noth1ng 1s 1mp0ss1bLe such as C0d1ng F0rever.</span>
-        <span class="typewriter-hint">›注意那些1和0,二进制的关系,别忘了学C++呦~</span>
+        <span class="typewriter-text">Noth1ng 1s 1mp0ss1bLe 1n C0d1ng F0rever.</span>
+  
+        <span class="typewriter-hint">
+           &nbsp;看到那些1和0了吗？请试着<br>
+         「翻转个角度思考问题<br>
+           &nbsp;或许会有新的发现」<br>
+           &nbsp;没事干别老打游戏<br>
+           &nbsp;也不要忘了学点C++呦~
+        </span>
       </p>
     </div>
 
@@ -155,6 +162,7 @@ onMounted(() => {
          class="gitHub-btn" target="_blank" rel="noopener">
         ⭐ Star on GitHub
       </a>
+      <p class="pzl-entry">PROJECT 666 · <a href="/puzzle/">进入档案中枢 →</a></p>
     </div>
   </div>
 </template>
@@ -168,15 +176,15 @@ onMounted(() => {
 @keyframes blink-caret { from,to{border-color:transparent} 50%{border-color:#6366f1} }
 @keyframes particle-float { 0%{transform:translateY(0) rotate(0deg);opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{transform:translateY(-80vh) rotate(720deg);opacity:0} }
 @keyframes shimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
-
 .credits-bg { position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(135deg,#0a0a1a 0%,#1a1a3e 50%,#0d0d20 100%) }
 .particle { position:absolute;border-radius:50%;pointer-events:none;animation:particle-float linear infinite }
 .credits-page { max-width:900px;margin:0 auto;padding:60px 24px 80px }
 .hero-section { text-align:center;padding:40px 0 60px;animation:fade-in-up 0.8s ease-out }
 .hero-icon { font-size:64px;display:block;margin-bottom:16px;animation: float 3s ease-in-out infinite }
 .hero-title { font-size:clamp(36px,8vw,64px);font-weight:900;background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899,#f59e0b);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradient-shift 4s ease infinite;letter-spacing:-1px;line-height:1.2 }
-.hero-subtitle { color:#94a3b8;font-size:18px;margin-top:12px;font-family:'JetBrains Mono',monospace }
-.typewriter-text { display:inline-block;overflow:hidden;white-space:nowrap;border-right:3px solid #6366f1;animation:typewriter 2s steps(30) forwards,blink-caret 0.75s step-end infinite;width:0 }
+.hero-subtitle { color:#94a3b8;font-size:18px;margin-top:8  px;font-family:'JetBrains Mono',monospace }
+.typewriter-text { display:inline-block;overflow:hidden;white-space:nowrap;border-right:3px solid #6366f1;animation:typewriter 2s steps(40) forwards,blink-caret 0.75s step-end infinite;width:0 }
+.typewriter-hint { display:block;margin-top:16px;font-size:16px;color:#94a3b8;line-height:1.8;animation:fade-in-up 0.8s ease-out 1.8s both; }
 .hero-section.loaded .typewriter-text { width:100% }
 .section-divider { height:2px;margin:48px 0;background:linear-gradient(90deg,transparent,#6366f1,#a855f7,#ec4899,transparent);background-size:200% 100%;animation:shimmer 3s linear infinite;border-radius:2px }
 .section-label { display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#6366f1;margin-bottom:32px;padding:6px 16px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.3);border-radius:100px }
@@ -208,6 +216,9 @@ onMounted(() => {
 .credits-footer { text-align:center;padding:40px 0 20px;color:#475569;font-size:13px;animation:fade-in-up 0.8s ease-out 0.8s both }
 .credits-footer a { color:#6366f1;text-decoration:none }
 .credits-footer a:hover { text-decoration:underline }
+.pzl-entry { margin-top:14px;font-size:12px;letter-spacing:.14em;color:#475569 }
+.pzl-entry a { color:#6366f1;font-weight:600;text-decoration:none }
+.pzl-entry a:hover { color:#a5b4fc }
 .gitHub-btn { display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff !important;border-radius:100px;font-weight:700;font-size:14px;text-decoration:none !important;transition:all 0.3s ease;margin-top:16px }
 .gitHub-btn:hover { transform:scale(1.05);box-shadow:0 8px 24px rgba(99,102,241,.4);text-decoration:none !important }
 .credits-back {

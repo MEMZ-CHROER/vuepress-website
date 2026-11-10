@@ -789,6 +789,35 @@ body {
   }
 }
 
+/* ---------- PROJECT 666（全站谜题） ---------- */
+/* 隐形字：平时透明，选中后才显形 */
+.pzl-ghost {
+  color: transparent !important;
+  user-select: text;
+  cursor: text;
+}
+.pzl-ghost::selection {
+  color: #fff !important;
+  background: #6366f1 !important;
+}
+
+/* 666 解锁后的黄金模式 */
+html.pzl-gold {
+  --c-brand: #d4af37;
+  --c-brand-light: #f0d060;
+  --c-brand-dark: #b8860b;
+}
+html.pzl-gold body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% -12%, rgba(212, 175, 55, 0.11), transparent 55%),
+    radial-gradient(circle at 50% 112%, rgba(212, 175, 55, 0.07), transparent 55%);
+}
+
 /* ---------- 暗色模式 (如果启用) ---------- */
 @media (prefers-color-scheme: dark) {
   html:not([data-theme="light"]) {

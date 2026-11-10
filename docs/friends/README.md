@@ -91,6 +91,16 @@ tag:
 
 _友情链接不分大小，有趣就行。_
 
+<div class="pzl-ghost" aria-hidden="true">
+Friendship is the first door.<br />
+Rivers remember every name.<br />
+In the silence, a signal waits.<br />
+Echoes answer only once.<br />
+North is not a direction, it is a promise.<br />
+Doors open for those who read the source.<br />
+<span style="font-size: 0.78em">door 9 → /?pzl=door9</span>
+</div>
+
 </div>
 
 <style scoped>

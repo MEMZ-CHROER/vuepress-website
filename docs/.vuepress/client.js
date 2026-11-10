@@ -11,6 +11,11 @@ import LxySortDemo from "./components/LxySortDemo.vue";
 import LxyBenchDemo from "./components/LxyBenchDemo.vue";
 import FrontEditor from "./components/FrontEditor.vue";
 import PagePassword from "./components/PagePassword.vue";
+import PuzzleHub from "./components/PuzzleHub.vue";
+import VaultGate from "./components/VaultGate.vue";
+import FourierLab from "./components/FourierLab.vue";
+import PuzzleDoors from "./components/PuzzleDoors.vue";
+import PuzzleHooks from "./components/PuzzleHooks.vue";
 import CreditsLayout from "./layouts/Credits.vue";
 
 export default defineClientConfig({
@@ -29,6 +34,11 @@ export default defineClientConfig({
     app.component("LxyBenchDemo", LxyBenchDemo);
     app.component("FrontEditor", FrontEditor);
     app.component("PagePassword", PagePassword);
+    app.component("PuzzleHub", PuzzleHub);
+    app.component("VaultGate", VaultGate);
+    app.component("FourierLab", FourierLab);
+    app.component("PuzzleDoors", PuzzleDoors);
+    app.component("PuzzleHooks", PuzzleHooks);
 
     // ==== clean URL 目录兜底（PR #1720 项目侧方案）====
     // 访问无后缀路径（如 /about）时：
