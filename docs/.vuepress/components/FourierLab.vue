@@ -25,7 +25,6 @@ const status = ref("loading"); // loading | ready | error
 const errorText = ref("");
 const src = withBase("/puzzle/signal.wav");
 
-let raf = 0;
 let audioCtx = null;
 
 /* ---------- 轻量 FFT（radix-2，原地） ---------- */
@@ -176,7 +175,6 @@ async function toggle() {
 
 function onEnded() {
   playing.value = false;
-  cancelAnimationFrame(raf);
 }
 
 onMounted(() => {
@@ -184,7 +182,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  cancelAnimationFrame(raf);
   if (audio.value && !audio.value.paused) audio.value.pause();
   if (audioCtx) audioCtx.close().catch(() => {});
 });
