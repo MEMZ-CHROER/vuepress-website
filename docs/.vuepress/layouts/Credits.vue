@@ -51,7 +51,7 @@ onMounted(() => {
       <div class="section-label"><span>👑</span> Founders / Creator</div>
       <div class="founders-grid">
         <div class="founder-card">
-          <div class="founder-avatar"><img src="/credits/MEMZ-CHROER.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"></img></div>
+          <div class="founder-avatar"><img src="/credits/MEMZ-CHROER.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" /></div>
           <div class="founder-name">Lxy</div>
           <div class="founder-role">Founder &amp; Lead Developer</div>
           <div class="founder-desc">写代码、画坦克、种枇杷。<br>这个项目的一切始于一个想法。</div>
@@ -62,7 +62,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="founder-card">
-          <div class="founder-avatar"><img src="/credits/Hejuxiao.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"></img></div>
+          <div class="founder-avatar"><img src="/credits/Hejuxiao.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" /></div>
           <div class="founder-name">Hejuxiao</div>
           <div class="founder-role">Co-Founder &amp; Designer</div>
           <div class="founder-desc">负责美术与创意方向<br>坦克们背后的灵魂画手。</div>
@@ -84,7 +84,7 @@ onMounted(() => {
       <div class="thanks-grid">
 
         <div class="thank-item">
-          <div class="thank-icon"><img src="/credits/CSEL.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover"></div>
+          <div class="thank-icon"><img src="/credits/CSEL.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover" /></div>
           <div class="thank-info">
             <div class="thank-name">(CSEL-org &amp;&amp; CSEL) 全体成员</div>
             <div class="thank-contribution">感谢有你们，陪伴着我和我的博客一起成长<br>从 Vuepress 1.0 时代到现在，少不了你们的支持！</div>
@@ -92,7 +92,7 @@ onMounted(() => {
         </div>
 
         <div class="thank-item">
-          <div class="thank-icon"><img src="/credits/Apex.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover"></div>
+          <div class="thank-icon"><img src="/credits/Apex.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover" /></div>
           <div class="thank-info">
             <div class="thank-name">Apex</div>
             <div class="thank-contribution">一直陪伴着博客成长，给予一些思路</div>
@@ -100,7 +100,7 @@ onMounted(() => {
         </div>
 
         <div class="thank-item">
-          <div class="thank-icon"><img src="/credits/zsy.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover"></div>
+          <div class="thank-icon"><img src="/credits/zsy.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover" /></div>
           <div class="thank-info">
             <div class="thank-name"><a href="https://github.com/Andy-VibeLink" target="_blank" rel="noopener">Andy-VibeLink</a></div>
             <div class="thank-contribution">提供了关键的想法和建议</div>
@@ -108,7 +108,7 @@ onMounted(() => {
         </div>
 
         <div class="thank-item">
-          <div class="thank-icon"><img src="/credits/CSEL-Ent1ch.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover"></div>
+          <div class="thank-icon"><img src="/credits/CSEL-Ent1ch.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover" /></div>
           <div class="thank-info">
             <div class="thank-name">CSEL-Ent1ch</div>
             <div class="thank-contribution">修复了多个重要 Bug</div>
