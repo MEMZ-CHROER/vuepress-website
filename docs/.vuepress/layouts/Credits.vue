@@ -81,36 +81,40 @@ onMounted(() => {
 
     <div class="thanks-section">
       <div class="section-label"><span>🙏</span> Special Thanks</div>
-      <div class="thank-item">
-          <div class="thank-icon"><img src="/credits/CSEL.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></img></div>
+      <div class="thanks-grid">
+
+        <div class="thank-item">
+          <div class="thank-icon"><img src="/credits/CSEL.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover"></div>
           <div class="thank-info">
-            <div class="thank-name">(CSEL-org && CSEL) 全体成员</div>
-            <div class="thank-contribution">感谢有你们,陪伴着我和我的博客一起成长<br>从Vuepress 1.0时代到现在,少不了你们的支持！</div>
+            <div class="thank-name">(CSEL-org &amp;&amp; CSEL) 全体成员</div>
+            <div class="thank-contribution">感谢有你们，陪伴着我和我的博客一起成长<br>从 Vuepress 1.0 时代到现在，少不了你们的支持！</div>
           </div>
         </div>
-      <br>
-      <div class="thanks-grid">
+
         <div class="thank-item">
-          <div class="thank-icon"><img src="/credits/Apex.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></img></div>
+          <div class="thank-icon"><img src="/credits/Apex.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover"></div>
           <div class="thank-info">
             <div class="thank-name">Apex</div>
-            <div class="thank-contribution">一直陪伴着博客成长,给予一些思路</div>
+            <div class="thank-contribution">一直陪伴着博客成长，给予一些思路</div>
           </div>
         </div>
+
         <div class="thank-item">
-          <div class="thank-icon"><img src="/credits/zsy.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></img></div>
+          <div class="thank-icon"><img src="/credits/zsy.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover"></div>
           <div class="thank-info">
-            <div class="thank-name"><a href="https://github.com/Andy-VibeLink" type="_self">Andy-VibeLink</a></div>
+            <div class="thank-name"><a href="https://github.com/Andy-VibeLink" target="_blank" rel="noopener">Andy-VibeLink</a></div>
             <div class="thank-contribution">提供了关键的想法和建议</div>
           </div>
         </div>
+
         <div class="thank-item">
-          <div class="thank-icon"><img src="/credits/CSEL-Ent1ch.png" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></img></div>
+          <div class="thank-icon"><img src="/credits/CSEL-Ent1ch.png" style="width:50px;height:50px;border-radius:50%;object-fit:cover"></div>
           <div class="thank-info">
             <div class="thank-name">CSEL-Ent1ch</div>
             <div class="thank-contribution">修复了多个重要 Bug</div>
           </div>
         </div>
+
         <div class="thank-item">
           <div class="thank-icon">🌟</div>
           <div class="thank-info">
@@ -118,6 +122,7 @@ onMounted(() => {
             <div class="thank-contribution">感谢你长期以来的支持与陪伴</div>
           </div>
         </div>
+
       </div>
     </div>
 
