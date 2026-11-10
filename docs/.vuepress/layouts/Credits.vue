@@ -172,7 +172,7 @@ onMounted(() => {
 .particle { position:absolute;border-radius:50%;pointer-events:none;animation:particle-float linear infinite }
 .credits-page { max-width:900px;margin:0 auto;padding:60px 24px 80px }
 .hero-section { text-align:center;padding:40px 0 60px;animation:fade-in-up 0.8s ease-out }
-.hero-icon { font-size:64px;display:block;margin-bottom:16px;animation,float:3s ease-in-out infinite }
+.hero-icon { font-size:64px;display:block;margin-bottom:16px;animation: float 3s ease-in-out infinite }
 .hero-title { font-size:clamp(36px,8vw,64px);font-weight:900;background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899,#f59e0b);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradient-shift 4s ease infinite;letter-spacing:-1px;line-height:1.2 }
 .hero-subtitle { color:#94a3b8;font-size:18px;margin-top:12px;font-family:'JetBrains Mono',monospace }
 .typewriter-text { display:inline-block;overflow:hidden;white-space:nowrap;border-right:3px solid #6366f1;animation:typewriter 2s steps(30) forwards,blink-caret 0.75s step-end infinite;width:0 }
