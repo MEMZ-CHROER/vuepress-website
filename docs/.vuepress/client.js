@@ -1,6 +1,5 @@
 import { defineClientConfig, resolveRoute } from "vuepress/client";
 import MyLayout from "./layouts/Layout.vue";
-import CreditsLayout from "./layouts/Credits.vue";
 import QuoteOfTheDay from "./components/QuoteOfTheDay.vue";
 import Comment from "./components/Comment.vue";
 import EasterEgg from "./components/EasterEgg.vue";
@@ -12,6 +11,7 @@ import LxySortDemo from "./components/LxySortDemo.vue";
 import LxyBenchDemo from "./components/LxyBenchDemo.vue";
 import FrontEditor from "./components/FrontEditor.vue";
 import PagePassword from "./components/PagePassword.vue";
+import CreditsLayout from "./layouts/Credits.vue";
 
 export default defineClientConfig({
   layouts: {
