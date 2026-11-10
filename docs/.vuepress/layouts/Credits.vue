@@ -41,7 +41,8 @@ onMounted(() => {
       <span class="hero-icon">💜</span>
       <h1 class="hero-title">Credits</h1>
       <p class="hero-subtitle">
-        <span class="typewriter-text">Noth1ng 1s 1mp0ss1ble such as C0d1ng F0rever.</span>
+        <span class="typewriter-text">Noth1ng 1s 1mp0ss1bLe such as C0d1ng F0rever.</span>
+        <span class="typewriter-hint">›注意那些1和0,二进制的关系,别忘了学C++呦~</span>
       </p>
     </div>
 
