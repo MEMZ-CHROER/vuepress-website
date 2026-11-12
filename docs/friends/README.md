@@ -1,8 +1,5 @@
 ---
 title: 友情链接
-sidebar: false
-tag:
-  - 友链
 ---
 
 # 🤝 友情链接
@@ -100,7 +97,6 @@ North is not a direction, it is a promise.<br />
 Doors open for those who read the source.<br />
 <span style="font-size: 0.78em">door 9 → /?pzl=door9</span>
 </div>
-
 </div>
 
 <style scoped>
